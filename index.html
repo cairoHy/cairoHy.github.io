@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="new Cairo()">
+<meta property="og:url" content="http://cairohy.github.io/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="cairo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/12/10/paper/IJCAI'20-camera-ready/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/10/paper/IJCAI'20-camera-ready/" class="post-title-link" itemprop="url">IJCAI'20 Camera-Ready</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-10 16:00:00" itemprop="dateCreated datePublished" datetime="2020-12-10T16:00:00+00:00">2020-12-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/12/10/paper/IJCAI'20-camera-ready/" class="post-meta-item leancloud_visitors" data-flag-title="IJCAI'20 Camera-Ready" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>156</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="IJCAI’20-Poster和Slide"><a href="#IJCAI’20-Poster和Slide" class="headerlink" title="IJCAI’20 Poster和Slide"></a>IJCAI’20 Poster和Slide</h3><p>论文：<a href="https://www.ijcai.org/Proceedings/2020/527" target="_blank" rel="noopener">learning with noise: improving distantly-supervised fine-grained entity typing via automatic relabeling</a></p>
+<p>video: <a href>这里，暂时not available</a></p>
+<p>poster: <a href="https://cairohy.github.io/ijcai20/poster.pdf">这里</a></p>
+<p>slide: <a href="https://cairohy.github.io/ijcai20/slide.pdf">这里</a></p>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/10/paper/IJCAI'20-camera-ready/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/11/14/deeplearning/Test%20Adaption%20Robust%20Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/14/deeplearning/Test%20Adaption%20Robust%20Learning/" class="post-title-link" itemprop="url">利用Test Adaptation提高模型泛化性</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-14 08:00:00" itemprop="dateCreated datePublished" datetime="2020-11-14T08:00:00+00:00">2020-11-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/11/14/deeplearning/Test%20Adaption%20Robust%20Learning/" class="post-meta-item leancloud_visitors" data-flag-title="利用Test Adaptation提高模型泛化性" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Fully-Test-Time-Adaptation-by-Entropy-Minimization"><a href="#Fully-Test-Time-Adaptation-by-Entropy-Minimization" class="headerlink" title="Fully Test Time Adaptation by Entropy Minimization"></a>Fully Test Time Adaptation by Entropy Minimization</h3><p> 来自ArXiv，by DeepAI和伯克利，ICLR’21高分论文。</p>
+<p>一、Motivation：</p>
+<ul>
+<li>1.focus on一个独特的任务设置，这篇工作希望解决的setting是，当模型训练好之后，在没有任何监督信息的测试数据上使用时，只有parameter和test data，如何自适应的进行预测从而在测试数据上表现最佳。下表展示了fully test-time adaptation和之前的几种setting的区别。</li>
+<li>2.之前的类似任务上的方法为什么不能直接应用过来，它们的不足（fine-tune着力于训练阶段，领域自适应也需要训练数据，TTT比较相似但是在训练&amp;测试同时进行adaption）。</li>
+</ul>
+<p><img src="/images/1605540714424-9396b766-85cb-4fa1-be3a-2adb14578d94.png" alt></p>
+<blockquote>
+<p>背景知识：</p>
+<p>1.高熵代表不确定性（根据最大熵原理在满足已知条件的模型中，预测熵最大的模型是最好的模型）【label smoothing或者dropout都可以看作是一种软最大熵约束】；低熵代表高置信度。</p>
+<p>2.领域自适应的方法一般是应用在训练时，主要利用特征对齐、对抗不变性、共享代理目标等学习一个目标领域的表示。即使是最近的source-free的方法也需要利用生成建模和伪标签等、效率比较低。</p>
+</blockquote>
+<p>二、创新点&amp;设计思路：</p>
+<ul>
+<li><p>引入测试熵</p>
+<ul>
+<li>熵非常general与任务无关，但相比于自监督学习，熵又是task-specific的不需要手工设计目标。（自监督：补全context、rotation预测、添加噪声的自编码目标）而且，熵和performance具有反向相关性。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/1605616031989-970335be-01bd-4ff7-872c-1d8c7760b2e4.png" alt></p>
+<ul>
+<li><p>测试阶段的normalization</p>
+<ul>
+<li>从测试数据中以滑动平均的方式估计μ和σ，利用熵作为目标函数学习β和γ。adaption一个Epoch。</li>
+</ul>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/14/deeplearning/Test%20Adaption%20Robust%20Learning/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/06/04/nlp/When%20Bert%20Forgets%20How%20To%20POS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/04/nlp/When%20Bert%20Forgets%20How%20To%20POS/" class="post-title-link" itemprop="url">When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-04 11:05:00" itemprop="dateCreated datePublished" datetime="2020-06-04T11:05:00+00:00">2020-06-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/04/nlp/When%20Bert%20Forgets%20How%20To%20POS/" class="post-meta-item leancloud_visitors" data-flag-title="When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="When-Bert-Forgets-How-To-POS：-Amnesic-Probing-of-Linguistic-Properties-and-MLM-Predictions"><a href="#When-Bert-Forgets-How-To-POS：-Amnesic-Probing-of-Linguistic-Properties-and-MLM-Predictions" class="headerlink" title="When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions"></a>When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions</h3><p><a href="http://arxiv.org/abs/2006.00995" target="_blank" rel="noopener">http://arxiv.org/abs/2006.00995</a>, by 巴伊兰大学和AI2。</p>
+<p>利用一种改进的Probe方法来对黑盒NN模型的行为进行分析，判断。</p>
+<h4 id="1-常用的Probe方法及其不足。"><a href="#1-常用的Probe方法及其不足。" class="headerlink" title="1.常用的Probe方法及其不足。"></a>1.常用的Probe方法及其不足。</h4><p>什么是probe？增强神经网络模型可解释性的方法。理解这个黑盒子，尝试回答比如BERT的每个head编码了哪些信息？哪些hidden state的维度被实际用在了预测中？如果去掉某些信息会怎么样？等问题。probe是解决这类问题的一种方法，也可以叫做auxilliary prediction【辅助预测】或者diagnostic classification【诊断分类】。</p>
+<p>probe的过程？固定pre-train的原始模型的feature层，通过在原始模型的上层训练一个简单的分类网络，以对某种属性property的预测准确率来证明该信息被编码到了原始模型的隐藏表示中。</p>
+<p>不足？只能证明信息被encode到了隐藏表示中，无法证明原始模型有效利用了这些信息。</p>
+<h4 id="2-这篇文章提出的方法：Amnesic-Probing。"><a href="#2-这篇文章提出的方法：Amnesic-Probing。" class="headerlink" title="2.这篇文章提出的方法：Amnesic Probing。"></a>2.这篇文章提出的方法：Amnesic Probing。</h4><p>改进方式：<strong>反事实推理</strong>，假设某种属性P被解决任务T的原始模型有效使用了，那么把P去掉肯定会影响原始模型解决T的能力 。因此如果去掉P不影响解决T的能力，那么P中的信息就没有被有效利用。Intervention介入：这个工作和之前一些工作不同的地方在于它通过修改表示层来介入。其实很像是ablation，只是这里不能重新训练原始模型，算是黑盒子版本的ablation。</p>
+<p>步骤：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/04/nlp/When%20Bert%20Forgets%20How%20To%20POS/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/25/leetcode/%E5%9B%BE/" class="post-title-link" itemprop="url">leetcode: 图</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-25 21:00:00" itemprop="dateCreated datePublished" datetime="2020-05-25T21:00:00+00:00">2020-05-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/25/leetcode/%E5%9B%BE/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: 图" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、最小生成树"><a href="#一、最小生成树" class="headerlink" title="一、最小生成树"></a>一、最小生成树</h3><blockquote>
+<p>给你一个points 数组，表示 2D 平面上的一些点，其中 points[i] = [xi, yi] 。</p>
+<p>连接点 [xi, yi] 和点 [xj, yj] 的费用为它们之间的 曼哈顿距离 ：|xi - xj| + |yi - yj| ，其中 |val| 表示 val 的绝对值。</p>
+<p>请你返回将所有点连接的最小总费用。只有任意两点之间 有且仅有 一条简单路径时，才认为所有点都已连接。</p>
+</blockquote>
+<p>Prim：从点的视角出发，优点就是不用一次计算所有的边的权重。某个节点出发，把它放到队列里面。</p>
+<p>然后循环以下操作直到所有节点都已经访问：从队列中弹出距离最小的节点，如果还没访问就设置为访问，加入总代价。然后计算当前节点和所有没访问的节点之间的权重，放到优先级队列里面。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> PriorityQueue</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minCostConnectPoints</span><span class="params">(self, points: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        calcu_distance = <span class="keyword">lambda</span> x, y: abs(points[x][<span class="number">0</span>] - points[y][<span class="number">0</span>]) + abs(points[x][<span class="number">1</span>] - points[y][<span class="number">1</span>])   </span><br><span class="line">        n = len(points)</span><br><span class="line">        pq = PriorityQueue()  <span class="comment"># 利用优先级队列以logN时间开销存储</span></span><br><span class="line">        un_visit = set([i <span class="keyword">for</span> i <span class="keyword">in</span> range(n)])</span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        cur = (<span class="number">0</span>, <span class="number">0</span>)  <span class="comment"># distance, node index</span></span><br><span class="line">        pq.put(cur)</span><br><span class="line">        <span class="keyword">while</span> un_visit:</span><br><span class="line">            dist, cur = pq.get()</span><br><span class="line">            <span class="comment"># print('&#123;&#125;'.format(un_visit))</span></span><br><span class="line">            <span class="keyword">if</span> cur <span class="keyword">not</span> <span class="keyword">in</span> un_visit:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            un_visit.remove(cur)</span><br><span class="line">            res += dist</span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> un_visit:</span><br><span class="line">                dist = calcu_distance(cur, each)</span><br><span class="line">                pq.put((dist, each))</span><br><span class="line">            <span class="comment"># print('&#123;&#125;'.format(list(pq.queue)))</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<p>kruskal算法 + 并查集实现：从边的视角出发。初始化并查集。</p>
+<p>1.计算出所有边的权重并排序。</p>
+<p>2.在边的集合中按从小到大循环：</p>
+<p>如果加入当前边会形成环（也就是两个节点已经有通路了，并查集），那么就跳过。</p>
+<p>否则就加入当前边（加入总代价，并连通两个节点）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/25/leetcode/%E5%9B%BE/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/04/nlp/Recent%20Language%20Models/" class="post-title-link" itemprop="url">Recent Language Model Papers</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-04 17:00:00" itemprop="dateCreated datePublished" datetime="2020-03-04T17:00:00+00:00">2020-03-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/04/nlp/Recent%20Language%20Models/" class="post-meta-item leancloud_visitors" data-flag-title="Recent Language Model Papers" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Recent-Language-Model-Papers"><a href="#Recent-Language-Model-Papers" class="headerlink" title="Recent Language Model Papers"></a>Recent Language Model Papers</h3><p>最近的语言模型和词嵌入的文章，有的读的仔细点，有的略读，不断更新中。</p>
+<h4 id="1-AlBert"><a href="#1-AlBert" class="headerlink" title="1.AlBert"></a>1.AlBert</h4><p><a href="https://openreview.net/forum?id=H1eA7AEtvS" target="_blank" rel="noopener">https://openreview.net/forum?id=H1eA7AEtvS</a> ，ICLR’20, by Google, SOTA in GLUE.</p>
+<p>一个轻量级的BERT但是效果更好。它所做的修改主要有：</p>
+<ul>
+<li><p>首先把词向量矩阵分解了，这样使词向量矩阵的维度和hidden_size解耦，否则词向量矩阵参数量太大。</p>
+</li>
+<li><p>把每层的参数共享了，减少参数数量。</p>
+</li>
+<li><p>在这个基础上，能够把hidden_size提高到6144这种量级。</p>
+</li>
+<li><p>为了对句子级别进行建模，ALBERT增加了一个sentence order prediction（SOP）任务而不是被证明太简单基本无效的NSP任务，给定当前句子与其下一句，或者是顺序翻转的两句话，希望模型预测句子序是否准确。</p>
+</li>
+</ul>
+<h4 id="2-GPT-3，一个看看就好的单向语言模型"><a href="#2-GPT-3，一个看看就好的单向语言模型" class="headerlink" title="2.GPT-3，一个看看就好的单向语言模型"></a>2.GPT-3，一个看看就好的单向语言模型</h4><p><a href="http://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">http://arxiv.org/abs/2005.14165</a> ，By OpenAI。</p>
+<p>回想去年年底，我在尝试在GPT-2 Small（127M参数）模型的基础上搞点东西的时候，还在想这玩意fine-tune有点慢，batch size设不大啊。害，现在拿到论文只能看看人实验结果了，连下载模型的想法都不会有~</p>
+<p>GPT-3，一个最大175Billion参数的基于Transformer-decoder的单向自回归语言模型。希望解决的就是pretrain-fineTune这套框架。他们觉得这套框架虽然解决了task-specific Model的问题，但是没有解决task-specific data的问题，所以领域相关数据还是导致应用很受限。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/04/nlp/Recent%20Language%20Models/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/01/09/ml-coding-summarize/%E7%A8%80%E7%96%8F%E5%9B%BE%E8%AE%A1%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/09/ml-coding-summarize/%E7%A8%80%E7%96%8F%E5%9B%BE%E8%AE%A1%E7%AE%97/" class="post-title-link" itemprop="url">稀疏图计算</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-09 17:00:00" itemprop="dateCreated datePublished" datetime="2020-01-09T17:00:00+00:00">2020-01-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">编程总结</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/09/ml-coding-summarize/%E7%A8%80%E7%96%8F%E5%9B%BE%E8%AE%A1%E7%AE%97/" class="post-meta-item leancloud_visitors" data-flag-title="稀疏图计算" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="稀疏图计算的实现"><a href="#稀疏图计算的实现" class="headerlink" title="稀疏图计算的实现"></a>稀疏图计算的实现</h4><p>遇到图中元素很稀疏时可以使用sparse tensor计算所需要的值，然后再转化为dense tensor。假如涉及图的运算中稀疏程度很大、或者中间结果的维度很高，都能够有效的降低时间跟内存开销。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 选择所有非0元素的索引</span></span><br><span class="line">indices = torch.nonzero(x)  </span><br><span class="line"><span class="comment"># 从参与计算的tensor中取值</span></span><br><span class="line">values = x[tuple(indices[i] <span class="keyword">for</span> i <span class="keyword">in</span> range(indices.shape[<span class="number">0</span>]))]</span><br><span class="line"><span class="comment"># 进行需要的索引变换</span></span><br><span class="line">j_indices = indices.clone()</span><br><span class="line">value_indices = list(j_indices[i] <span class="keyword">for</span> i <span class="keyword">in</span> range(j_indices.shape[<span class="number">0</span>]))</span><br><span class="line">value_indices[<span class="number">1</span>] = value_indices[<span class="number">1</span>].zero_()</span><br><span class="line"><span class="comment"># 从某个参与计算的tensor中取相应的值</span></span><br><span class="line">emb_j = node_j[tuple(value_indices)]</span><br><span class="line"><span class="comment"># 进行计算</span></span><br><span class="line">final_values = func(values, emb_j)</span><br><span class="line"><span class="comment"># 最后可能需要再次对索引进行变换（比如加上一维）</span></span><br><span class="line">extra_indices = torch.arange(<span class="number">0</span>, window_size).to(indices.device).unsqueeze(<span class="number">1</span>).repeat(<span class="number">1</span>, n_num).t().reshape(</span><br><span class="line">            (<span class="number">1</span>, n_num, window_size))</span><br><span class="line">indices = torch.cat([indices[<span class="number">0</span>:<span class="number">1</span>], extra_indices, indices[<span class="number">1</span>:]], dim=<span class="number">0</span>)</span><br><span class="line">indices = indices.reshape((<span class="number">4</span>, <span class="number">-1</span>))</span><br><span class="line"><span class="comment"># 最后生成sparse tensor，再转换回来</span></span><br><span class="line">x_typename = torch.typename(x).split(<span class="string">'.'</span>)[<span class="number">-1</span>]</span><br><span class="line">sparse_tensortype = getattr(torch.sparse, x_typename)</span><br><span class="line">res = sparse_tensortype(indices, final_values, (b, window_size, l, l, <span class="number">1</span>)).requires_grad_(<span class="literal">True</span>).to_dense()</span><br></pre></td></tr></table></figure>
+<p>另外，中间尝试了把几个计算涉及的tensor分别转为sparse tensor然后运算最后再转回来，但是在backward的时候会出错，用<code>tensor.contiguous()</code>也没解决。</p>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/09/ml-coding-summarize/%E7%A8%80%E7%96%8F%E5%9B%BE%E8%AE%A1%E7%AE%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/12/30/nlp/pplm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/30/nlp/pplm/" class="post-title-link" itemprop="url">PPLM-使用预训练语言模型进行可控制的文本生成</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-30 21:10:00" itemprop="dateCreated datePublished" datetime="2019-12-30T21:10:00+00:00">2019-12-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/30/nlp/pplm/" class="post-meta-item leancloud_visitors" data-flag-title="PPLM-使用预训练语言模型进行可控制的文本生成" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>812</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="PLUG-AND-PLAY-LANGUAGE-MODELS-A-SIMPLE-APPROACH-TO-CONTROLLED-TEXT-GENERATION"><a href="#PLUG-AND-PLAY-LANGUAGE-MODELS-A-SIMPLE-APPROACH-TO-CONTROLLED-TEXT-GENERATION" class="headerlink" title="PLUG AND PLAY LANGUAGE MODELS: A SIMPLE APPROACH TO CONTROLLED TEXT GENERATION"></a>PLUG AND PLAY LANGUAGE MODELS: A SIMPLE APPROACH TO CONTROLLED TEXT GENERATION</h3><p><a href="https://arxiv.org/pdf/1912.02164.pdf，by" target="_blank" rel="noopener">https://arxiv.org/pdf/1912.02164.pdf，by</a> Uber AI。</p>
+<p>大规模预训练语言模型的效果不错，但如何利用它们生成属性可控的文本（比如说某一领域、某种风格、某种情感），fine-tune是一种方法，本文提出了一种不需要重新训练的方式。</p>
+<p>无需fine-tune或者重新训练LM。其具体的做法是根据梯度将Transformer-decoder每一层的hidden state向LM和attribute的方向改变一步。</p>
+<p>对于attribute，进行了两类属性的控制，1）情感，通过一个预训练的二分类器判断生成的候选文本的误差；2）主题，通过指定一个中心词，找到wordnet的相关词集合，以multi-hot的方式将这些词列为vocabulary中的ground-truth-labels来计算误差。</p>
+<p>分为三步，第一步通过一个前向过程获取$p(a|x),p(x)$，第二步通过反向传播获取相对于H的梯度并更新H，第三步利用更新之后的$\tilde H$来预测此时刻的vocab分布。</p>
+<p>计算$H_t$的更新值$\nabla H_t$通过若干次重复计算梯度并衰减求和得到。</p>
+<p>为了生成文本的流畅度，增加一项KL项，缩小输出的分布和之前的分布的KL值。</p>
+<p>最后，最后采样的分布是未改变的分布和改变后的分布的加权之和。</p>
+<p>最后的最后，根据$p(a|x)$，采样出来的候选seq集合还可以根据与attribute一致的程度进行排序。下图来自论文原文。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/30/nlp/pplm/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/11/17/ML-Basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/17/ML-Basics/" class="post-title-link" itemprop="url">ML-Basics Recap-软核</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-17 16:00:00" itemprop="dateCreated datePublished" datetime="2019-11-17T16:00:00+00:00">2019-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/17/ML-Basics/" class="post-meta-item leancloud_visitors" data-flag-title="ML-Basics Recap-软核" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>软核机器学习，记录结论和性质，推导细节省略。</p>
+<p>所有向量默认是列向量。</p>
+<h3 id="零、Basics"><a href="#零、Basics" class="headerlink" title="零、Basics"></a>零、Basics</h3><p>Sum Rule: <script type="math/tex">p(x_1) = \int p(x_1, x_2)dx_2</script></p>
+<p>Product Rule: <script type="math/tex">p(x_1, x_2) = p(x_1)\cdot p(x_2|x_1) =  p(x_2)\cdot p(x_1|x_2)</script></p>
+<p>Chain Rule: <script type="math/tex">p(x_1, \cdots, x_p) = \prod_i^p p(x_i|x_{<i})</script></p>
+<p>Bayesian Rule: <script type="math/tex">p(x_2|x_1) = \frac{p(x_1|x_2)p(x_2)}{p(x_1)}</script></p>
+<p>观测数据$X = {\cdots, x_i, \cdots}$, 标签$Y = {\cdots, y_i, \cdots}$，隐变量$Z = {\cdots, z_i, \cdots}$</p>
+<p>生成模型：能够以某种方式估计到观测数据的分布，比如计算联合分布或者边缘分布来求解参数。</p>
+<p>判别模型：无法获取观测数据的分布，只能估计条件分布$p(y|x)$。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/17/ML-Basics/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/11/17/deeplearning/NLP-bilinear-attentiton-networks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/17/deeplearning/NLP-bilinear-attentiton-networks/" class="post-title-link" itemprop="url">Bilinear Attention Networks</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-17 12:45:00" itemprop="dateCreated datePublished" datetime="2019-11-17T12:45:00+00:00">2019-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/17/deeplearning/NLP-bilinear-attentiton-networks/" class="post-meta-item leancloud_visitors" data-flag-title="Bilinear Attention Networks" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Bilinear-Attention-Networks"><a href="#Bilinear-Attention-Networks" class="headerlink" title="Bilinear Attention Networks"></a>Bilinear Attention Networks</h3><p>Pub in NeuraIPS’18, by Jin-Hwa Kim, 首尔国立大学。</p>
+<p>VQA的任务，主要关注attention部分。下图来自原论文Figure 1。</p>
+<p><img src="/images/image-20191117174946648.png" alt="image-20191117174946648"></p>
+<h4 id="1-输入矩阵X和Y，分别表示文本和图像两个部分的feature-map。"><a href="#1-输入矩阵X和Y，分别表示文本和图像两个部分的feature-map。" class="headerlink" title="1.输入矩阵X和Y，分别表示文本和图像两个部分的feature map。"></a>1.输入矩阵X和Y，分别表示文本和图像两个部分的feature map。</h4><p>其中文本特征矩阵X的长度是<script type="math/tex">l_1</script>(对应原文的<script type="math/tex">\rho</script>)，图像特征图Y的长度是<script type="math/tex">l_2</script>（对应原文的<script type="math/tex">\phi</script>，这里的<script type="math/tex">\phi</script>是图像检测的object数量）。<script type="math/tex">X\in R^{N, l_1}, Y\in R^{M, l_2}</script>。</p>
+<h4 id="2-计算Raw-Attention-Weight。"><a href="#2-计算Raw-Attention-Weight。" class="headerlink" title="2.计算Raw Attention Weight。"></a>2.计算Raw Attention Weight。</h4><p>目标是得到一个矩阵<script type="math/tex">F\in R^{l_1, l_2}</script>，而后可以从dim1或者dim2进行softmax：</p>
+<ul>
+<li>dot attention：<script type="math/tex">X^T\cdot Y</script>，需要两个feature的维度相同，而且缺少feature维度的线性变换。</li>
+<li>bilinear attention：<script type="math/tex">X^T\cdot W\cdot Y</script>，可以认为线性变换之后的X feature map与Y进行dot attention，但是W参数量可能很大。<script type="math/tex">W\in R^{N, M}</script></li>
+<li>low-rank bilinear attention: <script type="math/tex">X^T\cdot U\cdot V^T\cdot Y</script>,  把W分解为<script type="math/tex">U\cdot V^T</script>，其中<script type="math/tex">U\in R^{N, d}, V\in R^{M, d}</script>。</li>
+<li>Optimized：上面的计算等价于<script type="math/tex">(X^TU)\cdot(V^TY)</script>，也就是Figure 1中的计算。</li>
+<li>low-rank bilinear pooling：如果我们把上面一步的矩阵运算分开来，也就是一个向量一个向量的计算，并引入pooling矩阵，那么得到：<script type="math/tex">f_{ij} = P^T((U^TX_i)\circ(V^TY_j))</script>，<script type="math/tex">P\in R^{d, G}</script>，这里得到的<script type="math/tex">f_{ij}\in R^{G}</script>，也就是得到了G个raw attention weight。</li>
+</ul>
+<h4 id="3-计算attention-weight并使用。"><a href="#3-计算attention-weight并使用。" class="headerlink" title="3.计算attention weight并使用。"></a>3.计算attention weight并使用。</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/17/deeplearning/NLP-bilinear-attentiton-networks/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/11/03/nlp/Several-Papers-about-Syntactic-Structure-Utilization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/11/03/nlp/Several-Papers-about-Syntactic-Structure-Utilization/" class="post-title-link" itemprop="url">Several Papers about Syntactic Structure Utilization</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-03 21:10:00" itemprop="dateCreated datePublished" datetime="2019-11-03T21:10:00+00:00">2019-11-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/03/nlp/Several-Papers-about-Syntactic-Structure-Utilization/" class="post-meta-item leancloud_visitors" data-flag-title="Several Papers about Syntactic Structure Utilization" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Several-Papers-about-Syntactic-Structure-Utilization"><a href="#Several-Papers-about-Syntactic-Structure-Utilization" class="headerlink" title="Several Papers about Syntactic Structure Utilization"></a>Several Papers about Syntactic Structure Utilization</h3><p>近期读的几篇关于如何有效利用句法信息的论文。</p>
+<h4 id="1-《Syntax-Encoding-with-Application-in-Authorship-Attribution》"><a href="#1-《Syntax-Encoding-with-Application-in-Authorship-Attribution》" class="headerlink" title="1.《Syntax Encoding with Application in Authorship Attribution》"></a>1.《Syntax Encoding with Application in Authorship Attribution》</h4><p>EMNLP’18, By Richong.</p>
+<p>希望解决的问题：设计出一种通用的能够解析句法结构表示的方法，此方法需要能够和各种不同的NLP方法结合使用。同时为了验证该方法，作者将其应用到Authorship Attribution任务中（句法结构可以认为是作者的写作风格）。</p>
+<p>已有的方法：利用句法信息的方法可以分为两类，一类抽取句法结构树中的特征，这种方法需要人工设计特征提取过程而且丢弃掉了很多句法结构信息；一类利用句法结构复制语义编码，其核心任务还是语义编码只是利用句法信息更好地生成语义表示，此类任务大多在LSTM模型基础上做，和CNN等方法难以结合。</p>
+<p>本文的方法（思路）：</p>
+<p>首先，每个单词$w_i$对应一个Syntax Path: $r(w_i) = {t_1, \cdots, t_L}$，而任意一个句法路径的无序集合$R = {(i, R(w_i))}$都可以用来完整的恢复一个句子中的句法信息。而后，把每个句法路径编码为一个向量$\bar R(w)\in R^K$，这里作者使用了句法符号和其所在的句法树层次的embedding的按元素乘的结果之和作为句法路径的向量表示，比如are这个token的句法路径embedding就是$emb(VP)^t\circ emb^d(p_1) + emb^t(VBP)\circ emb^{d}(p_2)$。作者引入并证明了两个引理，说明只要K足够大，这种Syntax Encoding的方法就不会有句法信息的损失。这样即使不同的NLP下游任务需要不同侧重点的句法信息，也可以保证都包含在encode之后的表示里面。</p>
+<p><img src="/images/image-20200604170950613.png" alt></p>
+<p>模型过程：N-Gram的CNN卷积抽取内容信息（语义信息），句法编码抽取句法信息。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/03/nlp/Several-Papers-about-Syntactic-Structure-Utilization/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/10/07/nlp/ORDERED-NEURONS-INTEGRATING-TREE-STRUCTURES-INTO-RECURRENT-NEURAL-NETWORKS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/07/nlp/ORDERED-NEURONS-INTEGRATING-TREE-STRUCTURES-INTO-RECURRENT-NEURAL-NETWORKS/" class="post-title-link" itemprop="url">ORDERED NEURONS： INTEGRATING TREE STRUCTURES INTO RECURRENT NEURAL NETWORKS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-07 17:00:00" itemprop="dateCreated datePublished" datetime="2019-10-07T17:00:00+00:00">2019-10-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/10/07/nlp/ORDERED-NEURONS-INTEGRATING-TREE-STRUCTURES-INTO-RECURRENT-NEURAL-NETWORKS/" class="post-meta-item leancloud_visitors" data-flag-title="ORDERED NEURONS： INTEGRATING TREE STRUCTURES INTO RECURRENT NEURAL NETWORKS" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Recent-Language-Model-Papers"><a href="#Recent-Language-Model-Papers" class="headerlink" title="Recent Language Model Papers"></a>Recent Language Model Papers</h3><h3 id="On-LSTM"><a href="#On-LSTM" class="headerlink" title="On-LSTM"></a>On-LSTM</h3><p>ICLR’19的Best Paper， By YiKang。</p>
+<h4 id="1-解决的问题"><a href="#1-解决的问题" class="headerlink" title="1.解决的问题"></a>1.解决的问题</h4><p>RNN把序列顺序的处理，但是语言本身常常是具有非序列化结构的（比如树结构）。这样可以获取语言组合性语义的影响，学习到层次化的表示。首先，无监督的Grammer Induction还是一个open problem，通常训练的模型倾向于产生trivial的结构（左分支/右分支树）或者在利用RL学习branching策略的时候有困难。其次LSTM本质上适合建模链式结构的数据，虽然已有的研究表明它能够学习到语言中的树形结构，但是显式的引入一个带有树形结构的inductive bias会不会帮助LSTM更好的建模呢？</p>
+<h4 id="2-相关的方法"><a href="#2-相关的方法" class="headerlink" title="2.相关的方法"></a>2.相关的方法</h4><p>1.一些工作尝试LSTM中引入结构化信息，但是没有解决如何从观测数据中推导结构化信息的问题；2.也有一些工作针对1中的问题，即grammar induction；3.在recurrent结构模型中引入不同scale的recurrent结构从而让链式的先验具有层次化。（比如ClockWorkRNN和nested dropout，但是本文提出的方法更灵活更具有泛化能力）</p>
+<h4 id="3-提出的方法（Ordered-Neurons）思路"><a href="#3-提出的方法（Ordered-Neurons）思路" class="headerlink" title="3. 提出的方法（Ordered Neurons）思路"></a>3. 提出的方法（Ordered Neurons）思路</h4><p>预先在模型中定义神经元的序，高阶神经元更新的更久代表长程/全局信息，低阶神经元更新步数更少代表较小的constituent，当高阶神经元的信息在某个step被抹去其对应的子神经元的信息也应当被抹去（对应一个constituent结束）。神经元的序被如下定义，由parse得到的成分句法树决定。</p>
+<p><img src="/images/image-20200604170224175.png" alt></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/07/nlp/ORDERED-NEURONS-INTEGRATING-TREE-STRUCTURES-INTO-RECURRENT-NEURAL-NETWORKS/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/09/10/paper/ACL'19-poster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/09/10/paper/ACL'19-poster/" class="post-title-link" itemprop="url">ACL'19 Poster</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-10 16:00:00" itemprop="dateCreated datePublished" datetime="2019-09-10T16:00:00+00:00">2019-09-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/09/10/paper/ACL'19-poster/" class="post-meta-item leancloud_visitors" data-flag-title="ACL'19 Poster" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>78</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="IJCAI’20-Poster和Slide"><a href="#IJCAI’20-Poster和Slide" class="headerlink" title="IJCAI’20 Poster和Slide"></a>IJCAI’20 Poster和Slide</h3><p>论文：<a href="https://www.aclweb.org/anthology/P19-1440/" target="_blank" rel="noopener"><a href="https://www.aclweb.org/anthology/P19-1440.pdf" target="_blank" rel="noopener">Complex Question Decomposition for Semantic Parsing</a></a></p>
+<p>poster: <a href="https://cairohy.github.io/acl19/poster.pdf">这里</a></p>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/09/10/paper/ACL'19-poster/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/08/09/deeplearning/Survey%20on%20GNN/" class="post-title-link" itemprop="url">Survey on GNN</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-09 18:20:00" itemprop="dateCreated datePublished" datetime="2019-08-09T18:20:00+00:00">2019-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/08/09/deeplearning/Survey%20on%20GNN/" class="post-meta-item leancloud_visitors" data-flag-title="Survey on GNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Survey-on-GNN"><a href="#Survey-on-GNN" class="headerlink" title="Survey on GNN"></a>Survey on GNN</h3><h2 id="一、GNN相关研究Survey"><a href="#一、GNN相关研究Survey" class="headerlink" title="一、GNN相关研究Survey"></a>一、GNN相关研究Survey</h2><h3 id="0-Preliminary"><a href="#0-Preliminary" class="headerlink" title="0.Preliminary"></a>0.Preliminary</h3><p>关于图的一些概念和符号：</p>
+<p>图的表示：节点集合$\mathcal{V}$，边集合$\mathcal\epsilon$。</p>
+<p>邻接矩阵A，$a_{ij}$表示第i个节点到第j个节点的边的权重。</p>
+<p>对角度矩阵（度矩阵）D，$d_{ii}$表示第i个节点的度。</p>
+<p>拉普拉斯矩阵L = D - A，D是对角度矩阵。A是邻接矩阵。归一化的拉普拉斯矩阵是图的鲁棒的数学表示。</p>
+<p>转移矩阵$P = D^{-1}A$</p>
+<p>K近邻：$N_k(i)$，邻居节点$N_1(i) = N(i)$</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/08/09/deeplearning/Survey%20on%20GNN/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/06/24/leetcode/DP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/24/leetcode/DP/" class="post-title-link" itemprop="url">leetcode: DP</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-24 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-24T21:00:00+00:00">2019-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/06/24/leetcode/DP/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: DP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="最大化网格幸福感"><a href="#最大化网格幸福感" class="headerlink" title="最大化网格幸福感"></a>最大化网格幸福感</h2><blockquote>
+<p>给你四个整数 m、n、introvertsCount 和 extrovertsCount 。有一个 m x n 网格，和两种类型的人：内向的人和外向的人。总共有 introvertsCount 个内向的人和 extrovertsCount 个外向的人。</p>
+<p>请你决定网格中应当居住多少人，并为每个人分配一个网格单元。 注意，不必 让所有人都生活在网格中。</p>
+</blockquote>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>每个点都有三种状态：不住人、住内向的人或者住外向的人。</p>
+<p>1.状态压缩DP，由于矩阵大小n比较小，用长度为n的三进制数字记录每一行的状态，一共有<script type="math/tex">3^n</script>种状态，预先计算出行内和行间不同状态间的得分变化。再进行回溯就可以，回溯的单位是行，每次选择的范围是<script type="math/tex">3^n</script>。因此时间复杂度为<script type="math/tex">O(3^{2n}\cdot m \cdot n \cdot ic\cdot ec)</script>。</p>
+<p>2.插头DP（轮廓线DP），记录上一行当前元素到这一行j - 1个元素一共n个元素的状态，可以在<script type="math/tex">O(1)</script>时间算出行内和行间得分。进行记忆化搜索就可以，搜索的单位是每个点，每次选择的范围是3，时间复杂度是<script type="math/tex">O(3^n\cdot ic\cdot ec\cdot m \cdot n)</script>。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>第一种：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMaxGridHappiness_matrix_dp</span><span class="params">(self, m: int, n: int, ic: int, ec: int)</span> -&gt; int:</span></span><br><span class="line">    NO, IC, EC = <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">line_extra</span><span class="params">(cur, prev)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cur == NO <span class="keyword">or</span> prev == NO:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> cur == IC <span class="keyword">and</span> prev == IC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-60</span></span><br><span class="line">        <span class="keyword">if</span> cur == EC <span class="keyword">and</span> prev == EC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">40</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 当前行状态数量，每个格子是3种，所以是3 ** 6</span></span><br><span class="line">    state_n = <span class="number">3</span> ** n</span><br><span class="line">    <span class="comment"># 用来方便的计算下面的1和2</span></span><br><span class="line">    mask = [[<span class="number">0</span>] * n <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># 1.mask的状态对应的ic和ec数量</span></span><br><span class="line">    ic_count = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    ec_count = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># 2.mask的状态对应的行内和行间得分</span></span><br><span class="line">    line_score = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    outline_score = [[<span class="number">0</span>] * state_n <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># dp table</span></span><br><span class="line">    dp = [[[[<span class="number">-1</span>] * (ec + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(ic + <span class="number">1</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(m)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预先计算, O(3 ** n * n)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(state_n):</span><br><span class="line">        cur = i</span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> cur != <span class="number">0</span> <span class="keyword">and</span> j &lt;= n:</span><br><span class="line">            mask[i][j] = cur % <span class="number">3</span></span><br><span class="line">            cur //= <span class="number">3</span></span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="comment"># 计算ic和ec数量以及行内得分</span></span><br><span class="line">            <span class="keyword">if</span> mask[i][j] != NO:</span><br><span class="line">                <span class="keyword">if</span> mask[i][j] == IC:</span><br><span class="line">                    ic_count[i] += <span class="number">1</span></span><br><span class="line">                    line_score[i] += <span class="number">120</span></span><br><span class="line">                <span class="keyword">elif</span> mask[i][j] == EC:</span><br><span class="line">                    ec_count[i] += <span class="number">1</span></span><br><span class="line">                    line_score[i] += <span class="number">40</span></span><br><span class="line">                <span class="keyword">if</span> j &gt; <span class="number">0</span>: <span class="comment"># 计算行内相邻得分</span></span><br><span class="line">                    line_score[i] += line_extra(mask[i][j], mask[i][j - <span class="number">1</span>])</span><br><span class="line">    <span class="comment"># 计算行间得分，O(3 ** n * 3 ** n * n)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(state_n):</span><br><span class="line">        <span class="keyword">for</span> i2 <span class="keyword">in</span> range(i, state_n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">                outline_score[i][i2] += line_extra(mask[i][j], mask[i2][j])</span><br><span class="line">            outline_score[i2][i] = outline_score[i][i2]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># O(3 ** n * 3 ** n * m * ic * ec)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(last_mask, row, ic, ec)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> row == m <span class="keyword">or</span> ic + ec == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> dp[last_mask][row][ic][ec] != <span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> dp[last_mask][row][ic][ec]</span><br><span class="line">        <span class="comment"># 做选择</span></span><br><span class="line">        best = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> range(state_n):</span><br><span class="line">            <span class="comment"># 剪枝</span></span><br><span class="line">            <span class="keyword">if</span> ic_count[state] &gt; ic <span class="keyword">and</span> ec_count[state] &gt; ec:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> ic_count[state] &gt; ic <span class="keyword">or</span> ec_count[state] &gt; ec:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            score = line_score[state] + outline_score[state][last_mask]</span><br><span class="line">            best = max(best, score + dfs(state, row + <span class="number">1</span>, ic - ic_count[state], ec - ec_count[state]))</span><br><span class="line">        dp[last_mask][row][ic][ec] = best</span><br><span class="line">        <span class="keyword">return</span> best</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dfs(<span class="number">0</span>, <span class="number">0</span>, ic, ec)</span><br></pre></td></tr></table></figure>
+<p>第二种：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/24/leetcode/DP/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/06/22/leetcode/house-robber-iii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/22/leetcode/house-robber-iii/" class="post-title-link" itemprop="url">leetcode: house robber III</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-22 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-22T21:00:00+00:00">2019-06-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/06/22/leetcode/house-robber-iii/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: house robber III" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>690</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>所有房子排列成一个二叉树的结构。</p>
+<p>如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。</p>
+<p>计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>用递归比较选择和不选择当前节点的最大收益，并把结果缓存起来。</p>
+<h3 id="三、实现"><a href="#三、实现" class="headerlink" title="三、实现"></a>三、实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line">mem = &#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rob</span><span class="params">(self, root: TreeNode)</span> -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">in</span> mem:</span><br><span class="line">            <span class="keyword">return</span> mem[root]</span><br><span class="line">        res = root.val</span><br><span class="line">        </span><br><span class="line">        left_go = self.rob(root.left.left) + self.rob(root.left.right) <span class="keyword">if</span> root.left <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        right_go = self.rob(root.right.left) + self.rob(root.right.right) <span class="keyword">if</span> root.right <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        left = self.rob(root.left) <span class="keyword">if</span> root.left <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        right = self.rob(root.right) <span class="keyword">if</span> root.right <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        total = max(res + left_go + right_go, left + right)</span><br><span class="line">        mem[root] = total</span><br><span class="line">        <span class="keyword">return</span> total</span><br></pre></td></tr></table></figure>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/22/leetcode/house-robber-iii/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+
+    </div>
+</body>
+</html>

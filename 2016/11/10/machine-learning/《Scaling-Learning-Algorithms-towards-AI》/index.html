@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Scaling Learning Algorithms towards AI1.Shallow Arch VS. Deep Arch 浅层结构分类？  固定的预处理层 + 线性预测器（逻辑回归，感知机）    f(x) &#x3D; \sum_{i&#x3D;1}^k w_i\phi_i(x) 模式匹配器 + 线性预测器（核方法，核就是template matcher） 需要的计算次数多，local kernel f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Scaling Learning Algorithms towards AI》">
+<meta property="og:url" content="http://cairohy.github.io/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="Scaling Learning Algorithms towards AI1.Shallow Arch VS. Deep Arch 浅层结构分类？  固定的预处理层 + 线性预测器（逻辑回归，感知机）    f(x) &#x3D; \sum_{i&#x3D;1}^k w_i\phi_i(x) 模式匹配器 + 线性预测器（核方法，核就是template matcher） 需要的计算次数多，local kernel f">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-11-10T15:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.076Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="阅读笔记">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Scaling Learning Algorithms towards AI》 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Scaling Learning Algorithms towards AI》
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-10 15:00:00" itemprop="dateCreated datePublished" datetime="2016-11-10T15:00:00+00:00">2016-11-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="《Scaling Learning Algorithms towards AI》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Scaling-Learning-Algorithms-towards-AI"><a href="#Scaling-Learning-Algorithms-towards-AI" class="headerlink" title="Scaling Learning Algorithms towards AI"></a>Scaling Learning Algorithms towards AI</h2><h4 id="1-Shallow-Arch-VS-Deep-Arch"><a href="#1-Shallow-Arch-VS-Deep-Arch" class="headerlink" title="1.Shallow Arch VS. Deep Arch"></a>1.Shallow Arch VS. Deep Arch</h4><ul>
+<li><p>浅层结构分类？</p>
+<ul>
+<li>固定的预处理层 + 线性预测器（逻辑回归，感知机）</li>
+</ul>
+</li>
+</ul>
+<script type="math/tex; mode=display">f(x) = \sum_{i=1}^k w_i\phi_i(x)</script><ul>
+<li>模式匹配器 + 线性预测器（核方法，核就是template matcher）<ul>
+<li>需要的计算次数多，local kernel functions</li>
+<li>与之相比，局部的特征检测器（输出与未相连的输入并不相关）更优</li>
+</ul>
+</li>
+</ul>
+<script type="math/tex; mode=display">f(x) = b + \sum_{i=1}^n \alpha_iK(x,x_i)</script><ul>
+<li><p>简单的基础函数（线性组合、<strong>高斯径向基函数</strong>） + 线性预测器（只有一层隐藏层的神经网络、RBF、核函数是学习到的核方法、boosting算法）</p>
+<ul>
+<li>输出是参数化的非线性函数</li>
+<li>损失函数的最小化是非凸问题。</li>
+</ul>
+</li>
+<li><p>深层结构定义？</p>
+<ul>
+<li>多层参数化的非线性组件。</li>
+<li>参数可训练。</li>
+<li>层与层之间连接起来组成最终的函数。</li>
+</ul>
+</li>
+<li><p>浅层结构损失函数往往是凸函数，深层结构损失函数基本都是非凸函数。</p>
+</li>
+<li><p>深层结构能够有效表示任意函数，而浅层结构不行（或者代价很大）。</p>
+</li>
+<li><p>对比的方式？</p>
+<ul>
+<li>通过考虑architecture的深度和宽度（每层元素数量）的trade-off，说明浅层结构的局限。<ul>
+<li>即使是线性函数，增加层数也能利用任务的内在特征。</li>
+<li>深层结构能够简洁表示的函数，不一定能用浅层结构简洁的表示。</li>
+</ul>
+</li>
+<li>说明局部化和先验知识限制了浅层结构对knowledge的有效表示。</li>
+</ul>
+</li>
+<li><p>深层结构的缺点？</p>
+<ul>
+<li>非凸优化：从很少的先验知识中学习到的复杂函数，一般只能用非凸函数的形式表示。所以这不是缺点。</li>
+<li>训练时间：说明最近提出的突破性的训练深度网络的方法。所以这也不足以成为缺点了。<ul>
+<li>Lecun使用梯度下降训练卷积网络，1998年。</li>
+<li>Bengio 等人使用逐层贪婪初始化+梯度下降训练DBN，2007年。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Generalized-method-VS-Task-specific-method"><a href="#2-Generalized-method-VS-Task-specific-method" class="headerlink" title="2.Generalized method VS. Task-specific method"></a>2.Generalized method VS. Task-specific method</h4><ul>
+<li>所有实际的学习算法都存在某些预先假设。</li>
+<li>因此，不存在一个绝对的Generalized方法，只能寻找对某一任务很合适的方法。</li>
+<li>比如，高级动物和人类具有的感知、控制、预测、逻辑、计划、语言理解等能力。</li>
+<li>短期目标是具有人工智能的Agent。</li>
+<li>关键在于，模型如何有效的捕获和表示required knowledge。</li>
+<li><p>使用下面三个标准判定模型捕获和表示knowledge的有效程度。</p>
+<ul>
+<li>训练数据量（label数据量）</li>
+<li>达到某一性能所需计算资源量</li>
+<li>所需先验知识数量</li>
+</ul>
+</li>
+<li>非参数化方法（solution的复杂度会增加的方法）：例如核方法、经典k-近邻、混合模型、多层神经网络等。<ul>
+<li>会出现curse of dimensionality问题。</li>
+<li>局部性和smooth的权衡，高斯核函数若$\sigma$越大，局部性越弱，但是函数约smooth，模型不容易表示比较复杂的函数。</li>
+</ul>
+</li>
+</ul>
+<script type="math/tex; mode=display">K_\sigma(u,v) = e^{-\frac{1}{\sigma^2}||u-v||^2}</script><ul>
+<li>1996，Wolpert，No-Free-Lunch定理，没有一个学习算法是绝对泛化的，一定存在一个数据集，该学习算法在测试集和训练集表现都很差（有限的VC维）。</li>
+<li><p>因此，在所有函数的集合中，需要找到一个子集<code>AI-set</code>，其中的元素可能是我们的目标函数。这个子集可能很小，但是很容易找出。</p>
+<ul>
+<li>因为LeCun and Denker在1992年提出的理论。</li>
+<li>视网膜和大脑中区域在胚胎发生时连接起来。如果每一个视神经是等概率的进行排列，那么上百万个连接的数量过大，基因中的比特数量都不够编码正确的连接方式，胚胎发育的时间也不够计算这些连接的。</li>
+<li>其中一些（视神经与大脑）的连接和其他的比较起来一定是更简单、更容易计算的。其实也正是这样，连接模式能够使用很简单的语言进行描述，比如生物学中使用神经生长因子和注意力权重就可以描述出一个连接模式的拓扑结构。</li>
+<li>所以同理，我们能够根据相对较少的信息，来确定AI-set集合。</li>
+</ul>
+</li>
+<li>如后文所说，尽量寻找更加泛化的学习方法，才是应该做的事情。</li>
+</ul>
+<h4 id="3-Learning-Models"><a href="#3-Learning-Models" class="headerlink" title="3.Learning Models"></a>3.Learning Models</h4><p>先验知识（Prior Knowledge）通过下面的方式来植入学习模型中：</p>
+<ul>
+<li>数据的表示：预处理、特征抽取等。</li>
+<li>Architecture：模型能够表示的函数的集合，以及参数设定。</li>
+<li>损失函数loss function和正则化算子regularizer：表示了函数集合中函数如何被比较和评价，以及除去训练集影响的前提下对函数的偏好（先验Prior或者正则化惩罚项regularizer）。</li>
+</ul>
+<p>机器学习研究的策略分类[Hinton,2007]：</p>
+<ul>
+<li>失败主义（悲观型）。把函数集合限定在很小的范围内，靠人力精心设计的task-specified的预处理、参数和正则化项使模型能够work。虽然这种研究被称为失败，但是精心设计的预处理等过程，推动了机器学习的应用。还有一些方法，把中间特征用latent variable表示，而latent variable和observed variable之间的关系是硬编码在一起的。这种方法相当于把先验知识以图模型的结构确定下来并提供给模型。大部分对图模型的研究，人工设计核函数的核方法以及人工设计依赖结构和语义的图模型，都属于这种方法。属于短期看起来对特定任务效果很好，但其实<strong>没用</strong>的。</li>
+<li>保守型。有些认为使用类似高斯核的泛化模型，就可以模拟出任何函数了，再加上正则化保证不要过拟合，一切就ok了。但其实不是这样的，核方法只能有效的表示函数集合中的一小部分。而且虽然有效的数据预处理加上核方法对某些应用看似有用，但它并不是通往true AI的正确道路。</li>
+<li>乐观型。太过乐观，希望在尽量不加入先验知识的前提下，能够表示最大的AI-set函数集合。</li>
+</ul>
+<p>关于先验的几个概念：</p>
+<ul>
+<li>smooth prior：导数经常改变方向的函数最难学习，而smooth prior由于使用的是比较平滑的函数，因此无法单纯依靠smooth prior学习复杂函数。</li>
+<li>strong prior：强先验，对应更小的函数学习范围。</li>
+<li>broad prior：更宽泛的先验，对应更大的函数学习范围。</li>
+</ul>
+<p>陈述了观点：复杂函数是可能通过broad prior学习的，挑战在于学习算法的设计，如何把数据表示出来，而且表现出数据中蕴含的规律。并列举以下的例子和实验：</p>
+<ul>
+<li>Lecun1989、1998年关于视觉模式识别的研究。</li>
+<li>这个复杂函数应该由多层的简单函数构成，<strong>不同层级的函数就是不同级别的抽象</strong>。低级别的抽象识别出相对简单的部分，高级别的抽象组合这些简单的部分，就像人类的学习过程一样。</li>
+</ul>
+<p>陈述了另一个观点，即在学习了一些任务后，在学习完全不同的新任务的时候，能够仅仅使用很少的时间和数据就能抓住其本质，就像人类一样。这个观点与现在的迁移学习很相似。</p>
+<p>最后，陈述了学习模型的几个要素：</p>
+<ul>
+<li>灵活的定义先验知识的方式。</li>
+<li>能够应用在深层结构的学习算法。</li>
+<li>能够处理数以百万计参数的参数化学习算法。</li>
+<li>学习算法训练速度要够快。</li>
+<li>学习算法要能支持多任务学习和半监督式学习。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/" title="《Scaling Learning Algorithms towards AI》">http://cairohy.github.io/2016/11/10/machine-learning/《Scaling-Learning-Algorithms-towards-AI》/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 阅读笔记</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/03/python/Python%E7%94%9F%E6%88%90%E5%99%A8%E5%92%8C%E5%8D%8F%E7%A8%8B/" rel="prev" title="Python生成器和协程">
+      <i class="fa fa-chevron-left"></i> Python生成器和协程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/11/15/machine-learning/%E3%80%8AWindows10%E5%AE%89%E8%A3%85Theano%E5%92%8CKeras%E5%B9%B6%E9%85%8D%E7%BD%AE%E5%8A%A0%E9%80%9F%E3%80%8B/" rel="next" title="《Windows10安装Theano和Keras并配置加速》">
+      《Windows10安装Theano和Keras并配置加速》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scaling-Learning-Algorithms-towards-AI"><span class="nav-text">Scaling Learning Algorithms towards AI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Shallow-Arch-VS-Deep-Arch"><span class="nav-text">1.Shallow Arch VS. Deep Arch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Generalized-method-VS-Task-specific-method"><span class="nav-text">2.Generalized method VS. Task-specific method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Learning-Models"><span class="nav-text">3.Learning Models</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2016/11/10/machine-learning/%E3%80%8AScaling-Learning-Algorithms-towards-AI%E3%80%8B/";
+    this.page.identifier = "2016/11/10/machine-learning/《Scaling-Learning-Algorithms-towards-AI》/";
+    this.page.title = "《Scaling Learning Algorithms towards AI》";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'aa051bd35e798e02799fcdb7b38e5a4c',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

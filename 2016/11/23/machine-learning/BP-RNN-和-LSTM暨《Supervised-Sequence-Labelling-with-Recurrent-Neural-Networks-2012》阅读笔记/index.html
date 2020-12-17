@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、BackPropagation $w_{jk}^l$：表示第$l-1$层第k个神经元到第$l$层第j个神经元的连接权重； $b_j^l$：表示第$l$层第j个神经元的偏置； $z_j^l$：表示第$l$层第j个神经元的带权输入； $a_j^l$：表示第$l$层第j个神经元的激活值； $\sigma$：表示一个激活函数(sigmoid,relu,tanh)；  z_j^l &#x3D; \sum_kw_{">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记">
+<meta property="og:url" content="http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="一、BackPropagation $w_{jk}^l$：表示第$l-1$层第k个神经元到第$l$层第j个神经元的连接权重； $b_j^l$：表示第$l$层第j个神经元的偏置； $z_j^l$：表示第$l$层第j个神经元的带权输入； $a_j^l$：表示第$l$层第j个神经元的激活值； $\sigma$：表示一个激活函数(sigmoid,relu,tanh)；  z_j^l &#x3D; \sum_kw_{">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20150928231034836">
+<meta property="og:image" content="http://cairohy.github.io/images/Fh4TB2PmQXMqaADGnb40YJ9d2HiT.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FjcVrhalhfm_0tt6jHDzzckG-h9X.jpg">
+<meta property="article:published_time" content="2016-11-23T08:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.075Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="BP">
+<meta property="article:tag" content="LSTM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20150928231034836">
+
+<link rel="canonical" href="http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-23 08:00:00" itemprop="dateCreated datePublished" datetime="2016-11-23T08:00:00+00:00">2016-11-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、BackPropagation"><a href="#一、BackPropagation" class="headerlink" title="一、BackPropagation"></a>一、BackPropagation</h2><ul>
+<li>$w_{jk}^l$：表示第$l-1$层第k个神经元到第$l$层第j个神经元的连接权重；</li>
+<li>$b_j^l$：表示第$l$层第j个神经元的偏置；</li>
+<li>$z_j^l$：表示第$l$层第j个神经元的带权输入；</li>
+<li>$a_j^l$：表示第$l$层第j个神经元的激活值；</li>
+<li>$\sigma$：表示一个激活函数(sigmoid,relu,tanh)；</li>
+</ul>
+<script type="math/tex; mode=display">z_j^l = \sum_kw_{jk}^la_k^{l-1} + b_j^l</script><script type="math/tex; mode=display">a_j^l = \sigma(\sum_kw_{jk}^la_k^{l-1} + b_j^l)=\sigma(z_j^l)</script><p>向量化上面的公式：</p>
+<script type="math/tex; mode=display">a^l = \theta(w^la^{l-1} + b_l) = \theta(z^l) ​</script><ul>
+<li>L(W,b,x,y)：表示损失函数，其中y是正确值，x是输入，下面是二次方损失函数的计算；</li>
+</ul>
+<script type="math/tex; mode=display">L(W,b,x,y) = \frac{1}{2N} \sum_N||y-a^l||^2</script><ul>
+<li>阿达马（Hadamard）乘积，表示两个同维度向量a,b按元素相乘的结果向量，用$a\odot b$表示。</li>
+<li>反向传播BP计算的目标：$\frac{\partial L}{\partial w_{jk}^l}$和$\frac{\partial L}{\partial b_j^l}$，也就是L对所有参数的偏导数。</li>
+<li>$\delta^l_j$：表示第$l$层第j个单元的残差。也就是$\frac{\partial L}{\partial z^l_j}$。</li>
+<li>$\delta_j^L = \frac{\partial L}{\partial a_j^L}\sigma’(z_j^L)$：表示顶层（输出层，假设是第L层）的残差，也就是损失函数对输出层的带权输入的偏导数。这个公式也可以进行向量化，为以下的形式：</li>
+</ul>
+<script type="math/tex; mode=display">\delta^L = \bigtriangledown_aL \odot \sigma'(z^L)</script><ul>
+<li>当使用二次损失函数的时候，$\delta^l = (a^L - y) \odot \sigma’(z^L)$。</li>
+<li>使用上一层的残差表示当前层的残差：</li>
+</ul>
+<script type="math/tex; mode=display">\delta^l = ((w^{l+1})^T\delta^{l+1})\odot \sigma'(z^l)</script><ul>
+<li>最后，利用链式求导求出来的结果：</li>
+</ul>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial w_{jk}^l} =  \frac{\partial L}{\partial z_{j}^l}\frac{\partial z_j^l}{\partial w_{jk}^l} = \delta^l_j a_k^{l-1}</script><script type="math/tex; mode=display">\frac{\partial L}{\partial b^l_j} =  \frac{\partial L}{\partial z_{j}^l}\frac{\partial z_j^l}{\partial b_{j}^l} = \delta^l_j</script><p>向量化以上的结果，得到：</p>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial b} = \delta</script><script type="math/tex; mode=display">\frac{\partial L}{\partial w} = a_{in}\delta_{out}</script><h2 id="二、RNN"><a href="#二、RNN" class="headerlink" title="二、RNN"></a>二、RNN</h2><ul>
+<li>RNN能够从之前的输入中映射出输出，具有一定程度的记忆能力，能够从之前的输入中存储网络的内部状态。</li>
+<li>有足够多隐藏单元的RNN能够模拟任何Sequence-to-Sequence的映射。</li>
+</ul>
+<h3 id="1-RNN的forward-pass"><a href="#1-RNN的forward-pass" class="headerlink" title="1.RNN的forward pass"></a>1.RNN的forward pass</h3><p>注：下面这段使用的符号和上面的符号定义又有些不同，没办法，下面这篇论文就是这么用的。</p>
+<p>Graves A. Supervised Sequence Labelling with Recurrent Neural Networks[M]. Springer Berlin Heidelberg, 2012.</p>
+<ul>
+<li>一个I个输入单元、H个隐藏单元和K个输出单元的RNN，输入序列是$x$，长度为$T$,$x_i^t$是输入单元$i$在$t$时刻的输入。</li>
+<li>对每一个隐藏单元h，其t时刻的带权输入值$a_h^t$如下所示，也就是本文第一章中的$z^t_h$，(⊙o⊙)…好乱：</li>
+</ul>
+<script type="math/tex; mode=display">a_h^t = \sum_{i=1}^IW_{ih}x_i^t + \sum_{h'=1}^HW_{h'h}b_{h'}^{t-1}</script><ul>
+<li>也就是，其带权输入值不仅与这一时刻的输入层单元值相关，还与上一时刻所有隐藏单元的激活值$b_{h’}^{t-1}$相关，而激活值计算如下所示，其中$\theta_h$是激活函数（tanh,sigmoid,….），这里是一样的：</li>
+</ul>
+<script type="math/tex; mode=display">b_h^t = \theta_h(a_h^t)</script><ul>
+<li>整个网络从t=1开始迭代，$b_h^0$可以取全0，不过2006年之后也有人提出，使用非0来初始化能够提高RNN的性能和稳定性。</li>
+<li>第k个输出单元t时刻的值按照下面的公式计算，就是每个隐藏单元激活值的连接，这里并没有引入偏置向量，不过可以认为是第0个单元，不影响：</li>
+</ul>
+<script type="math/tex; mode=display">a_k^t = \sum_{h=1}^H w_{hk}b_h^t</script><h3 id="2-RNN的Output层和损失函数"><a href="#2-RNN的Output层和损失函数" class="headerlink" title="2.RNN的Output层和损失函数"></a>2.RNN的Output层和损失函数</h3><p>按照实际情况选择RNN输出层的激活函数(sigmoid,softmax)和损失函数(cross_entropy)。</p>
+<p>RNN应用在时间序列分析。</p>
+<h3 id="3-RNN的backward-pass"><a href="#3-RNN的backward-pass" class="headerlink" title="3.RNN的backward pass"></a>3.RNN的backward pass</h3><p>现在计算出cross_entropy损失函数L关于输出y的偏导数，下一步就是计算L关于权重的偏导数。</p>
+<p>已经提出的两种算法，可以有效的计算RNN的权重偏导数</p>
+<ul>
+<li>real time recurrent learning(RTRL,1987)</li>
+<li>backpropagation through time(BPTT,1990)</li>
+</ul>
+<p>这里对BPTT进行介绍，因为它的思想更简单，而且计算效率更高。</p>
+<p>BPTT也是通过链式法则的应用进行权值训练，但是对于递归神经网络，一个隐藏层单元激活值的影响不仅仅通过通往输出层的连接，还可以通过对下一时刻(timestep)隐藏层的影响。所以，残差$\delta^t_h$的计算也应该包含这两条线路，如下所示：</p>
+<script type="math/tex; mode=display">\delta^t_h  = \theta'(a^t_h)(\sum_{k=1}^K\delta^t_kw_{hk} + \sum_{h'=1}^H \delta^{t+1}_{h'}w_{hh'})</script><p>这里的残差计算方式和第一章相同，$\delta^t_j = \frac{\partial L}{\partial a^t_j}$。其中a是带权输入。</p>
+<p>这样从T开始计算，算到1，就可以得出$\frac{\partial L}{\partial w_{ij}}$，注意在这里整个网络在所有时刻使用的是同一权重。</p>
+<h3 id="4-双向RNN"><a href="#4-双向RNN" class="headerlink" title="4.双向RNN"></a>4.双向RNN</h3><p>BRNN，1997、1999年提出。能够使用输入序列当前时刻后面的内容作为上下文。使用两个隐藏层，一个从前往后一个从后向前，两个隐藏层互不连接。</p>
+<ul>
+<li>前向过程</li>
+</ul>
+<p>从1到T，前向隐藏层的前向过程，存储每个t的激活值。</p>
+<p>从T到1，后向隐藏层的前向过程，存储每个t的激活值。</p>
+<p>对于所有t，使用前两步计算的激活值，进行输出层的前向过程。</p>
+<ul>
+<li>后向过程</li>
+</ul>
+<p>对所有t，计算输出层的$\delta$值。</p>
+<p>对T到1，利用$\delta$进行前向隐藏层的后向过程。</p>
+<p>对1到T，利用$\delta$进行后向隐藏层的前向过程。</p>
+<p>BRNN可以应用于像蛋白质结构预测（2001）、时间序列任务、自动听写等应用中。</p>
+<h3 id="5-序列雅克比矩阵（sequential-Jacobian原谅我不知道它怎么翻译）"><a href="#5-序列雅克比矩阵（sequential-Jacobian原谅我不知道它怎么翻译）" class="headerlink" title="5.序列雅克比矩阵（sequential Jacobian原谅我不知道它怎么翻译）"></a>5.序列雅克比矩阵（sequential Jacobian原谅我不知道它怎么翻译）</h3><h3 id="6-训练神经网络的一些tricks"><a href="#6-训练神经网络的一些tricks" class="headerlink" title="6.训练神经网络的一些tricks"></a>6.训练神经网络的一些tricks</h3><ul>
+<li>梯度下降算法：批量vs在线，梯度下降、动量momentum<ul>
+<li>一些批量梯度下降算法：RPROP、quickprop、conjugate gradients、L-BFGS</li>
+<li>在线学习算法：stochastic meta-descent</li>
+</ul>
+</li>
+<li>泛化方式<ul>
+<li>early stopping</li>
+<li>输入增加高斯噪声</li>
+<li>权重增加高斯噪声</li>
+</ul>
+</li>
+<li>输入的表示，输入的标准化（把输入向量化为均值0，标准差1）很重要。</li>
+<li>权重的初始化，小而随机</li>
+</ul>
+<h2 id="三、LSTM"><a href="#三、LSTM" class="headerlink" title="三、LSTM"></a>三、LSTM</h2><h3 id="1-网络结构"><a href="#1-网络结构" class="headerlink" title="1.网络结构"></a>1.网络结构</h3><ul>
+<li>Memory Block(Memory Cell)<ul>
+<li>输入：$x_t$</li>
+<li>input gate输入门：$i_t$</li>
+<li>output gate输出门：$O_t$</li>
+<li>forget gate遗忘门：$f_t$</li>
+<li>细胞状态：$C_t$</li>
+<li>单元激活值：$h_t$</li>
+</ul>
+</li>
+</ul>
+<p>盗个图过来吧，文字还是有点描述不清楚，以后别记不得了。</p>
+<p><img src="http://img.blog.csdn.net/20150928231034836" alt="这里写图片描述"></p>
+<script type="math/tex; mode=display">f_t = \sigma(W_f\cdot [h_{t-1},x_t] + b_f)</script><script type="math/tex; mode=display">i_t = \sigma(W_i\cdot [h_{t-1},x_t] + b_i)</script><script type="math/tex; mode=display">\tilde{C}_t = tanh(W_C\cdot [h_{t-1},x_t] + b_C)</script><script type="math/tex; mode=display">{C}_t = f_t\cdot C_{t-1}+i_t\cdot \tilde{C}_t</script><script type="math/tex; mode=display">O_t = \sigma(W_o\cdot [h_{t-1},x_t] + b_o)</script><script type="math/tex; mode=display">h_t=tanh(C_t)\cdot O_t</script><h3 id="2-LSTM的变种和进一步研究"><a href="#2-LSTM的变种和进一步研究" class="headerlink" title="2.LSTM的变种和进一步研究"></a>2.LSTM的变种和进一步研究</h3><ul>
+<li>2000年，增加了窥视孔连接Peephole，所有或者部分公式中的$[h<em>{t-1},x_t]$替换为$[C</em>{t-1},h_{t-1},x_t]$。</li>
+<li>配对了遗忘门和输入门，即$i_t=1-f_t$。</li>
+<li>2014年，Gated Recurrent Unit（GRU），合并了细胞状态和单元激活值，合并输入门和遗忘门为更新门，模型更加简单。</li>
+<li>Depth Gated RNNs, Clockwork RNNs等</li>
+<li>注意力机制、Grid LSTM等</li>
+</ul>
+<h3 id="3-预处理"><a href="#3-预处理" class="headerlink" title="3.预处理"></a>3.预处理</h3><p>预处理能够通过采样减少输入序列的长度，从而使得LSTM能够更好的进行处理，上下文信息更少。</p>
+<h3 id="4-双向LSTM"><a href="#4-双向LSTM" class="headerlink" title="4.双向LSTM"></a>4.双向LSTM</h3><h3 id="5-LSTM的正向（激活）和反向（BPTT）过程"><a href="#5-LSTM的正向（激活）和反向（BPTT）过程" class="headerlink" title="5.LSTM的正向（激活）和反向（BPTT）过程"></a>5.LSTM的正向（激活）和反向（BPTT）过程</h3><p>下面的过程都是带peephole的LSTM。输入公式还是不如手写方便，还是手写吧。。。</p>
+<ul>
+<li>正向过程：</li>
+</ul>
+<p><img src="/images/Fh4TB2PmQXMqaADGnb40YJ9d2HiT.jpg" alt="LSTM正向过程"></p>
+<ul>
+<li>反向过程：</li>
+</ul>
+<p><img src="/images/FjcVrhalhfm_0tt6jHDzzckG-h9X.jpg" alt="forward pass"></p>
+<h3 id="6-参考"><a href="#6-参考" class="headerlink" title="6.参考"></a>6.参考</h3><p><a href="http://blog.csdn.net/ycheng_sjtu/article/details/48792467" target="_blank" rel="noopener">http://blog.csdn.net/ycheng_sjtu/article/details/48792467</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" title="BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记">http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-和-LSTM暨《Supervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012》阅读笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/RNN/" rel="tag"><i class="fa fa-tag"></i> RNN</a>
+              <a href="/tags/BP/" rel="tag"><i class="fa fa-tag"></i> BP</a>
+              <a href="/tags/LSTM/" rel="tag"><i class="fa fa-tag"></i> LSTM</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/11/15/basic/HTTPS%E5%8E%9F%E7%90%86/" rel="prev" title="HTTPS原理">
+      <i class="fa fa-chevron-left"></i> HTTPS原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/07/deeplearning/NLP-RC-NIPS2015-%E3%80%8ATeaching-Machines-to-Read-and-Comprehend%E3%80%8B/" rel="next" title="《Teaching Machines to Read and Comprehend》">
+      《Teaching Machines to Read and Comprehend》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、BackPropagation"><span class="nav-text">一、BackPropagation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、RNN"><span class="nav-text">二、RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RNN的forward-pass"><span class="nav-text">1.RNN的forward pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-RNN的Output层和损失函数"><span class="nav-text">2.RNN的Output层和损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RNN的backward-pass"><span class="nav-text">3.RNN的backward pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-双向RNN"><span class="nav-text">4.双向RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-序列雅克比矩阵（sequential-Jacobian原谅我不知道它怎么翻译）"><span class="nav-text">5.序列雅克比矩阵（sequential Jacobian原谅我不知道它怎么翻译）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-训练神经网络的一些tricks"><span class="nav-text">6.训练神经网络的一些tricks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、LSTM"><span class="nav-text">三、LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-网络结构"><span class="nav-text">1.网络结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-LSTM的变种和进一步研究"><span class="nav-text">2.LSTM的变种和进一步研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-预处理"><span class="nav-text">3.预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-双向LSTM"><span class="nav-text">4.双向LSTM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-LSTM的正向（激活）和反向（BPTT）过程"><span class="nav-text">5.LSTM的正向（激活）和反向（BPTT）过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-参考"><span class="nav-text">6.参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2016/11/23/machine-learning/BP-RNN-%E5%92%8C-LSTM%E6%9A%A8%E3%80%8ASupervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/";
+    this.page.identifier = "2016/11/23/machine-learning/BP-RNN-和-LSTM暨《Supervised-Sequence-Labelling-with-Recurrent-Neural-Networks-2012》阅读笔记/";
+    this.page.title = "BP,RNN 和 LSTM暨《Supervised Sequence Labelling with Recurrent Neural Networks-2012》阅读笔记";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'eb4428c6e6e2a7512f41c662a6bbc41d',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文是《Tutorial on Variational AutoEncoders》一文部分翻译的内容。 1.介绍generative model，学习高维数据的概率分布P(X)。学习到不同维度之间的相互依赖关系，比如手写数字的生成模型如果生成了8的左边一半像素，那么剩下的像素也就能够随之确定。 latent variable，给予生成模型一些信息用来生成数据。比如一个生成手写数字的生成模型，隐变量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tutorial on Variational AutoEncoders">
+<meta property="og:url" content="http://cairohy.github.io/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="本文是《Tutorial on Variational AutoEncoders》一文部分翻译的内容。 1.介绍generative model，学习高维数据的概率分布P(X)。学习到不同维度之间的相互依赖关系，比如手写数字的生成模型如果生成了8的左边一半像素，那么剩下的像素也就能够随之确定。 latent variable，给予生成模型一些信息用来生成数据。比如一个生成手写数字的生成模型，隐变量">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/FpGiJ4m_kuLDnwaI2bEnTa0Gy5eM.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fr5BnYnPD05J7luly4ixXxUg5b9B.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FkmcbSMY5VyFhPyRC2VRvKtbDTmq.jpg">
+<meta property="article:published_time" content="2017-11-17T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.073Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="变分自编码器">
+<meta property="article:tag" content="VAE">
+<meta property="article:tag" content="生成模型">
+<meta property="article:tag" content="variational Bayesian method">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/FpGiJ4m_kuLDnwaI2bEnTa0Gy5eM.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Tutorial on Variational AutoEncoders | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tutorial on Variational AutoEncoders
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-17 11:00:00" itemprop="dateCreated datePublished" datetime="2017-11-17T11:00:00+00:00">2017-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/" class="post-meta-item leancloud_visitors" data-flag-title="Tutorial on Variational AutoEncoders" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是<a href="https://arxiv.org/abs/1606.05908" target="_blank" rel="noopener">《Tutorial on Variational AutoEncoders》</a>一文部分翻译的内容。</p>
+<h4 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h4><p>generative model，学习高维数据的概率分布<script type="math/tex">P(X)</script>。学习到不同维度之间的相互依赖关系，比如手写数字的生成模型如果生成了8的左边一半像素，那么剩下的像素也就能够随之确定。</p>
+<p>latent variable，给予生成模型一些信息用来生成数据。比如一个生成手写数字的生成模型，隐变量z就可以是从[0,…,9]中随机采样的整型，确定了隐变量模型才能生成像素点。</p>
+<p>但是隐变量又不可能那么简单，因为对于一个能够表达出数据集特性的生成模型，对于每个数据点，生成模型都要能够产生出一个隐变量来生成一个<strong>非常</strong>相似的东西。对手写数字数据集来说，同样的一个8，可能大一点或者小一点，往左歪一点或者往右歪一点，字迹是粗一点还是细一点。所以，生成模型中隐变量需要表达更多的信息，需要一个高维度的向量来表示隐变量<script type="math/tex">z\in R^Z</script>，隐变量要能够自动的学习到这些信息的表示，而且这些影响手写数字生成的信息之间的相互影响和依赖，即隐变量的latent structure，也应该自动的学习。</p>
+<h4 id="2-目标函数"><a href="#2-目标函数" class="headerlink" title="2.目标函数"></a>2.目标函数</h4><p>VAE的过程是：从概率密度函数P(z)中采样隐变量z之后，从确定性函数<script type="math/tex">f(z;\theta)</script>得到的值，这个值要大概率和数据集中的数据很相似。</p>
+<p>所以我们的目标是对数据集中的所有数据x，最大化：</p>
+<script type="math/tex; mode=display">
+P(X) = \int P(X|z;\theta)P(z)dz</script><p>其中的条件概率<script type="math/tex">P(X|z;\theta)</script>等于<script type="math/tex">N(X|f(z;\theta), \sigma I)</script>，也就是在标准VAE中，如果输出是实数向量，通常输出的分布是均值为<script type="math/tex">f(z;\theta)</script>方差为<script type="math/tex">\sigma I</script>的高斯分布。</p>
+<p>VAE要最大化P(x)，就要解决两个问题：</p>
+<ul>
+<li>隐变量z如何表示？</li>
+</ul>
+<p>使用标准正态分布<script type="math/tex">N(0,I)</script>，因为只要有一个n维标准正态分布的z，再找到一个足够复杂的函数g，那么g(z)就可以表示任意一个n维分布。</p>
+<p>对上面的公式而言，<script type="math/tex">f(z;\theta)</script>就是一个多层神经网络组成的函数逼近器。可以将将隐变量映射到最后的输出。</p>
+<ul>
+<li><script type="math/tex">P(X)</script>的积分如何计算？</li>
+</ul>
+<p>现在我们得到了<script type="math/tex">P(z)=N(0,I)</script>，可以直接计算<script type="math/tex">P(X)</script>了吗？还是不行，假如采用抽样的方式抽样出很多z来计算<script type="math/tex">P(X)</script>的话就会发现，对于绝大多数z来说，<script type="math/tex">P(X|z)</script>都接近于0（因为z是标准正态分布的采样），这种方式非常低效。</p>
+<p>VAE的解决这个问题的核心思想就是，试图抽样出有更大可能性产生X的z。而做到这一点是通过另一个分布<script type="math/tex">Q(z|X)</script>来实现的，这个分布产生的Q能够以较大的可能产生X。</p>
+<p>但是我们使用了Q分布后，<script type="math/tex">P(X)</script>积分公式就变成了<script type="math/tex">E_{z\sim Q}P(X|z)</script>，我们要找到后者和<script type="math/tex">P(X)</script>之间的关系。根据<script type="math/tex">P(z|X)和Q(z|X)</script>的KL散度的公式进行推导，可以推出：</p>
+<p><img src="/images/FpGiJ4m_kuLDnwaI2bEnTa0Gy5eM.jpg" alt=""></p>
+<p>其中左侧的部分就是目标函数，我们要最大化这个目标函数就是在最大化对数似然概率的同时，最小化我们预测的分布Q和真实分布P之间的差异。</p>
+<h4 id="3-目标函数优化"><a href="#3-目标函数优化" class="headerlink" title="3.目标函数优化"></a>3.目标函数优化</h4><p>那么<script type="math/tex">Q(z|X)</script>是一个什么分布呢？通常的选择是，也是一个多元高斯分布<script type="math/tex">N(z|\mu(X),\sigma(X))</script>，其中的<script type="math/tex">\mu和\sigma</script>都是由神经网络学习到的映射。</p>
+<p>所以目标函数等号右侧的最后一项就变成了两个多元高斯分布的KL散度，因为我们假定<script type="math/tex">P(z)</script>是标准多元高斯分布。在得到了Q分布之后，这一项是能够计算出来的（当然也能够利用梯度下降来优化）。</p>
+<p>而右侧的第一项，也就是<script type="math/tex">E_{z\sim Q}[logP(X|z)]</script>，通过当前时刻的Q分布，从中采样出若干个z，然后从这若干个z中计算出<script type="math/tex">P(X|z)</script>作为期望的逼近值。</p>
+<p>但是这样做的话，由于采样操作对<script type="math/tex">\mu</script>和<script type="math/tex">\sigma</script>不可导，反向传播无法进行，因此，实际的VAE中使用了一个叫做reparameterization的改进，以从<script type="math/tex">N(0,I)</script>中抽样出数值<script type="math/tex">\epsilon</script>后，用<script type="math/tex">\epsilon</script>乘以方差再加上均值的结果代替从<script type="math/tex">N(z|\mu(X),\sigma(X))</script>中抽样，如下图。</p>
+<p><img src="/images/Fr5BnYnPD05J7luly4ixXxUg5b9B.jpg" alt=""></p>
+<p>所以最终，VAE的优化目标就是，让最终的输出<script type="math/tex">f(z)</script>与目标<script type="math/tex">x</script>足够接近的同时，隐变量的分布<script type="math/tex">Q\sim N(\mu, \sigma^2)</script>接近真实先验分布<script type="math/tex">P\sim N(0,I^2)</script>。</p>
+<h4 id="4-条件变分自编码器"><a href="#4-条件变分自编码器" class="headerlink" title="4.条件变分自编码器"></a>4.条件变分自编码器</h4><p>为了解决某种问题，比如说给定某个人的手迹，要求生成另一些与他的手迹很像的手迹。这时候需要制定输入计算输出<script type="math/tex">P(Y|X)</script>，为了解决这类问题，从变分自编码器衍生出条件变分自编码器。</p>
+<p><img src="/images/FkmcbSMY5VyFhPyRC2VRvKtbDTmq.jpg" alt=""></p>
+<p>模型在Encoder和Decoder的输入中，增加了条件输入X，如上图。当然这张图只是一个简化版本，实际的CVAE有很多论文提出了很多不同的版本。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/" title="Tutorial on Variational AutoEncoders">http://cairohy.github.io/2017/11/17/deeplearning/Tutorial on Variational AutoEncoders/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 变分自编码器</a>
+              <a href="/tags/VAE/" rel="tag"><i class="fa fa-tag"></i> VAE</a>
+              <a href="/tags/%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B/" rel="tag"><i class="fa fa-tag"></i> 生成模型</a>
+              <a href="/tags/variational-Bayesian-method/" rel="tag"><i class="fa fa-tag"></i> variational Bayesian method</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/11/deeplearning/DRL/%E3%80%8ADavid%20Silver%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%AC%E5%BC%80%E8%AF%BE%E3%80%8B-8%EF%BC%9AIntegrating%20Learning%20and%20Planning/" rel="prev" title="【David Silver强化学习公开课】-8：Integrating Learning and Planning">
+      <i class="fa fa-chevron-left"></i> 【David Silver强化学习公开课】-8：Integrating Learning and Planning
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/11/21/deeplearning/five%20papers%20about%20memory%20and%20machine%20reading%20comprehension/" rel="next" title="将Memory Network用于RC和QA的五篇论文">
+      将Memory Network用于RC和QA的五篇论文 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-介绍"><span class="nav-text">1.介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-目标函数"><span class="nav-text">2.目标函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-目标函数优化"><span class="nav-text">3.目标函数优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-条件变分自编码器"><span class="nav-text">4.条件变分自编码器</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2017/11/17/deeplearning/Tutorial%20on%20Variational%20AutoEncoders/";
+    this.page.identifier = "2017/11/17/deeplearning/Tutorial on Variational AutoEncoders/";
+    this.page.title = "Tutorial on Variational AutoEncoders";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '2ca10c0054c5ca67cc4a77b8383de491',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="转自博客. End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRFSourceXuezhe Ma and Eduard Hovy    CMU  ACL2016 What将POS和NER问题转变成一个序列标注问题。用基于神经网络的端到端模型解决序列标注问题。 Pros and cons传统的HMM, CRF的方法，依赖于手工构建的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两篇命名实体识别的经典模型[转]">
+<meta property="og:url" content="http://cairohy.github.io/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="转自博客. End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRFSourceXuezhe Ma and Eduard Hovy    CMU  ACL2016 What将POS和NER问题转变成一个序列标注问题。用基于神经网络的端到端模型解决序列标注问题。 Pros and cons传统的HMM, CRF的方法，依赖于手工构建的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1fh5bifi2x9j30rw0m83ze.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fh5biq8k3tj30p00zcjss.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79gy1fhtzwcgx11j31bs0hgjs2.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fn86kvolrmj30kq0muq41.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNc79gy1fi1v29q1mcj30ru0tuac9.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fi1v98gjl1j30ri11iacs.jpg">
+<meta property="article:published_time" content="2017-07-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.073Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="命名实体识别">
+<meta property="article:tag" content="序列标注任务">
+<meta property="article:tag" content="神经网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1fh5bifi2x9j30rw0m83ze.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>两篇命名实体识别的经典模型[转] | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          两篇命名实体识别的经典模型[转]
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-07-02 00:00:00" itemprop="dateCreated datePublished" datetime="2017-07-02T00:00:00+00:00">2017-07-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96/" itemprop="url" rel="index"><span itemprop="name">信息抽取</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/" class="post-meta-item leancloud_visitors" data-flag-title="两篇命名实体识别的经典模型[转]" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>转自<a href="lanzhuzhu.github.io">博客</a>.</p>
+<h1 id="End-to-end-Sequence-Labeling-via-Bi-directional-LSTM-CNNs-CRF"><a href="#End-to-end-Sequence-Labeling-via-Bi-directional-LSTM-CNNs-CRF" class="headerlink" title="End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRF"></a>End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRF</h1><h2 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h2><p>Xuezhe Ma and Eduard Hovy    CMU  ACL2016</p>
+<h2 id="What"><a href="#What" class="headerlink" title="What"></a>What</h2><p>将POS和NER问题转变成一个序列标注问题。用基于神经网络的端到端模型解决序列标注问题。</p>
+<h2 id="Pros-and-cons"><a href="#Pros-and-cons" class="headerlink" title="Pros and cons"></a>Pros and cons</h2><p>传统的HMM, CRF的方法，依赖于手工构建的特征，和任务相关的资源。这导致模型很难适应新的任务和领域。近些年有一些非线性神经网络模型用词向量（Word Embedding）作为输入，有前馈神经网络、循环神经网络（RNN）、长短期记忆模型（LSTM）、GRU，取得不错结果。</p>
+<p>contributions:</p>
+<ol>
+<li>a novel neural network architecture for linguistic sequence labeling:</li>
+<li>empirical evaluations on benchmark data sets for two classic NLP tasks.</li>
+<li>state-of-the-art performance with <strong>truly end-to-end</strong> system.</li>
+</ol>
+<p>end-to-end的优点：</p>
+<ul>
+<li><p>no task-specific resources,</p>
+</li>
+<li><p>no feature engineering,</p>
+</li>
+<li><p>no data pre-processing beyond pre-trained word embeddings on unlabeled corpora.</p>
+</li>
+</ul>
+<h2 id="Methods"><a href="#Methods" class="headerlink" title="Methods:"></a>Methods:</h2><ol>
+<li><p>用 CNN获得Character-level词表示。Figure 1: The convolution neural network for extracting character-level representations of words. Dashed arrows indicate a <strong>dropout layer</strong> applied before character embeddings are input to CNN.</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1fh5bifi2x9j30rw0m83ze.jpg" style="zoom:50%"></p>
+</li>
+<li><p>把步骤一的词表示和事先训练好的词向量拼接起来，输入Bi-directional LSTM，得到每个状态的表示。注意，BLSTM的输入和输出都过了Dropout层（下图未画出）</p>
+<p>  ​</p>
+</li>
+<li><p>用步骤二的输出输入CRF层，最终预测。  </p>
+<p>  <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fh5biq8k3tj30p00zcjss.jpg" style="zoom:50%"></p>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><ol>
+<li><p>Peephole： LSTM 变种，增加了 peephole 到每个门[ I, F, O]上，即，增加细胞状态[<script type="math/tex">C_{t-1}</script>]作为输入。许多论文会加入部分的 peephole。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fhtzwcgx11j31bs0hgjs2.jpg" alt=""></p>
+</li>
+<li><p>对CRF算法的训练和解码，使用viterbi 算法。参见维基百科。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="Model-Parameters"><a href="#Model-Parameters" class="headerlink" title="Model Parameters"></a>Model Parameters</h2><h3 id="词向量"><a href="#词向量" class="headerlink" title="词向量"></a>词向量</h3><ul>
+<li><strong>0.5Dropout Training+Fine Tuning +Early Stopping，</strong></li>
+</ul>
+<ul>
+<li>NER relies more heavily on pretrained embeddings than POS tagging.</li>
+</ul>
+<ul>
+<li>可能由于Word2Vec 的训练用的是Case Sensitive的方式，所以在NER任务上效果就差了。</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fn86kvolrmj30kq0muq41.jpg" style="zoom:50%"></p>
+<h1 id="Named-Entity-Recognition-with-Bidirectional-LSTM-CNNs"><a href="#Named-Entity-Recognition-with-Bidirectional-LSTM-CNNs" class="headerlink" title="Named Entity Recognition with Bidirectional LSTM-CNNs"></a>Named Entity Recognition with Bidirectional LSTM-CNNs</h1><h2 id="Source-1"><a href="#Source-1" class="headerlink" title="Source"></a>Source</h2><p>TACL ACL2016,   arXiv 2015</p>
+<p>Jason P.C. Chiu University of British Columbia jsonchiu@gmail.com</p>
+<p>Eric Nichols   Honda Research Institute Japan Co.,Ltd. e.nichols@jp.honda-ri.com本田车？</p>
+<h2 id="Main-idea"><a href="#Main-idea" class="headerlink" title="Main idea"></a>Main idea</h2><p>本文利用一个混合的框架BiLSTM/CNN来自动学习word- 和character-level 特征，而不用特征工程。提出新的方法来编码部分词汇匹配特征到神经网络中。本文系统只使用了分词后的文本，公共word vector, 和开源自动构建的词典，超过之前报告的最好方法。提到其他的竞争系统使用了大量特征工程，特制词汇表，和丰富的实体链接信息。  </p>
+<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h2><p>从传统的统计模型，是应用模型到手工制作的特征。Collobert et al. (2011b)开始有神经网络的方法，早期方法的简单，前馈网络，没有利用长距离关系和字符级特征。近年LSTM和CNN分别用于NER或POS的例子，缺点是受限于差的word embedding, 没有字符级的CNN用来做英文NER。因此本文提出混合的模型来解决，1. LSTM/CNN+word-character-level 特征。2、 提出词典编码策略和匹配算法，利用部分匹配，并和exact match对比。</p>
+<h2 id="Methods-1"><a href="#Methods-1" class="headerlink" title="Methods:"></a>Methods:</h2><ol>
+<li><p>Word embedding and lexicon features: </p>
+<p>词典：抽取某一个类别下的命名实体名作为词典，然后对其进行分词，用来部分匹配。对文本中的every n-gram匹配词典中的词entry【直到最长的词】，匹配成功指的是：n-gram的词匹配词典的某个词entry的前缀或后缀，且长度达到词典中entry的一半以上。以及一些条件的修饰。</p>
+</li>
+<li><p>Character-level Features</p>
+<p>将character-embedding和(upper case, lower case, punctuation, other)四种Character Type Feature连接起来，送入CNN。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fi1v29q1mcj30ru0tuac9.jpg" style="zoom:50%"></p>
+<p>类似，将输入的词典特征也当做一个向量并入输入向量。不同的是，最后将前向LSTM和后向LSTM的输出分别经过全连接和log-softmax之后，将所得的概率相加，得到最后的概率。【和一般的BiLSTM输出连接之后再接一个softmax不同，哪个效果更好，理论上没有很好的对比解释性？】</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fi1v98gjl1j30ri11iacs.jpg" style="zoom:50%"></p>
+<ul>
+<li>训练</li>
+</ul>
+<p>最后的得分是神经网络的分数加上tag转换的值之和。这其实就是CRF的原理，只不过不是完全端到端的模型。</p>
+<p>目标函数和梯度可以通过动态编程实现。通过Viterbi算法来找到使分数值最大的序列。</p>
+</li>
+</ol>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>优点：系统融合了神经网络自动学习和优化特征的优点，且加入了少量人工特征，所以在大的数据集OntoNotes上的实验结果很好。</p>
+<p>缺点：构建和应用词典和词向量是值得研究的地方。基于character-level学习的特征有些融合在词典中了，词典使用了部分匹配的方法，可以更灵活的应用已有词典。</p>
+<p>拓展模型到相似任务，如extended tagset NER and entity linking.</p>
+<h1 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h1><p>Chiu 等人的文章早于前面一篇Xuezhe Ma 的论文，两篇论文的图都很像，后者是利用BiLSTM_CNN来解决解决NER的任务，而Ma的论文在模型的最后加了CRF，泛化用来处理序列标注的类似任务。Chiu 的文章中还是包含了一些外部的知识，如词典特征，字符类型，大小写等； 用partial lexicon matches的方法来编码那些没有出现在预训练的word embedding词表中的词的信息。Chiu的论文算是从传统 基于特征工程，外部知识的方法到端到端的神经网络方法的一个成功尝试，后面的不少论文都在这篇基础上改进。</p>
+<p>此外，在此之前还有<br>2015.08.09 arXiv上的Bidirectional LSTM-CRF Models for Sequence Tagging（Zhiheng Huang, Wei Xu, Kai Yu；Baidu research)这篇论文用BiLSTM-CRF的模型处理序列标注的问题，取得了此前的最好结果，论文中还对比了各种模型，如 LSTM ，BI-LSTM，LSTM-CRF，发现还是BiLSTM-CRF在POS 和NER 任务上取得效果最好。但是论文利用了一些外部特征，不算一个端到端的模型。</p>
+<p>总之，可以看出，每一次论文的改进都是在前面论文的基础上做了一些微小改进，越来越减少对文本的预处理和对外部知识的依赖。总的来说，从15年Huang的工作到后面，模型的框架变化不大，效果略有提升。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/" title="两篇命名实体识别的经典模型[转]">http://cairohy.github.io/2017/07/02/forward/两篇命名实体识别的早期经典模型/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" rel="tag"><i class="fa fa-tag"></i> 命名实体识别</a>
+              <a href="/tags/%E5%BA%8F%E5%88%97%E6%A0%87%E6%B3%A8%E4%BB%BB%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 序列标注任务</a>
+              <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 神经网络</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/06/28/deeplearning/NLP-RE-%E3%80%8AZero-Shot%20Relation%20Extraction%20via%20Reading%20Comprehension%E3%80%8B/" rel="prev" title="《Zero-Shot Relation Extraction via Reading Comprehension》">
+      <i class="fa fa-chevron-left"></i> 《Zero-Shot Relation Extraction via Reading Comprehension》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/07/09/deeplearning/NLP-QA-wiki-%E3%80%8AReading%20Wikipedia%20to%20Answer%20Open-Domain%20Questions%E3%80%8B/" rel="next" title="从维基百科中找答案-《Reading Wikipedia to Answer Open-Domain Questions》">
+      从维基百科中找答案-《Reading Wikipedia to Answer Open-Domain Questions》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#End-to-end-Sequence-Labeling-via-Bi-directional-LSTM-CNNs-CRF"><span class="nav-text">End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Source"><span class="nav-text">Source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What"><span class="nav-text">What</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pros-and-cons"><span class="nav-text">Pros and cons</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Methods"><span class="nav-text">Methods:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background"><span class="nav-text">Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model-Parameters"><span class="nav-text">Model Parameters</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#词向量"><span class="nav-text">词向量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Results"><span class="nav-text">Results</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Named-Entity-Recognition-with-Bidirectional-LSTM-CNNs"><span class="nav-text">Named Entity Recognition with Bidirectional LSTM-CNNs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Source-1"><span class="nav-text">Source</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Main-idea"><span class="nav-text">Main idea</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Problem"><span class="nav-text">Problem:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Methods-1"><span class="nav-text">Methods:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluation"><span class="nav-text">Evaluation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Comparison"><span class="nav-text">Comparison</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2017/07/02/forward/%E4%B8%A4%E7%AF%87%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%9A%84%E6%97%A9%E6%9C%9F%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B/";
+    this.page.identifier = "2017/07/02/forward/两篇命名实体识别的早期经典模型/";
+    this.page.title = "两篇命名实体识别的经典模型[转]";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'a2f9f3bfc549a2774836862f521f69d3',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="软核机器学习，记录结论和性质，推导细节省略。 所有向量默认是列向量。 零、BasicsSum Rule: p(x_1) &#x3D; \int p(x_1, x_2)dx_2 Product Rule: p(x_1, x_2) &#x3D; p(x_1)\cdot p(x_2|x_1) &#x3D;  p(x_2)\cdot p(x_1|x_2) Chain Rule: p(x_1, \cdots, x_p) &#x3D; \prod_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ML-Basics Recap-软核">
+<meta property="og:url" content="http://cairohy.github.io/2019/11/17/ML-Basics/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="软核机器学习，记录结论和性质，推导细节省略。 所有向量默认是列向量。 零、BasicsSum Rule: p(x_1) &#x3D; \int p(x_1, x_2)dx_2 Product Rule: p(x_1, x_2) &#x3D; p(x_1)\cdot p(x_2|x_1) &#x3D;  p(x_2)\cdot p(x_1|x_2) Chain Rule: p(x_1, \cdots, x_p) &#x3D; \prod_">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200908192437985.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200908192459775.png">
+<meta property="article:published_time" content="2019-11-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.076Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="阅读笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/image-20200908192437985.png">
+
+<link rel="canonical" href="http://cairohy.github.io/2019/11/17/ML-Basics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ML-Basics Recap-软核 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/11/17/ML-Basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ML-Basics Recap-软核
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-17 16:00:00" itemprop="dateCreated datePublished" datetime="2019-11-17T16:00:00+00:00">2019-11-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/11/17/ML-Basics/" class="post-meta-item leancloud_visitors" data-flag-title="ML-Basics Recap-软核" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>软核机器学习，记录结论和性质，推导细节省略。</p>
+<p>所有向量默认是列向量。</p>
+<h3 id="零、Basics"><a href="#零、Basics" class="headerlink" title="零、Basics"></a>零、Basics</h3><p>Sum Rule: <script type="math/tex">p(x_1) = \int p(x_1, x_2)dx_2</script></p>
+<p>Product Rule: <script type="math/tex">p(x_1, x_2) = p(x_1)\cdot p(x_2|x_1) =  p(x_2)\cdot p(x_1|x_2)</script></p>
+<p>Chain Rule: <script type="math/tex">p(x_1, \cdots, x_p) = \prod_i^p p(x_i|x_{<i})</script></p>
+<p>Bayesian Rule: <script type="math/tex">p(x_2|x_1) = \frac{p(x_1|x_2)p(x_2)}{p(x_1)}</script></p>
+<p>观测数据$X = {\cdots, x_i, \cdots}$, 标签$Y = {\cdots, y_i, \cdots}$，隐变量$Z = {\cdots, z_i, \cdots}$</p>
+<p>生成模型：能够以某种方式估计到观测数据的分布，比如计算联合分布或者边缘分布来求解参数。</p>
+<p>判别模型：无法获取观测数据的分布，只能估计条件分布$p(y|x)$。</p>
+<h3 id="一、线性模型"><a href="#一、线性模型" class="headerlink" title="一、线性模型"></a>一、线性模型</h3><h4 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h4><p>线性回归模型<script type="math/tex">w^Tx</script>使用最小二乘法等价于噪声<script type="math/tex">\epsilon\sim N(0, \sigma^2)</script>（<script type="math/tex">y</script>为一维）的极大似然估计。</p>
+<p>正则化和MAP的类似性：如果权重服从先验<script type="math/tex">w\sim N(0, \sigma_0^2)</script>，那么利用MAP极大后验估计的结果类似于MLE增加L2正则项；而如果权重服从Laplace分布，那么类似于增加L1正则项。</p>
+<h4 id="线性分类"><a href="#线性分类" class="headerlink" title="线性分类"></a>线性分类</h4><p>1.硬分类（直接得到类别）</p>
+<p>感知机：线性回归的基础上增加不可导的<script type="math/tex">sign(\cdot)</script>激活函数，没有解析解，使用梯度下降求解。</p>
+<p>线性判别分析：将样本投影到一条向量上，并使得类内聚合、类间分开。</p>
+<p>2.软分类（得到分类概率）</p>
+<blockquote>
+<p>判别式</p>
+</blockquote>
+<p>logistic回归：线性回归增加<script type="math/tex">sigmoid(\cdot)</script>激活函数，MLE作为目标函数，使用梯度下降求解。</p>
+<blockquote>
+<p>生成式</p>
+</blockquote>
+<p>高斯判别分析：假设<script type="math/tex">x</script>从两个方差相同的正态分布中采样，<script type="math/tex">y</script>代表样本属于哪个正态分布。通过贝叶斯公式，最大化以下先验的联合概率求解：<script type="math/tex">argmax P(X, Y) = argmax P(X|Y)P(Y)</script>，包含四个参数。推断时利用条件概率<script type="math/tex">P(Y|X)</script>进行推断。</p>
+<script type="math/tex; mode=display">
+y\sim Bernoulli(\phi)\\\\
+x|y=1 \sim \mathcal{N}(\mu_1, \Sigma) \\\\
+x|y=2 \sim \mathcal{N}(\mu_2, \Sigma)</script><p>朴素贝叶斯：对于属性之间增加了独立性假设，使得后验分布<script type="math/tex">P(x|y)</script>能够按照维度分解。</p>
+<h3 id="二、指数族分布"><a href="#二、指数族分布" class="headerlink" title="二、指数族分布"></a>二、指数族分布</h3><p>具有如下形式概率密度函数的分布：<script type="math/tex">P(x|\eta) = h(x)exp(\eta^T\phi (x) - A(\eta))</script>。其中<script type="math/tex">\eta</script>是参数向量，<script type="math/tex">x\in R^{p}</script>。</p>
+<p>充分统计量：<script type="math/tex">\phi(x)</script>，能够表述样本的统计性质。</p>
+<p>对数配分函数：<script type="math/tex">A(\eta)</script>，因为转换为<script type="math/tex">\frac{1}{z} h(x)\cdot exp(\eta^T \phi(x))</script>的形式的时候，<script type="math/tex">A(\eta) = log(z)</script>。</p>
+<p>对数配分函数的性质：<script type="math/tex">A'(\eta) = E_{p(x|\eta)}[\phi(x)]</script>。</p>
+<p>极大似然估计的性质：<script type="math/tex">argmax_\eta \sum_i p(x_i|\eta) = argmax_\eta\sum_i (\eta^T\phi(x) - A(\eta))</script>，令导数为0可得<script type="math/tex">A_{MLE}'(\eta) = \frac{1}{N}\sum_i\phi(x_i)</script>。因此MLE对指数族分布来说只需要保留样本的充分统计量即可优化。</p>
+<p>从最大熵的角度：1.没有已知信息的时候熵最大出现在均匀分布下。2.在有一个样本集合的情况下，利用经验分布<script type="math/tex">\hat p(x)</script>和最大熵原理，最终得到的分布<script type="math/tex">p(x)</script>一定是指数族分布，而且能够得到其PDF的形式。</p>
+<h4 id="一维高斯分布"><a href="#一维高斯分布" class="headerlink" title="一维高斯分布"></a>一维高斯分布</h4><p>对于具有参数<script type="math/tex">\theta = (\mu, \sigma^2)</script>的一维高斯分布，转换为指数族分布的形式后，指数族的参数<script type="math/tex">\eta</script>可以求出来：<script type="math/tex">\eta^T = (\eta_1, \eta_2) = (\frac{\mu}{\sigma^2}, -\frac{1}{2\sigma^2})</script>。</p>
+<p>充分统计量：<script type="math/tex">\phi(x) = (\begin{array}{} x\\x^2 \end{array})</script>。对数配分函数的形式略复杂。</p>
+<h3 id="三、支持向量机（SVM）"><a href="#三、支持向量机（SVM）" class="headerlink" title="三、支持向量机（SVM）"></a>三、支持向量机（SVM）</h3><p>主要关注点：间隔，对偶，核技巧。</p>
+<p>分类：硬间隔（hard-margin），软间隔，kernel SVM。</p>
+<p>用来解决二分类问题，其模型和感知机相同$f(x;w) = sign(w^Tx + b)$，属于线性分类模型中的硬分类模型。</p>
+<h4 id="1-最大间隔分类器"><a href="#1-最大间隔分类器" class="headerlink" title="1.最大间隔分类器"></a>1.最大间隔分类器</h4><p>对于属于两个类别的<script type="math/tex">\{x_i, y_i\}_{i=1}^N, x_i\in R^p, y_i\in \{-1, 1\}</script>的数据样本，求解<script type="math/tex">w,b</script>使得<script type="math/tex">y_i(w^Tx + b) > 0</script>，也就是要正确划分。并满足如下的最大间隔：</p>
+<script type="math/tex; mode=display">
+max\ margin(w, b) = max\ min_{(w, b, x_i)} distance(w, b, x_i)</script><script type="math/tex; mode=display">
+= max\ min_{(w,b,x_i)} \frac{1}{||w||} |w^Tx + b|=max_{(w,b)}\ \frac{1}{||w||} min_{(x_i)}  y_i(w^Tx + b)</script><p>那么存在一个正数<script type="math/tex">\gamma</script>等于这些样本到分类超平面的最小距离，那么上面的间隔约束可以转化为<script type="math/tex">max_{(w,b)}\ \frac{1}{||w||}\cdot \gamma</script>，可以约束<script type="math/tex">\gamma</script>为1，这个约束变成了<script type="math/tex">min_{(w,b)} \ ||w||=min_{w,b} \frac{1}{2} w^Tw</script>。且满足<script type="math/tex">y_i(w^Tx + b) \geq 1</script>。</p>
+<blockquote>
+<p>$\gamma$为什么可以取值为1？1）$aw^Tx + ab = 0$与$w^Tx + b = 0$是同一个超平面，2）且同一个向量到这两个超平面的距离相同。</p>
+<p>所以可以用$\gamma$来缩放$w,b$使得$\gamma=w^Tx = 1$。</p>
+</blockquote>
+<h4 id="2-优化问题的转化。"><a href="#2-优化问题的转化。" class="headerlink" title="2.优化问题的转化。"></a>2.优化问题的转化。</h4><p>拉格朗日乘子法，将上面的有约束优化问题转化为无约束优化问题（两者实际上可以证明是等价的）：</p>
+<script type="math/tex; mode=display">
+min_{\{w,b\}}\ max_{\lambda}\ \mathcal{L}(w,b,\lambda) = \frac{1}{2}w^Tw +  \sum_{i=1}^N\lambda_i (1-y_i(w^Tx_i+b)),其中\lambda_i \geq 0,\lambda的乘项$\geq 0$。</script><p>对这个先min再max的原始优化问题，有一个对偶形式（先max再min）的问题，这个对偶形式总是<script type="math/tex">\leq</script>原问题的（弱对偶关系），而在当前的原始问题下这两个问题是等价的（<script type="math/tex">==</script>）「满足KKT条件」：</p>
+<script type="math/tex; mode=display">
+max_{\lambda}\ min_{\{w,b\}}\ \mathcal{L}(w,b,\lambda)</script><p>这个对偶问题比原始问题更容易求解。</p>
+<p>然后从里到外推偏导数等于0的公式，推推推，得到了<script type="math/tex">min_{\lambda} f(\lambda, x, y)</script>的形式，w和b都被约去了。还有两个约束<script type="math/tex">\lambda \geq 0, \sum_{i=1}^N \lambda_i y_i = 0</script>。</p>
+<h4 id="3-优化问题的求解。"><a href="#3-优化问题的求解。" class="headerlink" title="3.优化问题的求解。"></a>3.优化问题的求解。</h4><p>根据上面的最优化问题可以求出<script type="math/tex">\lambda</script>的值。然后就求出了参数<script type="math/tex">w,b</script>的最优解析<script type="math/tex">w^*,b^*</script>。</p>
+<p>其中<script type="math/tex">w^* = \sum_{i=1}^{N} \lambda_i y_i x_i</script>是w的最佳值。b的最佳值如下，其中<script type="math/tex">x_k, y_k</script>是支持向量，距离超平面距离为1。</p>
+<script type="math/tex; mode=display">
+b^* = y_k - \sum_{i=1}^{N} \lambda_i y_i x_i^Tx_k</script><p>这样就求解出了硬间隔SVM。</p>
+<h3 id="四、概率图模型（PGM）"><a href="#四、概率图模型（PGM）" class="headerlink" title="四、概率图模型（PGM）"></a>四、概率图模型（PGM）</h3><blockquote>
+<p>什么样的方法可以转化为PGM？概率图又是如何得到的？</p>
+</blockquote>
+<p>高维随机变量的困难：联合概率计算复杂。</p>
+<p>Naive Bayes：增加维度独立的假设进行简化。这样就可以方便的计算后验分布<script type="math/tex">p(x|y), x\in R^p</script>。但是这个假设过强。（样本x的第3维特征是年龄，第8维特征是收入，就无法独立）</p>
+<p>Markov假设：并没有要求每个维度完全独立，而是第i个维度从依赖前i-1个维度变成只依赖第i-1个维度。但是这样顺序性的依赖太单一。（比如收集的样本x的第3维特征刚好依赖于第5、6维特征，就不能满足这个假设）</p>
+<p>条件独立性假设：只是假设把维度分为若干个集合<script type="math/tex">\{X_1, \cdots, X_k\}</script>，其中两个集合的特征在第三个集合被观测到的时候独立。比如划分出A、B、C三个集合：$A\bot B|C$。</p>
+<h4 id="1-概率图表示"><a href="#1-概率图表示" class="headerlink" title="1.概率图表示"></a>1.概率图表示</h4><ul>
+<li>有向图<ul>
+<li>离散：贝叶斯网络</li>
+<li>连续：高斯贝叶斯网络</li>
+</ul>
+</li>
+<li>无向图<ul>
+<li>离散：马尔科夫网络</li>
+<li>连续：高斯马尔科夫网络</li>
+</ul>
+</li>
+</ul>
+<h5 id="有向图-贝叶斯网络"><a href="#有向图-贝叶斯网络" class="headerlink" title="有向图-贝叶斯网络"></a>有向图-贝叶斯网络</h5><p>利用拓扑排序进行图的构造。那么根据构造了的有向图，就能够把高维随机变量的联合概率因子分解为条件概率和边缘概率的乘积。</p>
+<p>对图的局部进行观察，会发现几种特殊的节点关系：</p>
+<ul>
+<li><p>1.从图上面看，某个节点上面若有tail-tail路径或者head-tail路径，那么当该节点事件发生时，这条路径被阻塞；间接相连的两个节点所代表的维度在这个条件下就是独立的。</p>
+</li>
+<li><p>2.而如果存在head-head路径（该节点C同时依赖于另外两个维度的变量A、B），那么刚好相反，如果C不发生那么A和B独立；反之路径连通，A和B不独立。</p>
+</li>
+<li><p>3.另一种特殊的局部拓扑，两个节点A、B同时指向节点C，节点C又指向节点D，那么若节点D被观测到，那么节点A和B也是连通的，就不独立了。</p>
+</li>
+</ul>
+<p>D划分：一种划分特征节点构成的图的方式，对于划分出来的集合A、B、C，要满足<script type="math/tex">A\bot B|C</script>。那么C中所有的点都要是上面这几种关系中第一种关系中的特殊节点。D划分可以应用在bayes定理，用来计算<script type="math/tex">p(x_i|x_{\neq i})</script>，计算的结果只涉及到<script type="math/tex">parent(x_i), child(x_i)</script>，这两个集合中的节点叫做Markov blanket（马尔科夫毯）。</p>
+<p>模型：</p>
+<ul>
+<li>单一，朴素贝叶斯：<script type="math/tex">x_i\bot x_j|y</script>，体现在图上就是y和<script type="math/tex">x_i, x_j</script>构成tail-to-tail的子图。</li>
+<li>混合，GMM(Gaussian Mixture Model)，隐变量z表示聚类的类别，</li>
+<li>时间，马尔科夫链和高斯过程。</li>
+<li>动态系统，{HMM，LDS，粒子滤波}。</li>
+<li>连续，高斯贝叶斯网络。</li>
+</ul>
+<h5 id="无向图-马尔科夫网络"><a href="#无向图-马尔科夫网络" class="headerlink" title="无向图-马尔科夫网络"></a>无向图-马尔科夫网络</h5><p>无向图组成的网络，适用于离散多维变量。</p>
+<ul>
+<li>Global Markov：根据无向图找到具有条件独立性的三个节点集合。</li>
+<li>Local Markov：一个节点a，节点集合N，邻居节点集合<script type="math/tex">N(\cdot)</script>，<script type="math/tex">a \bot \{N - a - N(a)\}|N(a)</script>。</li>
+<li>成对 Markov：不相连的两个节点在其他节点被观测时独立。</li>
+</ul>
+<blockquote>
+<p>团和最大团：图中若干节点的集合，其中任意两个节点都互相连通。最大团就是节点最多再也无法添加时的团。</p>
+</blockquote>
+<p>那么就可以利用团的概念把<script type="math/tex">p(x)</script>因子分解成：<script type="math/tex">p(x) = \frac{1}{Z}\prod_{i=1}^{K} \varphi(x_{c_i})</script></p>
+<p>其中<script type="math/tex">\varphi(\cdot)</script>称为势函数大于0，最终<script type="math/tex">p(x)</script>的分布的形式叫做Gibbs分布。这个分布的形式和指数族分布一致，也就满足了样本集合的最大熵原理。</p>
+<h4 id="2-概率图推断"><a href="#2-概率图推断" class="headerlink" title="2.概率图推断"></a>2.概率图推断</h4><p>已知概率图、参数和观测样本，推测未知变量的分布。比如计算联合概率、条件概率或者是极大后验估计。</p>
+<ul>
+<li>精确推断<ul>
+<li>变量消除Variable Elimination</li>
+<li>信念传播Belief Propagation</li>
+<li>Junction Tree</li>
+</ul>
+</li>
+<li>近似推断<ul>
+<li>Loop Belief</li>
+<li>Monte Carlo采样：重要性采样、MCMC</li>
+<li>确定性近似（变分推断）</li>
+</ul>
+</li>
+</ul>
+<h5 id="变量消除"><a href="#变量消除" class="headerlink" title="变量消除"></a>变量消除</h5><p>已知一个概率图，求某个变量d的边缘概率<script type="math/tex">p(d)</script>，也就是对其他所有变量做求和/积分：<script type="math/tex">\sum_{a,b,c}p(a,b,c,d)</script>。首先根据概率图对联合概率进行因子分解，分解之后逐步求积分。（从依赖的发起节点开始），比如<script type="math/tex">p(d) = \sum_{b, c} p(d|c)p(c|b)\cdot \sum_a p(a)p(b|a)</script>。其实也就是先对内部求和/求积分，再把求得的概率函数和外部的其他部分相乘。</p>
+<p>缺点就是会有很多重复计算的部分，还有就是在图的计算中很难选择最优的消除次序，可能会导致消除的时间复杂度很高。</p>
+<h5 id="信念传播"><a href="#信念传播" class="headerlink" title="信念传播"></a>信念传播</h5><p><img src="/images/image-20200908192437985.png" alt="无向无环图"></p>
+<p>对于上面这种图（无向无环），定义<script type="math/tex">m_{c\rightarrow b}(b)</script>为<script type="math/tex">\sum_c\varphi(c)\varphi(b,c) \sim \sum_c p(c)p(b|c)</script>，这可以认为是把从C到B的路径上的依赖C约掉，只保留B的部分，那么可以这样求<script type="math/tex">p(a)</script>。</p>
+<ul>
+<li><p><script type="math/tex">p(a) = \sum_{\{b,c,d\}} p(a,b,c,d)</script>。</p>
+</li>
+<li><p>首先写出四条边四个点因子分解式：<script type="math/tex">p(a,b,c,d) = \frac{1}{z}\varphi_a(a)\cdot \varphi_b(b)\cdot \varphi_c(c)\cdot \varphi_d(d) \cdot \varphi_{ab}(a,b)\cdot \varphi_{bc}(b,c)\cdot \varphi_{bd}(b,d)</script>。</p>
+</li>
+<li><p>求出<script type="math/tex">m_{c\rightarrow b}(b),m_{d\rightarrow b}(b)</script>，即消去b上游的所有依赖节点。<br><script type="math/tex">p(a) = \sum_b \varphi(a) m_{b\rightarrow a}(a)</script>。<script type="math/tex">m_{b\rightarrow a}(a) = \sum_b \varphi(a,b)\varphi(b)\cdot m_{c\rightarrow b}(b)\cdot m_{d\rightarrow b}(b)</script>。</p>
+</li>
+<li><p>最后得到了无向图节点j到i的信息传播的公式，以及i节点的边缘概率：</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+m_{j\rightarrow i}(a) = \sum_j \varphi(i,j)\varphi(i)\cdot \prod_{k\in N(j) - i}m_{k\rightarrow j}(j) \\\\
+p(i) = \varphi(i)\cdot \prod_{k\in N(i)} m_{k\rightarrow i}(i)</script><p>所以只要有<script type="math/tex">m_{i\rightarrow j}</script>即可计算边缘概率，对n条边的无向图来说遍历图求得2n个<script type="math/tex">m</script>就可以计算任意的边缘概率了。其中的<script type="math/tex">\varphi(i)\prod_{k\in N(i)} m_{k\rightarrow i})(i)</script>叫做节点i的belief。 这种变量消除+Cache的方法就是BP信念传播。流程见下图，其中搜集信息即递归计算入信息，分发信息即递归计算出信息。</p>
+<p><img src="/images/image-20200908192459775.png" alt="信念传播"></p>
+<h5 id="Max-Product"><a href="#Max-Product" class="headerlink" title="Max Product"></a>Max Product</h5><p>Max Product可以看作是BP的一种改进。是Viterbi算法i的推广形式。</p>
+<p>对于上面信念传播图中的图，首先我们明确一个概念，就是a、b、c、d都是随机变量，而信念传播是一种求它们边缘概率的方法。</p>
+<p>那知道了这个图，假如说我希望求一个序列<script type="math/tex">(\hat a, \hat b, \hat c, \hat d)</script>使得它们的联合概率<script type="math/tex">p(a,b,c,d)</script>最大要怎么办呢？可以稍微修改BP方法中m函数的定义为如下形式：</p>
+<script type="math/tex; mode=display">
+m_{j\rightarrow i}(a) = \max_j \varphi(i,j)\varphi(i)\cdot \prod_{k\in N(j) - i}m_{k\rightarrow j}(j)</script><p>这样把sum改成max的意思就是，我消去变量j的方式从求和/积分，变成了求使得后面的部分最大化的j的值。</p>
+<p>这实际上就是一种动态规划求最佳序列的方式，只是在图/树上求解，所以是Viterbi的一种推广。</p>
+<h5 id="势函数"><a href="#势函数" class="headerlink" title="势函数"></a>势函数</h5><p>势函数<script type="math/tex">\varphi(\cdot)</script>是来自物理中的一个概念。我们在无向图中，利用极大团来因子分解联合概率的时候引入了它，<script type="math/tex">p(x) = \frac{1}{Z}\prod_{i=1}^{K} \varphi(x_{c_i})</script>。实际应用中需要对势函数进行设计，并满足配分函数<script type="math/tex">Z</script>的求和/积分等于1。</p>
+<h5 id="道德图"><a href="#道德图" class="headerlink" title="道德图"></a>道德图</h5><p>将有向图转化为无向图的一种途径。需要特殊处理的只有head-2-head类型的结构，也就是对一个节点i，转化的时候需要将其所有的父亲节点两两互相连接。（有向树转化为无向图）</p>
+<h5 id="因子图"><a href="#因子图" class="headerlink" title="因子图"></a>因子图</h5><p>可以视为对有向图更精细的分解，而且分解之后的节点需要满足<script type="math/tex">p(x) = f_s(x_s)</script>，其中<script type="math/tex">x_s</script>是因子节点。</p>
+<h4 id="3-学习"><a href="#3-学习" class="headerlink" title="3.学习"></a>3.学习</h4><ul>
+<li>参数学习</li>
+<li>结构学习</li>
+</ul>
+<h3 id="五、EM算法"><a href="#五、EM算法" class="headerlink" title="五、EM算法"></a>五、EM算法</h3><p>有隐变量情况下的参数估计算法。</p>
+<h4 id="1-收敛性"><a href="#1-收敛性" class="headerlink" title="1.收敛性"></a>1.收敛性</h4><p>首先从MLE参数估计的公式，最大化观测数据x的似然概率：<script type="math/tex">\theta^{t+1} = argmax_\theta \int_z log\ p(x, z|\theta)\cdot p(z|x;\theta^t)dz</script>。可以证明这样求得的参数一定满足随着$t$越来越大$log p(x|\theta^t)$越来越大。</p>
+<h4 id="2-公式推导（KL-ELBO角度）"><a href="#2-公式推导（KL-ELBO角度）" class="headerlink" title="2.公式推导（KL + ELBO角度）"></a>2.公式推导（KL + ELBO角度）</h4><p>E步：根据当前隐变量z的后验分布，求出$E_{z|x} [log p(x,z|\theta)]$。</p>
+<p>M步：根据当前的期望，用上一时刻的参数$\theta^t$从后验分布中采样z，优化参数$\theta$以最大化联合分布的期望<script type="math/tex">\theta^{t+1} = argmax_{\theta} E_{z|x,\theta^t} [\log p(x,z|\theta]</script>。</p>
+<p>其中我们从KL + ELBO角度进行如下推导（有点像VAE的推导过程），首先对数似然变形，并引入一个隐变量的先验分布$q(z)$【因为$p(z|x)$不好求】：</p>
+<p>$\log p(x|\theta) = \log p(x, z|\theta) - \log p(z|\theta) = \log \frac{p(x, z|\theta)}{q(z)} - \log \frac{p(z|\theta)}{q(z)}$。</p>
+<p>然后对等式两边分别求$q(z)$的期望。左边等于不求。右边等于：</p>
+<p>$\int_{z} q(z) \log \frac{p(x, z|\theta)}{q(z)}dz - \int_z q(z) \log \frac{p(z|\theta)}{q(z)}dz$。</p>
+<p>也就是：$ELBO + KL(q(z)||p(z|x,\theta))$，第二项KL散度$\geq 0$，所以第一项也被称为ELBO证据下界。</p>
+<p>那么，当KL散度等于0的时候，也就是$q(z) = p(z|x, \theta^t)$的时候，我们在M步做的事情是：</p>
+<script type="math/tex; mode=display">argmax_\theta \int_z q(z) \log \frac{p(x, z|\theta)}{q(z)}dz = argmax_\theta \int_z p(z|x, \theta^t) (\log p(x,z|\theta) - \log p(z|x, \theta^t))dz</script><p>而由于此时的$\theta^t$是个常数，所以可以省略掉上面的式子中和$\theta$无关的部分，留下：$argmax_\theta \int_z p(z|x, \theta^t)\log p(x|\theta)dz$，也就是我们一开始写的那个与z的后验有关的联合分布期望。</p>
+<h4 id="3-公式推导（Jensen不等式角度）"><a href="#3-公式推导（Jensen不等式角度）" class="headerlink" title="3.公式推导（Jensen不等式角度）"></a>3.公式推导（Jensen不等式角度）</h4><blockquote>
+<p>Jensen不等式，concave函数的中点函数值$\geq$其两端连线直接在当前点的值。</p>
+</blockquote>
+<p>首先从log likelihood开始，$\log p(x|\theta) = \log E_{q(z)}[\frac{p(x,z|\theta)}{q(z)}] $。</p>
+<p>利用jensen不等式得到它 $\geq  E_{q(z)}[\log\frac{p(x,z|\theta)}{q(z)}]$即ELBO。等式成立的情况下有$p(x,z|\theta) = c\cdot q(z)$，其中c是常数。这里经过推导，就可以得到$c == p(x|\theta)$，所以z的先验概率$q(z) = \frac{p(x,z|\theta)}{p(x|\theta)} = p(z|x, \theta)$，就等于后验概率。</p>
+<p>EM实际上是为了生成模型估计参数，引入隐变量z来更新参数。</p>
+<h4 id="4-广义EM"><a href="#4-广义EM" class="headerlink" title="4.广义EM"></a>4.广义EM</h4><p>log likelihood = ELBO + KL(q||p)。由此可以推广EM算法到其广义的形式。</p>
+<p>E步，固定$\theta$求z的分布q使得$KL$最小或者$ELBO$最大；M步，固定$\hat q$求参数$\theta$去最大化ELBO也就是联合分布$E_q[\log p(x, z)] + H(q)$。</p>
+<p>而原始的EM中分布q就等于后验$p(z|x)$。</p>
+<h3 id="六、变分推断（VI）"><a href="#六、变分推断（VI）" class="headerlink" title="六、变分推断（VI）"></a>六、变分推断（VI）</h3><h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>频率角度-&gt;优化问题。（模型、策略、算法）</p>
+<p>贝叶斯角度-&gt;积分问题。</p>
+<ul>
+<li>贝叶斯推断计算参数后验。（精确推断或者近似推断）</li>
+<li>贝叶斯决策，使用参数后验求期望。</li>
+</ul>
+<h4 id="公式推导"><a href="#公式推导" class="headerlink" title="公式推导"></a>公式推导</h4><p>$x$: 观测数据，$z$：隐变量 + 参数，$(x, z)$完整数据。目标：找到一个变分分布$q(z)$，使得ELBO：$1： \mathcal{L}(z) = \int_z q(z) \frac{p(x,z)}{p(z)}dz$最大，也就是变分接近后验分布。</p>
+<p>$q(z) = \prod_{i=1}^M q_i(z_i)$，假设z可以划分为M份互不相关的分量，那么可以因子分解为左边。然后固定其他所有分量求解分量$z_j$的话，1式可以变成：</p>
+<script type="math/tex; mode=display">
+\int_{z_j} q_j(z_j) \cdot E_{\prod_{i\neq j}q_i(z_i)}[ \log p(x,z) ]\ dz_j - (\int_{z_j} q_j(z_j) \log q_j(z_j)dz_j + C)</script><p>再进行变换就得到$-KL(q_j||P(x, z_j))$。</p>
+<p>经典变分推断的目标就是找到一个变分分布，可以最小化KL，最大化ELBO。然后每次固定M-1组，交替求解其中的一组隐变量。（坐标上升的思想），迭代求解直到$\mathcal{L}$不再下降。</p>
+<p>但是这样做：1）平均场假设太强，2）intractable。</p>
+<h4 id="SGVI（Stochastic-Gradient）"><a href="#SGVI（Stochastic-Gradient）" class="headerlink" title="SGVI（Stochastic Gradient）"></a>SGVI（Stochastic Gradient）</h4><p>随机梯度变分推断利用梯度下降来计算变分分布的参数。</p>
+<p>经过推导，ELBO对变分分布参数$\phi$的导数是：</p>
+<script type="math/tex; mode=display">
+\nabla_\phi \mathcal{L}(\phi) = \nabla_\phi E_{q_\phi} [\log P_\theta(x^{i}, z) - \log q_\phi] = E_{q_\phi} [\nabla_\phi \log q_\phi\cdot (\log P_{\theta}(x^{i}, z) - \log q_\phi)]</script><p>能写成期望的形式意味着可以通过在q分布采样的方式计算下一轮的导数，也就是采样L个隐变量$z^{(l)}$，梯度约等于：</p>
+<script type="math/tex; mode=display">
+\frac{1}{L}\sum_{l=1}^L \nabla_\phi \log q_\phi(z^{(l)})\cdot (\log P_{\theta}(x^{i}, z^{(l)}) - \log q_\phi(z^{(l)}))</script><p>但是这样采样的方差很大，因为q很大和很小的时候对log q求期望差别很大。那如何降低方差呢？引入了重参数化技巧（即VAE中的那个，不仅仅可以处理不可微问题，而且可以减少方差）。找一个$\epsilon\sim p(\epsilon)$，这个p分布要尽量简单一点，然后保证得到的$\epsilon$可以用来采样$z$，也就是z可以通过现有后验分布的参数$\phi$和这个$\epsilon$进行简单的变换$g_\phi(\epsilon, x)$得到。然后进行一系列推导，最后得到的结论是这样采样$\epsilon$并计算$z$最终算出来的梯度就减少了方差。</p>
+<p>举例：比如VAE里面$z$服从高斯分布，那么分布参数$\phi$就是均值$\mu$和方差$\sigma$，这时候这个$\epsilon$从标准高斯分布中采样，$g_\phi = \mu + \sigma * \epsilon$就可以得到服从$z$分布的隐变量。</p>
+<p>得到了梯度之后，就可以利用梯度上升/下降对q分布的参数$\phi$进行参数优化了。</p>
+<h3 id="七、MCMC"><a href="#七、MCMC" class="headerlink" title="七、MCMC"></a>七、MCMC</h3><h4 id="采样方法介绍"><a href="#采样方法介绍" class="headerlink" title="采样方法介绍"></a>采样方法介绍</h4><p>蒙特卡洛方法是一种基于采样的随机近似方法，可以用来进行近似推断。</p>
+<p>也就是把积分形式$\int p(z|x)f(z)dz$近似为$\frac{1}{N}\sum_{i=1}^N f(z_i)$。但是假如说后验分布比较复杂，怎么才能采样得到$z_i$呢？</p>
+<ul>
+<li><p>1）概率分布采样：计算机能够从均匀分布$U(0, 1)$中采样，如果能够根据z的分布的概率密度函数能够计算累计分布函数cdf，则可以根据cdf的逆函数将$o\sim U(0, 1)$作为逆函数输入进行采样，但是这也仅限于简单的分布。</p>
+</li>
+<li><p>2）拒绝采样，引入一个提议分布$q(z)$和正整数$M$，保证处处都有$Mq(z)\geq p(z|x)$。那么对$z_i$可以计算出接受率$\alpha$，每次从$q(z)$中采样出一个点，从$U(0, 1)$中采样出一个$u$，如果$u \leq \alpha$那么接受当前采样，否则拒绝。</p>
+</li>
+<li><p>3）重要性采样，从$q(z)$中采样，每个样本的权重等于$p$与$q$的比值，对两个分布的形式有要求否则采样效率低：</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+\int p(z|x)f(z)dz = \int \frac{p(z|x)}{q(z)}f(z)q(z)dz \simeq \frac{1}{N}\sum_{i=1}^{N} f(z)\frac{p(z|x)}{q(z)}</script><p>这些采样方法要求proposal distribution <script type="math/tex">q</script>和原始分布<script type="math/tex">p</script>接近，且简单易于采样，这有时很困难。</p>
+<h4 id="MCMC"><a href="#MCMC" class="headerlink" title="MCMC"></a>MCMC</h4><p>马尔科夫链：时间和状态都是离散的。<script type="math/tex">\{...,x_t,...\}, x_t\in \{1, 2, \cdots, N\}</script>，<script type="math/tex">Q\in R^{N\times N}</script>为状态转移矩阵。</p>
+<p>齐次（一阶）马氏链：<script type="math/tex">q(x_t|x_{<t}) = q(x_t|x_{t-1})</script>。</p>
+<p>平稳分布：如有<script type="math/tex">\pi(x^*) = \int \pi (x)\cdot Q(x\rightarrow x^*)dx</script>或者写成<script type="math/tex">\pi (x^t) = \sum_{i=1}^N \pi(x^{t-1}=i)\cdot Q(x^{t-1}\rightarrow x^t)</script>，则称<script type="math/tex">\{\pi (k)\}</script>是<script type="math/tex">\{x_t\}</script>的平稳分布，也就是最终的状态分布稳定了，状态$k$的概率值为<script type="math/tex">\pi(k)</script>。（对离散型随机变量）</p>
+<p>细致平衡：<script type="math/tex">q (x)\cdot Q(x\rightarrow x^*) = q (x^*)\cdot Q(x^*\rightarrow x)</script>，detailed balance是产生平稳分布的充分条件，其中$q (x)$表示取值为$x$的概率，$q$表示一个平稳分布。</p>
+<p>MCMC采样：</p>
+<ul>
+<li>从<script type="math/tex">\{x_1, \cdots, x_{m-1}, x_m, \cdots, x_{m + n}, \cdots\}</script>这组序列中，选择n个采样样本<script type="math/tex">\{x_m, \cdots, x_{m + n}, \cdots\}</script>，其中到第m步马氏链形成了平稳分布。</li>
+<li>平稳分布接近或者等于目标分布，那么在平稳分布上采样就等价于在目标分布上采样了。</li>
+<li>关于能够到达平稳分布的证明：<ul>
+<li>首先能够得到<script type="math/tex">q^{t+1} = q^t\cdot Q</script>，也就是<script type="math/tex">q^{t+1} = q^1\cdot Q^t</script>。</li>
+<li>状态转移矩阵<script type="math/tex">Q</script>是一个随机矩阵，方阵 &amp; 每一行之和等于1。它有一个性质即特征值<script type="math/tex">\leq 1</script>，所以<script type="math/tex">Q^T = (ALA^{-1})^T = AL^TA^{-1}</script>。（A是一个矩阵，其每一列以此是A的特征向量的分量。L是一个矩阵，其对角线依次是A的特征值；其他元素为0。）</li>
+<li>因此存在足够大的T，使得<script type="math/tex">L^T</script>只有若干个元素为1（即Q本身为1的那些特征值）。此时<script type="math/tex">L^{T} = L^{T+1}</script>，且<script type="math/tex">q^{t+1} = q^1\cdot AL^TA^{-1}</script>，而<script type="math/tex">q^{t+2} = q1\cdot AL^{T+1}A^{-1}</script>，所以q形成了平稳分布。</li>
+</ul>
+</li>
+</ul>
+<p>Metropolis-Hastings：</p>
+<ul>
+<li>均匀分布中采样$u\sim U(0, 1)$，Q为proposal matrix可以由任意先验给出，<script type="math/tex">z^*\sim Q(z|z^{(i-1)})</script>，接受率<script type="math/tex">\alpha = min(1, \frac{p(z^*)\cdot Q(z|z^*)}{p(z)\cdot Q(z^*|z)})</script>。</li>
+<li>如果<script type="math/tex">u < \alpha</script>，那么<script type="math/tex">z^{(i)} = z^*</script>，否则<script type="math/tex">z^{(i)} = z^{(i-1)}</script>。</li>
+<li>这里的原理就是<script type="math/tex">p(z)Q(z^*|z)\cdot \alpha(z, z^*) = p(z^*)Q(z|z^*)\cdot \alpha(z^*, z)</script>保证了最终得到的是平稳分布。</li>
+<li>在x是连续变量的情况下，转换矩阵Q变为核函数积分形式。</li>
+<li>问题：1）高维变量<script type="math/tex">\alpha</script>计算很慢，而且转移会被拒绝效率较低；2）在多维变量采样时可能面临联合分布难以计算的问题。</li>
+</ul>
+<p>Gibbs采样：在采样第i维的时候，固定住其他维度不变。它需要知道每个维度在其他维度下的条件概率。</p>
+<ul>
+<li>比如对一个m维的变量，<script type="math/tex">p(z) = p(z_1, \cdots, z_m)</script>，<script type="math/tex">z^{t+1}_i\sim p(z_i|z_{\neq i}^t)</script>。</li>
+<li>MH采样中的<script type="math/tex">P(z^*)</script>在某一时刻对第i维度采样就等于<script type="math/tex">p(z_i^*|z_{\neq i}^*)\cdot p(z^*_{\neq i})</script>，而<script type="math/tex">Q(z|z^*)</script>就等于<script type="math/tex">p(z_i|z^*_{\neq i})</script>。</li>
+<li>而且，因为某一个时刻采样i维的时候，<script type="math/tex">z_{\neq i}</script>是固定不变的，所以<script type="math/tex">z_{\neq i} == z_{\neq i}^*</script>。</li>
+<li>这样算出的接受率<script type="math/tex">\alpha = 1</script>，也就是每个时刻都选择从<script type="math/tex">p(z_i|z^t{\neq i})</script>中采样的值。</li>
+</ul>
+<p>Tricks：</p>
+<ul>
+<li>通常多维变量采样Gibbs采样。</li>
+<li>MH或者Gibbs采样的相邻样本之间是相关的，如果要求独立性，需要重新在生成的平稳序列下再次随机采样。</li>
+<li>关于“燃烧期”，即抛弃的不稳定的MC序列的长度，通常是经验性的判定，或者可以使用序列窗口的均值来判断是否平稳。</li>
+</ul>
+<p>MCMC的问题：</p>
+<ul>
+<li>不能保证多少步收敛；</li>
+<li>如果p分布过于复杂或者维数很大，燃烧期可能很长（比如分布很陡峭、或者具有某些概率极低的低谷）</li>
+<li>样本之间有关联性，不符合采样的独立性原则。</li>
+</ul>
+<h4 id="HMC"><a href="#HMC" class="headerlink" title="HMC"></a>HMC</h4><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.bilibili.com/video/BV1aE411o7qd" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1aE411o7qd</a></p>
+<p><a href="https://www.yuque.com/books/share/f4031f65-70c1-4909-ba01-c47c31398466" target="_blank" rel="noopener">https://www.yuque.com/books/share/f4031f65-70c1-4909-ba01-c47c31398466</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2019/11/17/ML-Basics/" title="ML-Basics Recap-软核">http://cairohy.github.io/2019/11/17/ML-Basics/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 阅读笔记</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/11/17/deeplearning/NLP-bilinear-attentiton-networks/" rel="prev" title="Bilinear Attention Networks">
+      <i class="fa fa-chevron-left"></i> Bilinear Attention Networks
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/30/nlp/pplm/" rel="next" title="PPLM-使用预训练语言模型进行可控制的文本生成">
+      PPLM-使用预训练语言模型进行可控制的文本生成 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#零、Basics"><span class="nav-text">零、Basics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、线性模型"><span class="nav-text">一、线性模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线性回归"><span class="nav-text">线性回归</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线性分类"><span class="nav-text">线性分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、指数族分布"><span class="nav-text">二、指数族分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一维高斯分布"><span class="nav-text">一维高斯分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、支持向量机（SVM）"><span class="nav-text">三、支持向量机（SVM）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-最大间隔分类器"><span class="nav-text">1.最大间隔分类器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-优化问题的转化。"><span class="nav-text">2.优化问题的转化。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-优化问题的求解。"><span class="nav-text">3.优化问题的求解。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、概率图模型（PGM）"><span class="nav-text">四、概率图模型（PGM）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-概率图表示"><span class="nav-text">1.概率图表示</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#有向图-贝叶斯网络"><span class="nav-text">有向图-贝叶斯网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#无向图-马尔科夫网络"><span class="nav-text">无向图-马尔科夫网络</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-概率图推断"><span class="nav-text">2.概率图推断</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#变量消除"><span class="nav-text">变量消除</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#信念传播"><span class="nav-text">信念传播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Max-Product"><span class="nav-text">Max Product</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#势函数"><span class="nav-text">势函数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#道德图"><span class="nav-text">道德图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#因子图"><span class="nav-text">因子图</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-学习"><span class="nav-text">3.学习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、EM算法"><span class="nav-text">五、EM算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-收敛性"><span class="nav-text">1.收敛性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-公式推导（KL-ELBO角度）"><span class="nav-text">2.公式推导（KL + ELBO角度）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-公式推导（Jensen不等式角度）"><span class="nav-text">3.公式推导（Jensen不等式角度）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-广义EM"><span class="nav-text">4.广义EM</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、变分推断（VI）"><span class="nav-text">六、变分推断（VI）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引言"><span class="nav-text">引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#公式推导"><span class="nav-text">公式推导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SGVI（Stochastic-Gradient）"><span class="nav-text">SGVI（Stochastic Gradient）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、MCMC"><span class="nav-text">七、MCMC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#采样方法介绍"><span class="nav-text">采样方法介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MCMC"><span class="nav-text">MCMC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HMC"><span class="nav-text">HMC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2019/11/17/ML-Basics/";
+    this.page.identifier = "2019/11/17/ML-Basics/";
+    this.page.title = "ML-Basics Recap-软核";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '8e16f6a0d15fbedf6b94534830b36099',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

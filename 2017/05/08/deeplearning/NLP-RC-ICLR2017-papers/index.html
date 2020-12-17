@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1、文章来源本次阅读了下面三篇发表在ICLR2017上的机器阅读理解文章。 《Bi-Directional Attention Flow For Machine Comprehension》 《Frustratingly Short Attention Spans In Neural Language Modeling》 《Reasoning With Memory Augmented Neura">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ICLR2017-Machine Comprehension三篇论文选读">
+<meta property="og:url" content="http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="1、文章来源本次阅读了下面三篇发表在ICLR2017上的机器阅读理解文章。 《Bi-Directional Attention Flow For Machine Comprehension》 《Frustratingly Short Attention Spans In Neural Language Modeling》 《Reasoning With Memory Augmented Neura">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/FklvkRV6mgKtmXqhCIVmtIrLSCRN.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Frl_yGjGzNcPT8vupn-By273GhBQ.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FvNZV6oaYk3X6dUp2OVcQPViRLc7.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FtJhgFeF1Po4288RnZEx5lyign57.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FnAdCFFzB8nAxbwUOmZf_qdHTl4E.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FkV_ukJcH8Obhn0kEaquKr2dzBFQ.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fsqj6R2ewS9ozU1AtckI8b0qgU5Y.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FjCux0vIJroh3UXgHPXgc0aDnyCq.jpg">
+<meta property="article:published_time" content="2017-05-08T14:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.072Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="机器阅读理解">
+<meta property="article:tag" content="完形填空">
+<meta property="article:tag" content="问答系统">
+<meta property="article:tag" content="memory">
+<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="ICLR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/FklvkRV6mgKtmXqhCIVmtIrLSCRN.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ICLR2017-Machine Comprehension三篇论文选读 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ICLR2017-Machine Comprehension三篇论文选读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-08 14:00:00" itemprop="dateCreated datePublished" datetime="2017-05-08T14:00:00+00:00">2017-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/" class="post-meta-item leancloud_visitors" data-flag-title="ICLR2017-Machine Comprehension三篇论文选读" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>本次阅读了下面三篇发表在ICLR2017上的机器阅读理解文章。</p>
+<p><a href="https://arxiv.org/abs/1611.01603" target="_blank" rel="noopener">《Bi-Directional Attention Flow For Machine Comprehension》</a></p>
+<p><a href="https://arxiv.org/abs/1702.04521" target="_blank" rel="noopener">《Frustratingly Short Attention Spans In Neural Language Modeling》</a></p>
+<p><a href="https://arxiv.org/abs/1610.06454" target="_blank" rel="noopener">《Reasoning With Memory Augmented Neural Networks For Language Comprehension》</a></p>
+<h4 id="2、Bi-Directional-Attention-Flow-For-Machine-Comprehension"><a href="#2、Bi-Directional-Attention-Flow-For-Machine-Comprehension" class="headerlink" title="2、Bi-Directional Attention Flow For Machine Comprehension"></a>2、Bi-Directional Attention Flow For Machine Comprehension</h4><p>华盛顿大学的研究人员提出的一种基于Attention的阅读理解框架BiDAF。代码在这里<a href="https://github.com/allenai/bi-att-flow" target="_blank" rel="noopener">https://github.com/allenai/bi-att-flow</a>。</p>
+<ul>
+<li>输入，假定输入上下文<script type="math/tex">X=\{x_1,\cdots,x_T\}</script>，问题<script type="math/tex">Q=\{q_1,\cdots,q_J\}</script>。</li>
+<li>字符嵌入层：利用CharCNN将每个单词映射到向量空间中。</li>
+<li>单词嵌入层：利用预训练的Glove词向量模型将单词映射到向量空间中。</li>
+<li>上下文嵌入层：输入上两层的输出，利用上下文去调整并输出每个单词包含上下文信息的向量表示。</li>
+<li>注意力层：输入问题q的向量表示<script type="math/tex">U\in R^{2d\times J}</script>和上下文的向量表示<script type="math/tex">H\in R^{2d\times T}</script>，利用注意力机制，输出D中每个单词基于问题的特征向量G，以及上下文嵌入层的输出。首先利用H和U计算出相似度矩阵<script type="math/tex">S\in R^{T\times J}</script>，其中</li>
+</ul>
+<script type="math/tex; mode=display">
+S_{tj}=\alpha(H_{:t},U_{:j})\in R</script><p>进一步的，利用S计算出上下文对于问题的注意力C2Q，以及问题对于上下文的注意力Q2C，C2Q代表对于每个上下文单词每一个问题单词的相关程度，Q2C则反之。</p>
+<p>利用S每一行进行softmax，得到C2Q的权重<script type="math/tex">a_t\in R^J</script>，而用这个权重可以得到<script type="math/tex">\tilde U\in R^{2d\times T}</script>，其中<script type="math/tex">\tilde u_{:t}=\sum_ja_{tj}U_{:j}</script>，也就是对应上下文每个单词时，q的表示。</p>
+<p>Q2C并不是和C2Q完全对应着来，而是<script type="math/tex">b=softmax(max_{col}(s))\in R^T</script>，也就是取了一个解释起来略复杂的softmax来计算注意力权重。而后计算出对于问题的表示<script type="math/tex">\tilde H\in R^{2d\times T}</script>，其中每一列<script type="math/tex">\tilde h = \sum_tb_th_{:t}</script>。</p>
+<p>最后，利用上面计算出来的这些结果计算输出<script type="math/tex">G\in R^{x\times T}</script>，<script type="math/tex">G_{:t}=\beta(H_{:t},\tilde U_{:t},\tilde H_{:t})</script>。这个G也就是基于问题的上下文特征向量。</p>
+<ul>
+<li>模型层：利用LSTM对注意力层的输出进行建模。输出<script type="math/tex">M \in R^{2d\times T}</script>。</li>
+<li>输出层：利用softmax和FC层输出结果。对于QA任务（默认答案是原文中连续的一段），预测其开始和结束的index。</li>
+</ul>
+<p><img src="/images/FklvkRV6mgKtmXqhCIVmtIrLSCRN.jpg" alt=""></p>
+<p>这篇文章提出的模型的创新点在于：</p>
+<ul>
+<li>利用了不同级别的表示：字符级别、词级别以及上下文级别。</li>
+<li>用一种新的方式将注意力机制加入模型中。<ul>
+<li>并没有过早的利用attention层将上下文总结为一个定长向量，而是记录下了每一个时间步的attention，并流入下一层。（类似AS-Reader和AOA）</li>
+<li>attention的计算，仅仅与当前时间步的上下文和问题相关，与之前时间步的状态无关。</li>
+<li>计算了双向的attention，即问题对上下文的注意力和上下文对于问题的注意力，利用了更多的信息。（类似AOA）</li>
+</ul>
+</li>
+</ul>
+<p>总的来说，这篇文章利用attention的思想和2016年稍早些发表的文章Attention-over-Attention有些类似，都利用了相似度矩阵以及双向的注意力。最终，这篇论文在斯坦福QA数据集（SQuAD，2016）和CNN/DailyMail完形填空任务中取得了state-of-the-art的成绩。</p>
+<p><img src="/images/Frl_yGjGzNcPT8vupn-By273GhBQ.jpg" alt=""></p>
+<h4 id="3、Frustratingly-Short-Attention-Spans-In-Neural-Language-Modeling"><a href="#3、Frustratingly-Short-Attention-Spans-In-Neural-Language-Modeling" class="headerlink" title="3、Frustratingly Short Attention Spans In Neural Language Modeling"></a>3、Frustratingly Short Attention Spans In Neural Language Modeling</h4><p>来自伦敦大学学院研究人员，有关Attention和Memory的一篇论文。在Memory Augmented模型中改进了Attention机制。</p>
+<p>已有的attention机制被用来捕捉长时依赖，但是输出向量需要同时满足：</p>
+<ul>
+<li>对单词的分布进行encode，以预测下一个单词；</li>
+<li>作为key来计算注意力权重向量；</li>
+<li>encode上下文，用来帮助预测下一个单词。</li>
+</ul>
+<p>本文提出了一种假设即对输出表示的这种过度利用可能让网络难以训练，因此做了以下几个事情：</p>
+<p>1）提出了几种改造的attention机制。</p>
+<p>2）发现了尽管效果超过了已有的使用memory的网络，但是其实主要利用了过去五个time-step的特征表示；</p>
+<p>3）找到了一种简单有效的网络结构，使用过去五个输出的表示拼接起来预测下一时刻的word。</p>
+<ul>
+<li>LM的标准Attention：引入Memory，但是把LSTM的过去L个time-step的输出<script type="math/tex">h\in R^k</script>作为Memory的内容<script type="math/tex">Y_t\in R^{k\times L}</script>。从公式中可以看到，无论是计算注意力权重向量<script type="math/tex">\alpha_t\in R^{L}</script>，还是计算上下文向量<script type="math/tex">r_t</script>，还是计算最终的表示<script type="math/tex">h_t^*</script>，都是用了LSTM的同一个输入<script type="math/tex">h_t</script>，这也让模型难以优化。</li>
+<li>K-V Attention：把<script type="math/tex">h_t = \begin{bmatrix}k_t\\vt\\\end{bmatrix}</script>分为两个部分，其中<script type="math/tex">k_t</script>负责计算注意力权重，而<script type="math/tex">v_t</script>负责计算上下文向量，但是计算表示<script type="math/tex">h_t^*</script>还是用到了<script type="math/tex">h_t</script>。</li>
+<li>K-V-P Attention：<script type="math/tex">h_t = \begin{bmatrix}k_t\\vt\\p_t\\\end{bmatrix}</script>，其中<script type="math/tex">p_t</script>和上下文向量一起编码最终的表示。</li>
+<li>N-gram RNN：使用前N个time-step的输出向量直接拼接来计算<script type="math/tex">h_t^*</script>。</li>
+</ul>
+<p>最终在Wikipedia和CBT数据集上进行了测试，wikipedia不了解，不过CBT上的结果只能说一般吧。比稍微复杂一些的RNN模型都要差一点。</p>
+<p><img src="/images/FvNZV6oaYk3X6dUp2OVcQPViRLc7.jpg" alt=""></p>
+<h4 id="4、Reasoning-With-Memory-Augmented-Neural-Networks-For-Language-Comprehension"><a href="#4、Reasoning-With-Memory-Augmented-Neural-Networks-For-Language-Comprehension" class="headerlink" title="4、Reasoning With Memory Augmented Neural Networks For Language Comprehension"></a>4、Reasoning With Memory Augmented Neural Networks For Language Comprehension</h4><p>ICLR2017上来自马萨诸塞州大医学院的一篇论文。利用<strong>假设检验</strong>这一认知过程中的过程基于Memory-Augmented神经网络，在CBT和WDW数据集上取得了state-of-the-art的结果。</p>
+<p>首先，文章引入了认知神经学领域的假设检验过程，这是一个首先提出一个形式化的假设而后对这个假设进行测试的过程，涉及到注意力、Working Memory和认知控制等。依靠注意力和短期记忆来维护、保持、更新假设，而认知控制用来检查并忽略错误的假设。</p>
+<p>主要利用了2016年提出的神经语义编码器（NSE）来实现，目标任务是Cloze形式的完型填空任务。可以认为是一个利用假设检验循环的推理过程。</p>
+<p>对之前的方法，本文将其分为两种：</p>
+<ul>
+<li>Single-step模型：包括AttentiveReader，StanfordAttentiveReader，ASReader都属于这一类，其特征是只读取上下文一次，通过一次计算过程预测答案；</li>
+<li>Multi-step模型：包括ImpatientReader，EpiReader，GAReader，IAAReader，AoAReader和本文提出的模型都是这类模型。</li>
+</ul>
+<p>本文的推理次数没有预先确定，而是根据上下文和问题动态确定。</p>
+<ul>
+<li>memory初始化：首先将上下文d和问题q放入LSTM中编码，并将其输出作为初始化的memory，其中q的编码记忆会更新而d不变：</li>
+</ul>
+<script type="math/tex; mode=display">
+M^q_0=BiLSTM^q(Q) \in R^{k\times |Q|}</script><script type="math/tex; mode=display">
+M^d=BiLSTM^d(D)\in R^{k\times |D|}</script><ul>
+<li><p>假设检验：</p>
+<ul>
+<li>构造假设：利用之前对q、d的记忆、q和d在前一时刻的状态<script type="math/tex">s_{t-1}^q,s_{t-1}^d</script>和NSE的read机制，构造当前时刻q和d的状态。利用compose机制计算出上下文。</li>
+</ul>
+<p><img src="/images/FtJhgFeF1Po4288RnZEx5lyign57.jpg" alt=""></p>
+<script type="math/tex; mode=display">c_t$$由compose模块计算，并写入。</script><p>c_t=compose^{MLP}(s^q_t,s^d_t,r_t)<br>$$</p>
+<ul>
+<li>检验假设：</li>
+</ul>
+</li>
+</ul>
+<p>write模块更新当前时刻q的记忆，同时承担着检验更新后的假设，并决定是否停止推理过程的任务。本文提出了两种策略：</p>
+<p><img src="/images/FnAdCFFzB8nAxbwUOmZf_qdHTl4E.jpg" alt=""></p>
+<p>1.Query Gating，如上图a。这里是利用t-1时刻q的记忆算出gating权重，决定如何更新。使用这种策略时，推理的步数T需要作为超参数指定。</p>
+<p><img src="/images/FkV_ukJcH8Obhn0kEaquKr2dzBFQ.jpg" alt=""></p>
+<p>2.Adaptive Computation，如上图b。首先计算出一个终止分数<script type="math/tex">e_t\in R</script>。在t步之后结束推理过程的可能性是：<script type="math/tex">p_t=e_t\prod_{i=1}^{t-1}(1-e_i)</script>，而T作为超参数表示最大允许步数，超过之后强行结束。</p>
+<p><img src="/images/Fsqj6R2ewS9ozU1AtckI8b0qgU5Y.jpg" alt=""></p>
+<ul>
+<li>答案预测：</li>
+</ul>
+<p>这里借鉴了AS-Reader的思想，将第t步问题到文档的对齐权重<script type="math/tex">l_t^d</script>进行softmax从而获得答案的条件概率。</p>
+<p>最后，在CBT和WDW数据集上进行了测试。</p>
+<p><img src="/images/FjCux0vIJroh3UXgHPXgc0aDnyCq.jpg" alt=""></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/" title="ICLR2017-Machine Comprehension三篇论文选读">http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 自然语言处理</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3/" rel="tag"><i class="fa fa-tag"></i> 机器阅读理解</a>
+              <a href="/tags/%E5%AE%8C%E5%BD%A2%E5%A1%AB%E7%A9%BA/" rel="tag"><i class="fa fa-tag"></i> 完形填空</a>
+              <a href="/tags/%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 问答系统</a>
+              <a href="/tags/memory/" rel="tag"><i class="fa fa-tag"></i> memory</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"><i class="fa fa-tag"></i> 论文阅读</a>
+              <a href="/tags/ICLR/" rel="tag"><i class="fa fa-tag"></i> ICLR</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/05/ml-coding-summarize/Tensorflow%E4%B8%ADGRU%E5%92%8CLSTM%E7%9A%84%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96/" rel="prev" title="Tensorflow中GRU和LSTM的权重初始化">
+      <i class="fa fa-chevron-left"></i> Tensorflow中GRU和LSTM的权重初始化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/05/09/ml-coding-summarize/AoA-Reader%E5%9C%A8tensorflow%E4%B8%8B%E5%AE%9E%E7%8E%B0%E6%80%BB%E7%BB%93/" rel="next" title="AoA-Reader实现总结-Tensorflow">
+      AoA-Reader实现总结-Tensorflow <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、文章来源"><span class="nav-text">1、文章来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、Bi-Directional-Attention-Flow-For-Machine-Comprehension"><span class="nav-text">2、Bi-Directional Attention Flow For Machine Comprehension</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、Frustratingly-Short-Attention-Spans-In-Neural-Language-Modeling"><span class="nav-text">3、Frustratingly Short Attention Spans In Neural Language Modeling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、Reasoning-With-Memory-Augmented-Neural-Networks-For-Language-Comprehension"><span class="nav-text">4、Reasoning With Memory Augmented Neural Networks For Language Comprehension</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/";
+    this.page.identifier = "2017/05/08/deeplearning/NLP-RC-ICLR2017-papers/";
+    this.page.title = "ICLR2017-Machine Comprehension三篇论文选读";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '193fb55ecfca004caca666ef6714b6df',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

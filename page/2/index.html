@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="new Cairo()">
+<meta property="og:url" content="http://cairohy.github.io/page/2/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="cairo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/page/2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/06/20/leetcode/basic%20calculator%20II/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/20/leetcode/basic%20calculator%20II/" class="post-title-link" itemprop="url">leetcode:basic calculator II</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-20T21:00:00+00:00">2019-06-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/06/20/leetcode/basic%20calculator%20II/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode:basic calculator II" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>实现一个对于正整数和“+, -, *, /, (, )”的计算器。每个表达式都是合法的。乘除法优先级较高。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>实际只需要一个操作数栈存储带正负号的操作数。遇到括号就递归处理。遇到优先级高的操作符乘除就直接算。</p>
+<h3 id="三、实现"><a href="#三、实现" class="headerlink" title="三、实现"></a>三、实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">nums = [str(a) <span class="keyword">for</span> a <span class="keyword">in</span> range(<span class="number">10</span>)]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calculate</span><span class="params">(self, s: str)</span> -&gt; int:</span>        </span><br><span class="line">        <span class="keyword">return</span> cal(list(reversed(s)))</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cal</span><span class="params">(s)</span>:</span></span><br><span class="line">    stack = []</span><br><span class="line">    op_stack = []</span><br><span class="line">    v, valid = <span class="number">0</span>, <span class="literal">False</span></span><br><span class="line">    sign = <span class="literal">None</span></span><br><span class="line">    compute_flag = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> s:</span><br><span class="line">        c = s.pop()</span><br><span class="line">        <span class="keyword">if</span> c == <span class="string">' '</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> c <span class="keyword">in</span> nums:</span><br><span class="line">            valid = <span class="literal">True</span></span><br><span class="line">            v = v * <span class="number">10</span> + int(c)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> valid:</span><br><span class="line">                <span class="keyword">if</span> compute_flag != <span class="number">1</span>:</span><br><span class="line">                    v = -v <span class="keyword">if</span> sign == <span class="string">'-'</span> <span class="keyword">else</span> v  <span class="comment"># 加减法直接记录</span></span><br><span class="line">                stack.append(v)</span><br><span class="line">                <span class="keyword">if</span> compute_flag == <span class="number">1</span>:</span><br><span class="line">                    evaluation(stack, op_stack)</span><br><span class="line">            v, valid = <span class="number">0</span>, <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> c == <span class="string">'('</span>:</span><br><span class="line">                stack.append( self.calculate(s))</span><br><span class="line">            <span class="keyword">elif</span> c == <span class="string">')'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># ['+', '-', '*', '/']</span></span><br><span class="line">                compute_flag = <span class="number">1</span> <span class="keyword">if</span> c <span class="keyword">in</span> [<span class="string">'*'</span>, <span class="string">'/'</span>] <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">                <span class="keyword">if</span> compute_flag == <span class="number">1</span>:</span><br><span class="line">                    op_stack.append(c)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    sign = c</span><br><span class="line">        <span class="comment"># print('stack: &#123;&#125;'.format(stack))</span></span><br><span class="line">        <span class="comment"># print('op_stack: &#123;&#125;'.format(op_stack))</span></span><br><span class="line">    <span class="keyword">if</span> valid == <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> compute_flag != <span class="number">1</span>:</span><br><span class="line">            v = -v <span class="keyword">if</span> sign == <span class="string">'-'</span> <span class="keyword">else</span> v</span><br><span class="line">        stack.append(v)</span><br><span class="line">        <span class="keyword">if</span> compute_flag == <span class="number">1</span>:</span><br><span class="line">            evaluation(stack, op_stack)</span><br><span class="line">    <span class="keyword">return</span> greedy_evaluation(stack, op_stack)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(op1, op2, sign)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> sign == <span class="string">'+'</span>:</span><br><span class="line">        <span class="keyword">return</span> op1 + op2</span><br><span class="line">    <span class="keyword">if</span> sign == <span class="string">'-'</span>:</span><br><span class="line">        <span class="keyword">return</span> op2 - op1</span><br><span class="line">    <span class="keyword">if</span> sign == <span class="string">'*'</span>:</span><br><span class="line">        <span class="keyword">return</span> op1 * op2</span><br><span class="line">    <span class="keyword">if</span> sign == <span class="string">'/'</span>:</span><br><span class="line">        <span class="keyword">return</span> op2 // op1 <span class="keyword">if</span> op2 &gt;= <span class="number">0</span> <span class="keyword">else</span> -(-op2 // op1)  <span class="comment"># 除法判断一下</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluation</span><span class="params">(stack, op_stack)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(stack) &lt; <span class="number">2</span> <span class="keyword">or</span> stack[<span class="number">-2</span>] == <span class="string">'('</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    sign = op_stack.pop()</span><br><span class="line">    op1, op2 = stack.pop(), stack.pop()</span><br><span class="line">    res = helper(op1, op2, sign)</span><br><span class="line">    stack.append(res)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greedy_evaluation</span><span class="params">(stack, op_stack)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sum(stack)</span><br><span class="line">	<span class="comment"># 就不用憨憨的再一个一个pop</span></span><br><span class="line">    <span class="comment"># res = None</span></span><br><span class="line">    <span class="comment"># while op_stack:</span></span><br><span class="line">    <span class="comment">#     res = res if res != None else stack.pop(0)</span></span><br><span class="line">    <span class="comment">#     sign = op_stack.pop(0)</span></span><br><span class="line">    <span class="comment">#     op2 = stack.pop(0)</span></span><br><span class="line">    <span class="comment">#     res = helper(op2, res, sign)</span></span><br><span class="line">    <span class="comment"># return res if res != None else stack[0]</span></span><br></pre></td></tr></table></figure>
+<p>有两个点需要注意：</p>
+<p>1.不要用pop(0)，因为是O(n)的开销。</p>
+<p>2.加减法就不用存储到op栈了，记录操作符的sign然后给操作数修改一下就行。这样最后算的时候直接sum数据栈就行。</p>
+<p>3.如果是用2的方法那么对除法要特殊处理，因为整除除法总是向0靠近。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/20/leetcode/basic%20calculator%20II/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/06/18/leetcode/basic%20calculator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/06/18/leetcode/basic%20calculator/" class="post-title-link" itemprop="url">leetcode: basic calculator</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-18T21:00:00+00:00">2019-06-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/06/18/leetcode/basic%20calculator/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: basic calculator" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>实现一个对于正整数和“+, -, (, )”的计算器。每个表达式都是合法的。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>两个栈，操作数栈存储操作数 + “(“，操作符栈存储其他操作符。数字直接入栈，操作符遇到右括号时将对应的左括号删除并求值，其他符号直接求值。</p>
+<h3 id="三、实现"><a href="#三、实现" class="headerlink" title="三、实现"></a>三、实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line">State = Enum(<span class="string">'State'</span>, (<span class="string">'begin'</span>, <span class="string">'num'</span>, <span class="string">'op'</span>))</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calculate</span><span class="params">(self, s: str)</span> -&gt; int:</span></span><br><span class="line">        nums = [str(a) <span class="keyword">for</span> a <span class="keyword">in</span> range(<span class="number">10</span>)]</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(op1, op2, sign)</span>:</span></span><br><span class="line">            <span class="comment"># 顺序不要搞反了</span></span><br><span class="line">            <span class="keyword">if</span> sign == <span class="string">'+'</span>:</span><br><span class="line">                <span class="keyword">return</span> op1 + op2</span><br><span class="line">            <span class="keyword">if</span> sign == <span class="string">'-'</span>:</span><br><span class="line">                <span class="keyword">return</span> op2 - op1</span><br><span class="line">            <span class="keyword">if</span> sign == <span class="string">'*'</span>:</span><br><span class="line">                <span class="keyword">return</span> op1 * op2</span><br><span class="line">            <span class="keyword">if</span> sign == <span class="string">'/'</span>:</span><br><span class="line">                <span class="keyword">return</span> op2 / op1</span><br><span class="line">            </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">evaluation</span><span class="params">()</span>:</span></span><br><span class="line">            <span class="keyword">if</span> len(stack) &lt; <span class="number">2</span> <span class="keyword">or</span> stack[<span class="number">-2</span>] == <span class="string">'('</span>:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            sign = op_stack.pop()</span><br><span class="line">            op1, op2 = stack.pop(), stack.pop()</span><br><span class="line">            res = helper(op1, op2, sign)</span><br><span class="line">            stack.append(res)</span><br><span class="line"></span><br><span class="line">        stack = []</span><br><span class="line">        op_stack = []</span><br><span class="line">        v = <span class="number">0</span></span><br><span class="line">        compute_flag = <span class="number">0</span></span><br><span class="line">        state = State.begin</span><br><span class="line">        <span class="keyword">if</span> s[<span class="number">0</span>] <span class="keyword">in</span> nums:</span><br><span class="line">            state = State.num</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            state = State.op</span><br><span class="line"></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; len(s):</span><br><span class="line">            c = s[i]</span><br><span class="line">            <span class="keyword">if</span> c == <span class="string">' '</span>:</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> state == State.num:</span><br><span class="line">                <span class="keyword">if</span> c <span class="keyword">in</span> nums:</span><br><span class="line">                    v = v * <span class="number">10</span> + int(c)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    state = State.op</span><br><span class="line">                    stack.append(v)</span><br><span class="line">                    <span class="comment"># print('stack: &#123;&#125;'.format(stack))</span></span><br><span class="line">                    v = <span class="number">0</span></span><br><span class="line">                    evaluation()</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">elif</span> state == State.op:</span><br><span class="line">                <span class="keyword">if</span> c <span class="keyword">in</span> nums:</span><br><span class="line">                    state = State.num</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> c == <span class="string">'('</span>:</span><br><span class="line">                        stack.append(c)</span><br><span class="line">                        compute_flag = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">elif</span> c == <span class="string">')'</span>:</span><br><span class="line">                        last = stack.pop()</span><br><span class="line">                        stack[<span class="number">-1</span>] = last  <span class="comment"># 删除倒数第二个元素（对应的左括号）</span></span><br><span class="line">                        evaluation()</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        compute_flag = <span class="number">1</span></span><br><span class="line">                        op_stack.append(c)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">'illegal state.'</span>)</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            <span class="comment"># print('stack: &#123;&#125;'.format(stack))</span></span><br><span class="line">            <span class="comment"># print('op_stack: &#123;&#125;'.format(op_stack))</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> state == State.num:</span><br><span class="line">            stack.append(v)</span><br><span class="line">        <span class="keyword">while</span> op_stack:</span><br><span class="line">            evaluation()</span><br><span class="line">        <span class="keyword">return</span> stack[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/18/leetcode/basic%20calculator/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/05/25/leetcode/DFS%E9%A2%98%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/05/25/leetcode/DFS%E9%A2%98%E7%9B%AE/" class="post-title-link" itemprop="url">leetcode: combination-sum系列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-25 21:00:00" itemprop="dateCreated datePublished" datetime="2019-05-25T21:00:00+00:00">2019-05-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/05/25/leetcode/DFS%E9%A2%98%E7%9B%AE/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: combination-sum系列" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。</p>
+<p>candidates 中的数字可以无限制重复被选取。</p>
+<ul>
+<li>所有数字（包括 <code>target</code>）都是正整数。</li>
+<li>解集不能包含重复的组合。 </li>
+</ul>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>首先利用回溯能够没有遗漏的找到所有的组合，但是这样是会重复的。</p>
+<p>我们可以首先对数组升序排列，然后对DFS搜索增加一个index，这样就控制了组合里面数的顺序，确保不会重复。</p>
+<p>剪枝，如果当前的选择无法组合，那么当前轮之后的选择直接跳过。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><h4 id="1-基础题"><a href="#1-基础题" class="headerlink" title="1.基础题"></a>1.基础题</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/05/25/leetcode/DFS%E9%A2%98%E7%9B%AE/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/03/25/leetcode/lfu-cache/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/25/leetcode/lfu-cache/" class="post-title-link" itemprop="url">leetcode: lfu-cache</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-25 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-25T21:00:00+00:00">2019-03-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/03/25/leetcode/lfu-cache/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: lfu-cache" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>为 <a href="https://baike.baidu.com/item/缓存算法" target="_blank" rel="noopener">最不经常使用（LFU）</a>缓存算法设计并实现数据结构。它应该支持以下操作：<code>get</code> 和 <code>put</code>。</p>
+<ul>
+<li>get(key) - 如果键存在于缓存中，则获取键的值（总是正数），否则返回 -1。</li>
+<li>put(key, value) - 如果键已存在，则变更其值；如果键不存在，请插入键值对。当缓存达到其容量时，则应该在插入新项之前，使最不经常使用的项无效。在此问题中，当存在平局（即两个或更多个键具有相同使用频率）时，应该去除最久未使用的键。</li>
+</ul>
+<p>「项的使用次数」就是自插入该项以来对其调用 get 和 put 函数的次数之和。使用次数会在对应项被移除后置为 0 。<br>在 O(1) 时间复杂度内执行两项操作？</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>对get操作来说，只需要使用key-&gt;value的映射即可在O(1)时间查找。<br>对put操作来说：</p>
+<ul>
+<li>1.因为要根据频率删除元素，所以要更新频率，就需要记录key-&gt;freq的映射。</li>
+<li>2.因为需要O(1)删除节点，所以需要按照freq排序，即记录freq -&gt; key_list，还需要记录并维护min_freq这个数值，从而直接找到使用频率最低的key的集合。</li>
+<li>3.因为题目要求在多个key使用频率相同时按照插入顺序删除最早插入的，但这个key_list不能以O(1)插入和删除，我们这里使用了OrderedDict来存储，其实也可以用Queue是一样的。</li>
+</ul>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><p>时间开销：</p>
+<ul>
+<li><p>更新频率，包含 OrderedDict/Queue删除元素、字典取值、OrderedDict/Queue插入元素，均为O(1)。</p>
+</li>
+<li><p>get，涉及到更新频率和字典取值，O(1)。</p>
+</li>
+<li>put，涉及到更新频率、字典取值、字典插入、字典/OrderedDict/Queue删除，O(1)。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/25/leetcode/lfu-cache/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/03/18/leetcode/coin-change-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/18/leetcode/coin-change-2/" class="post-title-link" itemprop="url">leetcode:coin-change-2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-18T21:00:00+00:00">2019-03-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/03/18/leetcode/coin-change-2/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode:coin-change-2" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>115</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>给定若干硬币金额和一个总金额，返回能凑出这个总金额的凑法。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>状态：前<script type="math/tex">i</script>个金额的硬币是否凑出总金额j记录在<script type="math/tex">dp[i][j]</script>。</p>
+<p>初始值：<script type="math/tex">dp[:][0] = 1, dp[0][:] = 0</script>，凑出总金额0只有1种。</p>
+<p>递推：已知<script type="math/tex">dp[<i],dp[i][<j]</script>，如果可以加入第<script type="math/tex">i</script>个元素那么由 [加入 + 不加入]的总凑法计算，否则就等于<script type="math/tex">dp[i-1][j]</script>（不加入的凑法）。</p>
+<p>返回：<script type="math/tex">dp[n][amount]</script>。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><p>时间复杂度和空间开销都是<script type="math/tex">O(N\cdot Amount)</script>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(self, amount: int, coins: List[int])</span> -&gt; int:</span></span><br><span class="line">        <span class="comment"># 前i个硬币总金额为amount的拼法</span></span><br><span class="line">        dp = [[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(amount + <span class="number">1</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(coins) + <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(coins) + <span class="number">1</span>):  <span class="comment"># 拼出总金额为0 = 1</span></span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(coins) + <span class="number">1</span>):  <span class="comment"># 前i个硬币</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, amount + <span class="number">1</span>):</span><br><span class="line">                <span class="comment"># 如果第i个硬币可以加进去</span></span><br><span class="line">                <span class="keyword">if</span> j - coins[i - <span class="number">1</span>] &gt;= <span class="number">0</span>:</span><br><span class="line">                    <span class="comment"># 不加进去的凑法 + 加进去的凑发</span></span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j] + dp[i][j - coins[i - <span class="number">1</span>]]</span><br><span class="line">                <span class="keyword">elif</span> j - coins[i - <span class="number">1</span>] &lt; <span class="number">0</span>:</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">return</span> dp[len(coins)][amount]</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/03/18/leetcode/coin-change-2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/02/18/leetcode/buy-sell-stock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/02/18/leetcode/buy-sell-stock/" class="post-title-link" itemprop="url">leetcode: buy-sell-stock</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-02-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-18T21:00:00+00:00">2019-02-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/02/18/leetcode/buy-sell-stock/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: buy-sell-stock" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>这是一个系列问题。</p>
+<p>给定一个股票价格的数组，求在k次交易的限制下最佳收益。（变种为无交易限制、增加交易费用、增加交易冷却时间等）</p>
+<p>必须在卖出后才能再次买入。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>状态：在k次交易限制下，需要求最后一天的收益，那么第i天经过了k次交易当前持有股票时的收益记录为<script type="math/tex">dp[i][k][1]</script>，交易次数就是买入次数。</p>
+<p>初始值：如果没有进行过交易，那么肯定不持有股票收益是0，<script type="math/tex">dp[:][0][0] = 0</script>，这时候肯定无法持有股票设置收益为负无穷<script type="math/tex">dp[:][0][1] = -inf</script>。我们用<script type="math/tex">dp[0][:][:]</script>记录第一天交易前的状态，很显然<script type="math/tex">dp[0][:][1] = -inf</script>。</p>
+<p>递推：已经知道之前的状态，如果此次交易之后持有股票，那么可能是之前一天持有的或者是今天买入的；否则可能是前一天就没有持有或者今天卖出。</p>
+<p>返回：<script type="math/tex">dp[n][:][1]</script>中最大的一个。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/02/18/leetcode/buy-sell-stock/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/01/25/leetcode/BFS%E9%A2%98%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/01/25/leetcode/BFS%E9%A2%98%E7%9B%AE/" class="post-title-link" itemprop="url">leetcode: BFS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-25 21:00:00" itemprop="dateCreated datePublished" datetime="2019-01-25T21:00:00+00:00">2019-01-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/01/25/leetcode/BFS%E9%A2%98%E7%9B%AE/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: BFS" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>写一个二叉树序列化和反序列化的函数，要求以层序遍历。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>对二叉树来说层序遍历即BFS，使用队列即可，因为没有环所以不需要记录visited。在反序列化的时候首先把字符串转化为TreeNode数组，然后层序遍历root恢复子节点连接，用一个指针记录数组的行进步数。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><h4 id="1-本题，层序遍历。"><a href="#1-本题，层序遍历。" class="headerlink" title="1. 本题，层序遍历。"></a>1. 本题，层序遍历。</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"># class TreeNode(object):</span></span><br><span class="line"><span class="comment">#     def __init__(self, x):</span></span><br><span class="line"><span class="comment">#         self.val = x</span></span><br><span class="line"><span class="comment">#         self.left = None</span></span><br><span class="line"><span class="comment">#         self.right = None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> queue</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Codec</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">serialize</span><span class="params">(self, root)</span>:</span></span><br><span class="line">        <span class="string">"""Encodes a tree to a single string.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        :type root: TreeNode</span></span><br><span class="line"><span class="string">        :rtype: str</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        res = []</span><br><span class="line">        q = queue.Queue()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">traverse</span><span class="params">(root)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">                res.append(<span class="string">'null'</span>)</span><br><span class="line">                <span class="keyword">return</span> </span><br><span class="line">            res.append(str(root.val))</span><br><span class="line">            q.put(root.left)</span><br><span class="line">            q.put(root.right)</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">                cur = q.get()</span><br><span class="line">                traverse(cur)</span><br><span class="line">        traverse(root)</span><br><span class="line">        <span class="keyword">while</span> res[<span class="number">-1</span>] == <span class="string">'null'</span>: res.pop()</span><br><span class="line">        ret = <span class="string">'['</span> + <span class="string">','</span>.join(res) + <span class="string">']'</span></span><br><span class="line">        print(ret)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deserialize</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="string">"""Decodes your encoded data to tree.</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        :type data: str</span></span><br><span class="line"><span class="string">        :rtype: TreeNode</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        data = data[<span class="number">1</span>:<span class="number">-1</span>].split(<span class="string">','</span>)</span><br><span class="line">        data = [TreeNode(int(i)) <span class="keyword">if</span> i != <span class="string">'null'</span> <span class="keyword">else</span> <span class="literal">None</span> <span class="keyword">for</span> i <span class="keyword">in</span> data]</span><br><span class="line">        q = queue.Queue()</span><br><span class="line">        root, i = data[<span class="number">0</span>], <span class="number">1</span></span><br><span class="line">        q.put(root)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> q.empty() <span class="keyword">and</span> i &lt; len(data):</span><br><span class="line">            cur = q.get()</span><br><span class="line">            <span class="keyword">if</span> cur:</span><br><span class="line">                cur.left = data[i]</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">                q.put(cur.left)</span><br><span class="line">                <span class="keyword">if</span> i &lt; len(data):</span><br><span class="line">                    cur.right = data[i] </span><br><span class="line">                    i += <span class="number">1</span></span><br><span class="line">                    q.put(cur.right)</span><br><span class="line">        <span class="keyword">return</span> root</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="comment"># Your Codec object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"># codec = Codec()</span></span><br><span class="line"><span class="comment"># codec.deserialize(codec.serialize(root))</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-jump-game"><a href="#2-jump-game" class="headerlink" title="2. jump game"></a>2. jump game</h4><p>BFS加判断：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canReach</span><span class="params">(self, arr: List[int], start: int)</span> -&gt; bool:</span></span><br><span class="line">        n = len(arr)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> arr <span class="keyword">or</span> start &gt;= n <span class="keyword">or</span> start &lt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> len(arr) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> arr[<span class="number">0</span>] == <span class="number">0</span></span><br><span class="line">        visited = [<span class="literal">False</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(n)]</span><br><span class="line">        visited[start] = <span class="literal">True</span></span><br><span class="line">        q = Queue()</span><br><span class="line">        q.put(start)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            cur = q.get()</span><br><span class="line">            <span class="keyword">if</span> arr[cur] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            left = cur - arr[cur]</span><br><span class="line">            right = cur + arr[cur]</span><br><span class="line">            <span class="comment"># print(left, right)</span></span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> [left, right]:</span><br><span class="line">                <span class="keyword">if</span> each &lt; <span class="number">0</span> <span class="keyword">or</span> each &gt;= n:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> visited[each]:</span><br><span class="line">                    visited[each] = <span class="literal">True</span></span><br><span class="line">                    q.put(each)</span><br><span class="line">                    <span class="comment"># print(list(q.queue))</span></span><br><span class="line">                    <span class="keyword">if</span> arr[each] == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/01/25/leetcode/BFS%E9%A2%98%E7%9B%AE/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/01/18/leetcode/partition-equal-subset-sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/01/18/leetcode/partition-equal-subset-sum/" class="post-title-link" itemprop="url">leetcode:partition-equal-subset-sum</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-01-18T21:00:00+00:00">2019-01-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/01/18/leetcode/partition-equal-subset-sum/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode:partition-equal-subset-sum" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>127</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>给定一个<strong>只包含正整数</strong>的<strong>非空</strong>数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>状态：前i个元素是否能找到一个子集其和等于sum/2。前<script type="math/tex">i</script>个是否能够等于<script type="math/tex">j</script>记录在<script type="math/tex">dp[i][j]</script>。</p>
+<p>初始值：<script type="math/tex">dp[:][0] = 0</script></p>
+<p>递推：已知<script type="math/tex">dp[<i],dp[i][<j]</script>，如果可以加入第<script type="math/tex">i</script>个元素那么由 [加入or不加入]决定，如果加入当前元素不合法那么就等于<script type="math/tex">dp[i-1][j]</script>。</p>
+<p>返回：<script type="math/tex">dp[n][sum/2]</script>。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><p>时间复杂度和空间开销都是<script type="math/tex">O(N\cdot S)</script>，S是sum/2。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canPartition</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        target = sum(nums)</span><br><span class="line">        n = len(nums)</span><br><span class="line">        <span class="keyword">if</span> target % <span class="number">2</span> != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        target = target // <span class="number">2</span></span><br><span class="line">        <span class="comment"># 前n个数字能否组成和为target</span></span><br><span class="line">        dp = [[<span class="literal">False</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(target + <span class="number">1</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n + <span class="number">1</span>):</span><br><span class="line">            dp[i][<span class="number">0</span>] = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):  <span class="comment"># 前n个数</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, target + <span class="number">1</span>):  <span class="comment"># 和为1到target</span></span><br><span class="line">                <span class="keyword">if</span> j - nums[i - <span class="number">1</span>] &gt;= <span class="number">0</span>:  <span class="comment"># 可以选择第i个数字</span></span><br><span class="line">                    dp[i][j] = (</span><br><span class="line">                        dp[i - <span class="number">1</span>][j] <span class="keyword">or</span> dp[i - <span class="number">1</span>][j - nums[i - <span class="number">1</span>]]</span><br><span class="line">                    )</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">return</span> dp[n][target]</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/01/18/leetcode/partition-equal-subset-sum/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/12/25/leetcode/combination/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/12/25/leetcode/combination/" class="post-title-link" itemprop="url">leetcode: combination</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-25 21:00:00" itemprop="dateCreated datePublished" datetime="2018-12-25T21:00:00+00:00">2018-12-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/12/25/leetcode/combination/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: combination" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>534</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、题目要求"><a href="#一、题目要求" class="headerlink" title="一、题目要求"></a>一、题目要求</h3><p>给定两个整数 <em>n</em> 和 <em>k</em>，返回 1 … <em>n</em> 中所有可能的 <em>k</em> 个数的组合。</p>
+<h3 id="二、分析"><a href="#二、分析" class="headerlink" title="二、分析"></a>二、分析</h3><p>用递归的DFS搜索，终止条件是临时数组长度足够，当前所有选择是指针j之后的所有数字中选择一个继续递归，递归完成后回溯，取消该数字的选择。</p>
+<p>如果当前临时数组把后续所有数字都加上都无法满足条件则跳出当前搜索。</p>
+<h3 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h3><p>每次记录答案复杂度为<script type="math/tex">O(k)</script>，这种情况下递归本身的时间复杂度为<script type="math/tex">O((\begin{array}{cols}n\\k\end{array}))</script>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">combine</span><span class="params">(self, n, k)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type n: int</span></span><br><span class="line"><span class="string">        :type k: int</span></span><br><span class="line"><span class="string">        :rtype: List[List[int]]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(res, i)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> len(res) == k:  <span class="comment"># 获得一组答案</span></span><br><span class="line">                ans.append(res.copy())            </span><br><span class="line">                <span class="keyword">return</span> </span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>, n + <span class="number">1</span>):  <span class="comment"># 遍历所有选择</span></span><br><span class="line">                <span class="keyword">if</span> len(res) + (n - i) &lt; k:  <span class="comment"># 剪枝</span></span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                res.append(j)</span><br><span class="line">                print(res)</span><br><span class="line">                add(res, j)  <span class="comment"># DFS</span></span><br><span class="line">                res.pop(<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">        add([], <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/12/25/leetcode/combination/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/10/18/deeplearning/LM/BERT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/10/18/deeplearning/LM/BERT/" class="post-title-link" itemprop="url">双向预训练语言模型BERT</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-10-18 17:00:00" itemprop="dateCreated datePublished" datetime="2018-10-18T17:00:00+00:00">2018-10-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/10/18/deeplearning/LM/BERT/" class="post-meta-item leancloud_visitors" data-flag-title="双向预训练语言模型BERT" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="BERT-Pre-training-of-Deep-Bidirectional-Transformers-for-Language-Understanding"><a href="#BERT-Pre-training-of-Deep-Bidirectional-Transformers-for-Language-Understanding" class="headerlink" title="BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"></a>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</h3><p>Google AI Language在2018.10发布的论文，提出一种预训练语言模型，在十多个NLP任务中取得了SOTA的效果。</p>
+<h4 id="1-现有的LM"><a href="#1-现有的LM" class="headerlink" title="1.现有的LM"></a>1.现有的LM</h4><p>两种使用语言模型的方法：</p>
+<p>Feature-based，Word2Vec、Glove、ELMo，把预训练好的语言模型当做一个feature加到word embedding中。</p>
+<p>fine-tuning，OpenAI-GPT，尽量不改动预训练的语言模型，加输出层并在下游的任务上fine-tune。</p>
+<p>他们的共同点：</p>
+<p>1.在预训练的时候用的是同一个目标函数；</p>
+<p>2.使用单向语言模型学习语言表示。其中，GPT在预训练的时候，预测下一个词只使用其左侧的上下文，相当于使用了Transformer的Decoder的结构。而ELMo等语言模型虽然得到了双向表示，但是是两个独立的目标函数下得到的双向表示直接拼接起来。</p>
+<h4 id="2-亮点"><a href="#2-亮点" class="headerlink" title="2.亮点"></a>2.亮点</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/10/18/deeplearning/LM/BERT/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/06/15/deeplearning/NLP-KBQA-Paper-Reading-2018-06/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/15/deeplearning/NLP-KBQA-Paper-Reading-2018-06/" class="post-title-link" itemprop="url">几篇KBQA论文阅读</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-06-15 12:00:00" itemprop="dateCreated datePublished" datetime="2018-06-15T12:00:00+00:00">2018-06-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/06/15/deeplearning/NLP-KBQA-Paper-Reading-2018-06/" class="post-meta-item leancloud_visitors" data-flag-title="几篇KBQA论文阅读" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>七篇和KBQA多多少少有些相关的论文，有些精读有些只是略读。</p>
+<h3 id="1-《Improving-Natural-Language-Inference-Using-External-Knowledge-in-the-Science-Questions-Domain》"><a href="#1-《Improving-Natural-Language-Inference-Using-External-Knowledge-in-the-Science-Questions-Domain》" class="headerlink" title="1.《Improving Natural Language Inference Using External Knowledge in the Science Questions Domain》"></a>1.《Improving Natural Language Inference Using External Knowledge in the Science Questions Domain》</h3><p>在NLI（自然语言推理）任务中，提出一种结合知识库的方法。</p>
+<p>已有的引入外部知识的方法，无非是：</p>
+<p>1.引入事实（facts），包含实体以及他们之间的关系；</p>
+<p>2.引入词法信息，比如一个实体的所有同义词；</p>
+<p>3.引入常识，比如所有涉及到的concept组成的subgraph。</p>
+<p>提出的使用外部知识的方法：</p>
+<p>text-only，graph-only，text-and-graph</p>
+<p>Text-Based Model：把Hypothesis和Premise的文本作为输入的一个多层分类模型。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/15/deeplearning/NLP-KBQA-Paper-Reading-2018-06/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/04/15/deeplearning/MRC/FusionNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/04/15/deeplearning/MRC/FusionNet/" class="post-title-link" itemprop="url">融合所有层次的表示就能够找到正确答案-FusionNet</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-04-15 14:00:00" itemprop="dateCreated datePublished" datetime="2018-04-15T14:00:00+00:00">2018-04-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/04/15/deeplearning/MRC/FusionNet/" class="post-meta-item leancloud_visitors" data-flag-title="融合所有层次的表示就能够找到正确答案-FusionNet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、《Fusionnet-fusing-via-fully-aware-attention-with-application-to-machine-comprehension》"><a href="#一、《Fusionnet-fusing-via-fully-aware-attention-with-application-to-machine-comprehension》" class="headerlink" title="一、《Fusionnet: fusing via fully-aware attention with application to machine comprehension》"></a>一、《Fusionnet: fusing via fully-aware attention with application to machine comprehension》</h3><h4 id="1、主要内容"><a href="#1、主要内容" class="headerlink" title="1、主要内容"></a>1、主要内容</h4><p>2017年11月的论文，国立台湾大学学生在MSR实习时产出。</p>
+<blockquote>
+<p>最近的MRC模型的核心创新点就是如何让问题q和上下文c的内容进行深度的<strong>交互</strong>，但是这些模型受制于学习能力、计算能力的限制通常只利用了<strong>部分信息</strong>。</p>
+<p>图像识别领域的研究认为<strong>不同层次</strong>的表示代表着不同的信息，而这一认识在MRC中也是适用的。</p>
+<p>提出了一种能够<strong>利用和融合</strong>问题和答案中不同层次信息的模型。</p>
+</blockquote>
+<p>核心概念：融合，history-of-word</p>
+<p>核心问题：</p>
+<h5 id="a-说以往的模型只利用了部分信息，那么它们分别利用了哪些信息如何利用的，可否进行一下分析？"><a href="#a-说以往的模型只利用了部分信息，那么它们分别利用了哪些信息如何利用的，可否进行一下分析？" class="headerlink" title="a.说以往的模型只利用了部分信息，那么它们分别利用了哪些信息如何利用的，可否进行一下分析？"></a>a.说以往的模型只利用了部分信息，那么它们分别利用了哪些信息如何利用的，可否进行一下分析？</h5><p>给定两个包含信息的向量集A和B（比如Q和C的词向量集合或者更高级向量表示的集合），利用A的信息更新B或者利用B的信息更新A的过程叫做融合（fusion），以往的模型大多都是在设计这个融合的过程。</p>
+<p>下图是论文关于问题1的一个陈述，包含了主要的几种信息融合的方式以及以往模型的做法，其中矩形一般是各种RNN网络，箭头指向的集合代表被融合的集合。融合的过程一般用注意力机制实现。</p>
+<p><img src="http://7xqpl8.com1.z0.glb.clouddn.com/aed80f38-a3ed-c4ff-7cb4-ac692639a4a4%2F201841611359.jpg" alt></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/04/15/deeplearning/MRC/FusionNet/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/03/09/vi/VI-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/09/vi/VI-3/" class="post-title-link" itemprop="url">变分推断（三）：指数族变分推断</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-09 19:15:00" itemprop="dateCreated datePublished" datetime="2018-03-09T19:15:00+00:00">2018-03-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/03/09/vi/VI-3/" class="post-meta-item leancloud_visitors" data-flag-title="变分推断（三）：指数族变分推断" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="变分推断（三）：指数族变分推断"><a href="#变分推断（三）：指数族变分推断" class="headerlink" title="变分推断（三）：指数族变分推断"></a>变分推断（三）：指数族变分推断</h2><h3 id="一、坐标更新公式在指数族下的变换"><a href="#一、坐标更新公式在指数族下的变换" class="headerlink" title="一、坐标更新公式在指数族下的变换"></a>一、坐标更新公式在指数族下的变换</h3><p>之前的博文中讨论了GMM中的变分推断和CAVI算法，这篇文章中，把它推广到更一般的情况，也就是分布是<strong>指数分布族</strong>（exponential family）的情况。</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Exponential_family" target="_blank" rel="noopener">指数分布族</a>，是对常见分布的性质经过总结和泛化归纳出来的一类分布，具有形如<script type="math/tex">f(x|\theta)=h(x)exp(\eta(\theta)\cdot T(x) - A(\theta))</script>形式的概率密度函数/概率质量函数。其中，T(x)是充分统计量（能够完全表征一个概率分布的所有量）。</p>
+</blockquote>
+<p>可以用指数族来简化CAVI中坐标更新的公式，我们假定完全条件概率(complete conditional)为如下的指数族形式：</p>
+<script type="math/tex; mode=display">
+p(z_j|z_{-j},x)=h(z_j)exp\{\eta_j(z_{-j},x)\cdot z_j - \alpha(\eta_j(z_{-j},x))\}</script><p>那么利用平均场假设，可对坐标更新公式做如下变换：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+q(z_j)&\propto exp\{ E[\log(p(z_j|z_{-j},x))] \}\\
+&=exp\{ \log h(z_j) + E[\eta_j(z_{-j},x)]\cdot z_j - E[\alpha(\eta_j(z_{-j},x))] \}\\
+&\propto \log h(z_j)\cdot exp\{ E[\eta_j(z_{-j},x)]\cdot z_j\}
+\end{aligned}</script><p>所以对当前变分参数<script type="math/tex">\mathcal{v}_j</script>，我们只需将其更新到其隐变量<script type="math/tex">z_j</script>对应的条件概率的期望参数<script type="math/tex">E[\eta_j(z_{-j},x)]</script>即可。</p>
+<h3 id="二、条件共轭模型"><a href="#二、条件共轭模型" class="headerlink" title="二、条件共轭模型"></a>二、条件共轭模型</h3><p>带<strong>局部变量</strong>和<strong>全局变量</strong>的条件共轭模型是指数族模型的一种重要的特例。</p>
+<p>在这里局部变量指的是只对<strong>某个数据点</strong>起作用的变量，而全局变量指的是对<strong>所有数据</strong>都起作用的变量。比如，在之前的GMM模型中，描述K个高斯分布均值的变量<script type="math/tex">\mu</script>就是全局变量，而描述第i个数据点属于哪个模型的变量<script type="math/tex">z</script>就是局部变量。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/03/09/vi/VI-3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/03/09/ml-coding-summarize/nlp%20implementations%20for%20common%20methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/09/ml-coding-summarize/nlp%20implementations%20for%20common%20methods/" class="post-title-link" itemprop="url">NLP implementations for common methods</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-09 17:00:00" itemprop="dateCreated datePublished" datetime="2018-03-09T17:00:00+00:00">2018-03-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">编程总结</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/03/09/ml-coding-summarize/nlp%20implementations%20for%20common%20methods/" class="post-meta-item leancloud_visitors" data-flag-title="NLP implementations for common methods" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Hi。</p>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/03/09/ml-coding-summarize/nlp%20implementations%20for%20common%20methods/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/03/03/vi/VI-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/03/03/vi/VI-2/" class="post-title-link" itemprop="url">变分推断（二）：贝叶斯高斯混合模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-03 11:25:00" itemprop="dateCreated datePublished" datetime="2018-03-03T11:25:00+00:00">2018-03-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/03/03/vi/VI-2/" class="post-meta-item leancloud_visitors" data-flag-title="变分推断（二）：贝叶斯高斯混合模型" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="变分推断（二）：贝叶斯高斯混合模型"><a href="#变分推断（二）：贝叶斯高斯混合模型" class="headerlink" title="变分推断（二）：贝叶斯高斯混合模型"></a>变分推断（二）：贝叶斯高斯混合模型</h2><p>以高斯混合模型（Mixture of Gaussians model，GMM）为例，推导变分推断的公式和CAVI算法的过程。</p>
+<h3 id="一、联合概率计算"><a href="#一、联合概率计算" class="headerlink" title="一、联合概率计算"></a>一、联合概率计算</h3><p>GMM中观察数据<script type="math/tex">x={x_1,\ldots,x_n}</script>来自于K个独立的高斯分布，每个分布的均值为<script type="math/tex">\mu_k</script>，one-hot向量<script type="math/tex">c_i\in R^K</script>指示每个数据点来自哪个分布，超参数<script type="math/tex">\sigma^2</script>固定。隐变量为<script type="math/tex">\mu,c</script>，下面是其先验值：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mu _k &\sim \mathcal N(0,\sigma^2)\\
+c_i&\sim  Categorical(\frac{1}{K},\ldots,\frac{1}{K})\\
+x_i&\sim \mathcal N(c_i^T\mu,1)
+\end{aligned}</script><p>由贝叶斯定理，能够计算出联合概率：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(\mu,c,x)&=p(\mu)p(c,x|\mu)\\
+&=p(\mu)p(c)p(x|c,\mu)\\
+&=p(\mu)\prod_{i=1}^n p(c_i)p(x_i|c_i,\mu)
+\end{aligned}</script><p>根据联合概率进行求和、积分可以推导出观测数据x的边缘概率的计算公式，但是这个公式没有解析解，计算的复杂度是<script type="math/tex">O(K^n)</script>。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(x)&=\int \sum_c p(\mu,c,x)d\mu\\
+&=\int p(\mu)\prod_{i=1}^n \sum_{c_i}p(c_i)p(x_i|c_i,\mu) d\mu
+\end{aligned}</script><h3 id="二、GMM中的CAVI"><a href="#二、GMM中的CAVI" class="headerlink" title="二、GMM中的CAVI"></a>二、GMM中的CAVI</h3><p>下面计算变分概率<script type="math/tex">q(z)</script>，其中<script type="math/tex">m=(m_1,\ldots,m_K),s^2=(s_1^2,\ldots,s_K^2),\varphi=(\varphi_1,\ldots,\varphi_n)</script>是变分参数，由这些参数决定变分分布q：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+q(z) &= q(\mu,c)\\
+&=\prod_{k=1}^K q(\mu_k;m_k,s_k^2)\cdot \prod_{i=1}^n q(c_i;\varphi_i)
+\end{aligned}</script><ul>
+<li>0.首先，可以得到ELBO的计算公式，是关于<script type="math/tex">m,s^2,\varphi</script>的函数：</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+ELBO(q) &= ELBO(m,s^2,\varphi)\\
+&=E_{q(z)}[\log p(x|z)] + E_{q(z)}[\log p(z)] - E_{q(z)}[\log q(z)]\\
+&=\sum_{i=1}^n E[\log p(x_i|c_i,\mu;\varphi_i,m,s^2)] + \{ \sum_{k=1}^KE[\log p(\mu_k);m_k,s_k^2] + \sum_{i=1}^nE[\log p(c_i;\varphi_i)] \} \\
+&- \{ \sum_{k=1}^KE[\log q(\mu_k);m_k,s_k^2] + \sum_{i=1}^nE[\log q(c_i;\varphi_i)] \} \\
+\end{aligned}</script><ul>
+<li>1.由上一节中推导出的CAVI隐变量更新公式，下面带入GMM计算cluster indicator隐变量<script type="math/tex">c</script>的参数更新公式，注意在此时<script type="math/tex">\mu</script>是不变的：</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/03/03/vi/VI-2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+
+    </div>
+</body>
+</html>

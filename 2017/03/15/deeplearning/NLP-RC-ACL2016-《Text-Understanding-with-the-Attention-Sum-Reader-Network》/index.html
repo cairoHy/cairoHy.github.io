@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1、文章来源IBM-Watson实验室的工作，文章发表于ACL2016，针对机器阅读理解任务提出了一个模型。 2、要解决的问题及已有方法使用类似完形填空（Cloze）这种形式的问答任务来评估模型的阅读理解能力。如下图所示，是完形填空任务的一个问答对。 完形填空任务作为评估目标具有以下优点：  容易评估对文本的理解程度，直接利用准确率即可评价。 容易改变任务的难度和侧重点，比如：改变空白词词性或者改">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》">
+<meta property="og:url" content="http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="1、文章来源IBM-Watson实验室的工作，文章发表于ACL2016，针对机器阅读理解任务提出了一个模型。 2、要解决的问题及已有方法使用类似完形填空（Cloze）这种形式的问答任务来评估模型的阅读理解能力。如下图所示，是完形填空任务的一个问答对。 完形填空任务作为评估目标具有以下优点：  容易评估对文本的理解程度，直接利用准确率即可评价。 容易改变任务的难度和侧重点，比如：改变空白词词性或者改">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/FgWJk2zt_WP7x4r8ttBElnLvcOVs.jpg">
+<meta property="og:image" content="http://jycloud.9uads.com/web/GetObject.aspx?filekey=3e388f18106f704527bde4797502b04a">
+<meta property="og:image" content="http://jycloud.9uads.com/web/GetObject.aspx?filekey=517d615c239b1a5b7c1240e5b71da0bd">
+<meta property="og:image" content="http://jycloud.9uads.com/web/GetObject.aspx?filekey=a2c7e98e507316775b8e96fed39a8dbd">
+<meta property="og:image" content="http://cairohy.github.io/images/FkVx76vox_8d7N4PIyl0zFNG56-b.jpg">
+<meta property="article:published_time" content="2017-03-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.072Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="问答系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/FgWJk2zt_WP7x4r8ttBElnLvcOVs.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-15 16:00:00" itemprop="dateCreated datePublished" datetime="2017-03-15T16:00:00+00:00">2017-03-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>IBM-Watson实验室的工作，文章发表于ACL2016，针对机器阅读理解任务提出了一个模型。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>使用类似完形填空（Cloze）这种形式的问答任务来评估模型的阅读理解能力。如下图所示，是完形填空任务的一个问答对。</p>
+<p>完形填空任务作为评估目标具有以下优点：</p>
+<ul>
+<li>容易评估对文本的理解程度，直接利用准确率即可评价。</li>
+<li>容易改变任务的难度和侧重点，比如：改变空白词词性或者改变问题的挑选方式。</li>
+<li>大规模语料库容易搜集。</li>
+</ul>
+<p><img src="/images/FgWJk2zt_WP7x4r8ttBElnLvcOVs.jpg" alt="1"></p>
+<p>一个问答对可以被形式化的表示为$(q,d,a,A)$的形式，其中A是备选答案、a是正确答案、q是问题、d是文档，其中$ a\in d,d\subseteq V$，也就是正确答案在d中。</p>
+<p>已有的方法：</p>
+<ol>
+<li>LSTM：在动词和介词的预测上能够达到人类水平，但在名词和命名实体填充方面效果不佳。</li>
+</ol>
+<p><img src="http://jycloud.9uads.com/web/GetObject.aspx?filekey=3e388f18106f704527bde4797502b04a" alt=""></p>
+<ol>
+<li>Attentive Reader [利用注意力机制，利用当前词和q编码向量u的相似性得到注意力权重，并编码文档为r]。</li>
+</ol>
+<p><img src="http://jycloud.9uads.com/web/GetObject.aspx?filekey=517d615c239b1a5b7c1240e5b71da0bd" alt=""></p>
+<ol>
+<li>Impatient Reader [在AR的基础上进行了细化] state-of-the-art in DailyNews。</li>
+</ol>
+<p><img src="http://jycloud.9uads.com/web/GetObject.aspx?filekey=a2c7e98e507316775b8e96fed39a8dbd" alt=""></p>
+<p>  上面两个模型来源于(2015-NIPS) teaching machines to read andcomprehend.其不足是对于多个正确答案的情况，可能会导致选择错误答案。</p>
+<ol>
+<li><p>MemNN [Memory] state-of-the-art in CBT。</p>
+<p>来源于  (2016-ICLR)The goldilocks principle: Reading children’s books with explicit memoryrepresentations. </p>
+</li>
+<li><p>Dynamic Entity Repres [利用注意力机制的复杂模型，针对命名实体优化]state-of-the-art in CNN。</p>
+</li>
+</ol>
+<p>来源于  (2016-NAACL-HLT)  Dynamic Entity Representation withMax-pooling Improves Machine Reading. </p>
+<ol>
+<li>Chen et al. [简化版本的Attentive Reader] 同期工作。</li>
+</ol>
+<p>来源于  (2016-ACL) A Thorough Examination of the CNN /Daily Mail Reading Comprehension Task. </p>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><p>Attention Sum Reader(AS-Reader)，能够在$a\in d$即【正确答案是文档中的词】这个前提下达到state-of-the-art。</p>
+<p>（1） 计算问题q的向量；</p>
+<p>（2） 计算上下文向量，即一个单词在d的上下文环境下的向量；</p>
+<p>（3） 将q的向量和每一个候选词在d上下文环境下的向量点乘，找到最可能的候选词。</p>
+<p><img src="/images/FkVx76vox_8d7N4PIyl0zFNG56-b.jpg" alt="2"></p>
+<p>使用e(w)表示单词w的embedding。</p>
+<p>使用f和g两个encoder，分别将文档里第i位的单词的embedding即$f_i(d)$和问题的embedding即$g(q)$编码到固定长度的向量。</p>
+<p>所以，将$exp(f_i(d)\cdot g(q))$看做是文章中第i个单词就是q的答案的概率，注意这个概率要归一化，归一化之后的概率称为$s_i$。这个概率也可以被看做是注意力。</p>
+<p>什么是Pointer sum attention呢，就是说对每一个单词w，将其在d中出现的每一次算出的概率$s_i$加起来得到$P(w|q,d)$。这种使用方式受2015年的Pointer Networks启发。</p>
+<p>实际的模型实现中，编码器f由一个双向的GRU实现，双向的第i个隐层状态拼接起来就是上下文向量。</p>
+<p>g由另一个双向GRU实现。这次就是正向的最后一个隐层状态和反向的第一个隐层状态拼接起来是q-embedding。</p>
+<p>而e就是一个lookup-table，里面每一行存一个单词的embedding。</p>
+<p>训练时，同时优化f,g,e。</p>
+<h4 id="4、对该方法的实验评估"><a href="#4、对该方法的实验评估" class="headerlink" title="4、对该方法的实验评估"></a>4、对该方法的实验评估</h4><p>在CNN、Daily Mail和CBT语料库上进行了测试。</p>
+<p>虽然该模型简单，但是三个数据集上都是state-of-the-art。</p>
+<p>用Adam+SGD优化，负对数似然作为损失函数。</p>
+<p>e中的参数用[-0.1,0.1]的均匀分布随机初始化。f和g的参数用随机正交矩阵初始化。</p>
+<p>batch_size=32，梯度裁剪阈值=10。</p>
+<p>每个epoch对样本打乱，而且每个mini_batch的样本长度差不多。</p>
+<p>没有使用pre-train的词向量，命名实体被随机变换。</p>
+<p>没有任何文本预处理，没有正则化项。</p>
+<p>使用准确率进行评估。</p>
+<p>试验中采用了三种ensemble的方式：</p>
+<p>（1）average ensemble by top 20%</p>
+<p>更改初始化参数，训练多个模型，然后取在验证集上效果最好的前20%个模型做bagging.</p>
+<p>（2）average ensemble</p>
+<p>取前效果排名前70%的model做bagging</p>
+<p>（3）greedy ensemble</p>
+<p>根据效果排序从效果最好的模型开始bagging，如果bagging后的模型在验证集上效果更好就加入，一直持续到最后。</p>
+<p><strong>实验分析</strong>：</p>
+<p>在CNN/Daily Mail数据集上，随着document的长度增加，测试的准确率会下降，而在CBT数据集上得到了相反的结论。从中可以看得出，两个数据集有着不同的特征。在论文中也对产生这种现象的原因进行了分析。</p>
+<p>chen2016分析了CNN、DailyNews语料库，并对其抽样进行了人工测试，认为模型能够达到的最高精确度应该就是本文模型所达到的水平了（因为语料库的噪音、错误答案等）。</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="">PaperWeekly的第二期GitChat</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/23462480#!" target="_blank" rel="noopener">知乎专栏，相关工作看这里介绍</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/" title="NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》">http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-《Text-Understanding-with-the-Attention-Sum-Reader-Network》/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 自然语言处理</a>
+              <a href="/tags/%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 问答系统</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/15/deeplearning/NLP-RNN-NIPS2017-%E3%80%8ALightRNN-Memory-and-Computation-Efficient-Recurrent-Neural-Networks%E3%80%8B/" rel="prev" title="NLP-RNN-NIPS2017-《LightRNN- Memory and Computation-Efficient Recurrent Neural Networks》">
+      <i class="fa fa-chevron-left"></i> NLP-RNN-NIPS2017-《LightRNN- Memory and Computation-Efficient Recurrent Neural Networks》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/22/deeplearning/NLP-doc2vec-ICML2014-%E3%80%8ADistributed-Representations-of-Sentences-and-Documents%E3%80%8B/" rel="next" title="NLP-doc2vec-ICML2014-《Distributed Representations of Sentences and Documents》">
+      NLP-doc2vec-ICML2014-《Distributed Representations of Sentences and Documents》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、文章来源"><span class="nav-text">1、文章来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、要解决的问题及已有方法"><span class="nav-text">2、要解决的问题及已有方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、提出的解决方法"><span class="nav-text">3、提出的解决方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、对该方法的实验评估"><span class="nav-text">4、对该方法的实验评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2017/03/15/deeplearning/NLP-RC-ACL2016-%E3%80%8AText-Understanding-with-the-Attention-Sum-Reader-Network%E3%80%8B/";
+    this.page.identifier = "2017/03/15/deeplearning/NLP-RC-ACL2016-《Text-Understanding-with-the-Attention-Sum-Reader-Network》/";
+    this.page.title = "NLP-RC-ACL2016-《Text Understanding with the Attention Sum Reader Network》";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '4ac2da4730d5627358f61268684accff',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Survey on GNN一、GNN相关研究Survey0.Preliminary关于图的一些概念和符号： 图的表示：节点集合$\mathcal{V}$，边集合$\mathcal\epsilon$。 邻接矩阵A，$a_{ij}$表示第i个节点到第j个节点的边的权重。 对角度矩阵（度矩阵）D，$d_{ii}$表示第i个节点的度。 拉普拉斯矩阵L &#x3D; D - A，D是对角度矩阵。A是邻接矩阵。归一化的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Survey on GNN">
+<meta property="og:url" content="http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="Survey on GNN一、GNN相关研究Survey0.Preliminary关于图的一些概念和符号： 图的表示：节点集合$\mathcal{V}$，边集合$\mathcal\epsilon$。 邻接矩阵A，$a_{ij}$表示第i个节点到第j个节点的边的权重。 对角度矩阵（度矩阵）D，$d_{ii}$表示第i个节点的度。 拉普拉斯矩阵L &#x3D; D - A，D是对角度矩阵。A是邻接矩阵。归一化的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/1566630959989.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566630988382.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566632463526.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566659721923.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566612142166.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566697021918.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566702171998.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566701958352.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566712761979.png">
+<meta property="og:image" content="http://cairohy.github.io/images/1566713648318.png">
+<meta property="article:published_time" content="2019-08-09T18:20:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.073Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="Survey">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/1566630959989.png">
+
+<link rel="canonical" href="http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Survey on GNN | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Survey on GNN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-09 18:20:00" itemprop="dateCreated datePublished" datetime="2019-08-09T18:20:00+00:00">2019-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/08/09/deeplearning/Survey%20on%20GNN/" class="post-meta-item leancloud_visitors" data-flag-title="Survey on GNN" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Survey-on-GNN"><a href="#Survey-on-GNN" class="headerlink" title="Survey on GNN"></a>Survey on GNN</h3><h2 id="一、GNN相关研究Survey"><a href="#一、GNN相关研究Survey" class="headerlink" title="一、GNN相关研究Survey"></a>一、GNN相关研究Survey</h2><h3 id="0-Preliminary"><a href="#0-Preliminary" class="headerlink" title="0.Preliminary"></a>0.Preliminary</h3><p>关于图的一些概念和符号：</p>
+<p>图的表示：节点集合$\mathcal{V}$，边集合$\mathcal\epsilon$。</p>
+<p>邻接矩阵A，$a_{ij}$表示第i个节点到第j个节点的边的权重。</p>
+<p>对角度矩阵（度矩阵）D，$d_{ii}$表示第i个节点的度。</p>
+<p>拉普拉斯矩阵L = D - A，D是对角度矩阵。A是邻接矩阵。归一化的拉普拉斯矩阵是图的鲁棒的数学表示。</p>
+<p>转移矩阵$P = D^{-1}A$</p>
+<p>K近邻：$N_k(i)$，邻居节点$N_1(i) = N(i)$</p>
+<p>关于GNN的基础概念和符号：</p>
+<p>$F^V, F^E$，节点和边的特征值</p>
+<p>$h^t_v$，第t层GNN中节点v的隐藏状态（或称属性）</p>
+<p>$e^t_{ij}$，第t层中ij节点连接的边的隐藏状态（或称属性）</p>
+<h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h3><p>主要参考：THU的《Deep Learning on Graphs: A Survey》《Graph Neural Networks: A Review of Methods and Applications》和Philip Yu组的《A Comprehensive Survey on Graph Neural Networks》这三篇最近的综述。中间穿插一些其他经典或最新论文的研究内容。</p>
+<p>GNN是什么？把基于神经网络的模型使用在图领域（输入是图，在图结构上的推理，生成图结构的数据等）的相关方法。</p>
+<p>为什么要用GNN？</p>
+<ul>
+<li>常规的图像声音视频等都是将数据转换到欧几里得空间（欧几里得结构数据），而有些数据（社交网络、知识图谱）无法进行欧几里得结构化。</li>
+<li><p>如果输入是图，那么CNN/RNN需要把节点的属性以一定的顺序stack起来处理，但是图的节点本质上是无序的。</p>
+</li>
+<li><p>其次，边在传统NN的处理中只是被当做节点的属性，而图结构中它其实蕴含更多信息（如依赖信息等）。</p>
+</li>
+<li><p>最后，高阶AI需要像人类一样从日常经验中利用推理图做决定或者判断（作者认为，无引用），这方面GNN才能做到（从无结构化数据中生成图）。</p>
+</li>
+</ul>
+<p>GNN分类，根据处理的任务类型：</p>
+<ul>
+<li>Node-focus：节点分类、边预测、节点推荐等，</li>
+<li>Graph-focus：图的分类（图的同构问题）、预测图的属性、图生成等。</li>
+</ul>
+<p>GNN分类，根据</p>
+<p>GNN分类：</p>
+<ul>
+<li>半监督：GNN，GCN，利用了图中节点的属性和标记来训练网络的参数。</li>
+<li>无监督：GAE，自编码器具有图结构</li>
+<li>最近的进展，GRNN，GRL（也可以归类为半监督，但是相关的方法还较少）</li>
+</ul>
+<blockquote>
+<p>第二部分主要是一些GNN发展过程中比较重要的论文的阅读笔记。</p>
+</blockquote>
+<h3 id="2-GNN"><a href="#2-GNN" class="headerlink" title="2.GNN"></a>2.GNN</h3><p>以最初的GNN为例，来说明图神经网络是如何建模并学习的。</p>
+<p>输入与输出：图中的每一个节点具有一个属性值$F^V$以及一个状态值$s_i$，每条边也具有一个属性值$F^E$。节点和边的属性值或者属性向量是输入的特征，我们希望求得每个节点的标签$\hat y_i$，状态值$s_i$是我们求解的中间结果。就像下面的公式所表示的。我们实际上要学习的是映射$\mathcal F和\mathcal O$。对于Graph-focus的任务，增加一个特殊节点表示整个图，一样的可以得到这个节点的标签。</p>
+<script type="math/tex; mode=display">
+s_i = \sum_{j\in \mathcal N(i)} \mathcal F(s_i, s_j, F^V_i, F^V_j, F^E_{ij}) \\
+\hat y_i = \mathcal O(s_i, F^V_i)</script><p>目标函数：所有节点的标签和ground-truth的某种差值之和。</p>
+<p>优化过程：首先利用jacobbi方法（把方程重写，并构建一个初始值，一直迭代求新的值直到满足一定条件）迭代求解状态值，直到到达某个不动点；而后利用当前状态值求解损失并反向传播更新参数；重复此步骤。</p>
+<p>不足：求解状态值的步骤过于耗时；要求$\mathcal F(\cdot)$是一个压缩映射影响了表达能力；而且求解节点状态值到一个不动点不利用表达节点的信息，因为得到的解会过于smooth（各个节点得到的信息区分度不足，收敛于一个很接近的状态值）。</p>
+<h3 id="2-1-GCN"><a href="#2-1-GCN" class="headerlink" title="2.1 GCN"></a>2.1 GCN</h3><p>来自文章《Semi-Supervised Classification with Graph Convolutional Networks》（Max Welling组，ICLR’2017）</p>
+<p>方法：</p>
+<p>从谱图卷积说起，给定输入的x谱图卷积操作是：$g<em>\theta \star x = Ug</em>\theta(\wedge) U^T x$，其中U是拉普拉斯矩阵分解得到的特征向量矩阵$\wedge$是特征值矩阵，这个操作需要分解整张图的L矩阵，效率太低，因此经过了各种近似，最终这篇论文使用了如下的方式计算（下面的H就是X也就是输入向量）：</p>
+<p><img src="/images/1566630959989.png" alt="1566630959989"></p>
+<p><img src="/images/1566630988382.png" alt="1566630988382"></p>
+<p>这个公式做了这样一个操作：<strong>每个节点拿到邻居节点信息然后聚合到自身embedding上</strong>。在上面的公式中D−12~AD−12D−12A~D−12可以看成是归一化后的邻接矩阵，$H^{(l)}W^{(l)}$相当于给l层所有节点的embedding做了一次线性变换，左乘邻接矩阵表示对于每个节点来说，该节点的特征变为邻居节点特征相加后的结果。</p>
+<p>最终，在N层网络之后，每个节点表示向量进行仿射变换之后softmax，就可以进行节点分类任务，并通过误差反向传播更新参数矩阵。</p>
+<p>实验：在Citeseer和另外两个文献引用数据集，以及NELL这个小型知识图谱上面进行了节点分类任务。（大约3K-65K个节点，4K-266K条边的规模）</p>
+<h3 id="2-2-GraphSAGE"><a href="#2-2-GraphSAGE" class="headerlink" title="2.2 GraphSAGE"></a>2.2 GraphSAGE</h3><p>来自文章《Inductive Representation Learning on Large Graphs》（Leskovec组，Stanford，NIPS’2017）</p>
+<p><img src="/images/1566632463526.png" alt="1566632463526"></p>
+<p>已有方法的问题：1.慢；2.只涉及到了直推式学习（transductive learning）的setting，因为图数据中的每一个节点可以通过边的关系利用其他节点的信息，这样就产生了一个问题，如果训练集上的节点通过边关联到了预测集或者验证集的节点，那么在训练的时候能否用它们的信息呢? 如果训练时用到了测试集或验证集样本的信息(或者说，测试集和验证集在训练的时候是可见的), 我们把这种学习方式叫做transductive learning, 反之，称为inductive learning. 显然，我们所处理的大多数机器学习问题都是inductive learning, 因为我们刻意的将样本集分为训练/验证/测试，并且训练的时候只用训练样本。然而，在GCN中，训练节点收集邻居信息的时候，用到了测试或者验证样本，所以它是transductive的。</p>
+<p>方法：SAGE的意思就是采样并聚合（sample and aggregate），说明了这个方法主要侧重于控制更新节点表示时涉及的邻域数量。首先对邻居采样（有放回的重采样方法直到采样数量足够），而后进行K次聚合，由K-hop的邻居开始到1-hop的邻居依次根据K个聚合网络和聚合参数更新自己的参数，最终目标样本再更新。实验中效果最好的平均聚合器(mean aggregator)，平均聚合器的思路很简单，每个维度取对邻居embedding相应维度的均值。</p>
+<p>参数学习:监督学习直接用节点样本进行交叉熵反向传播即可。非监督学习时，论文设计了一个优化目标函数，就是最小化广义邻居节点（定长随机游走能够到达的节点）的embedding，并通过负采样保证非邻居节点的embedding相似度较小。</p>
+<p>实验:在一个论文引用数据集上进行论文分类实验，在Reddit数据集上进行帖子主题分类实验（都没有使用内容数据），此外还划分了训练测试集来测试inductive setting下的效果。</p>
+<p>主要创新点：利用采样机制克服GCN的缺点，能够大规模应用。inductive框架，训练时只保留训练样本之间的边。</p>
+<h3 id="2-3-GAT"><a href="#2-3-GAT" class="headerlink" title="2.3 GAT"></a>2.3 GAT</h3><p>来自文章《GRAPH ATTENTION NETWORKS》（Bengio组，ICLR’2018）</p>
+<p>已有方法的不足：</p>
+<p>图结构数据常常含有噪声，意味着节点与节点之间的边有时不是那么可靠，邻居的相对重要性也有差异，解决这个问题的方式是在图算法中引入“注意力”机制(attention mechanism), 通过计算当前节点与邻居的“注意力系数”(attention coefficient), 在聚合邻居embedding的时候进行加权，使得图神经网络能够更加关注重要的节点，以减少边噪声带来的影响。</p>
+<p>提出的方法：</p>
+<p>图注意力机制就给定节点$V_i$，以及它的邻居节点集合$\mathcal N(i)$，将节点集合中的每个节点映射到[0, 1]值域的一个函数，该函数表示邻居节点的相对重要程度。</p>
+<p>如下公式所示，节点0和邻居j的注意力权重是由一个参数化函数计算得到的，其中a和W是参数向量/矩阵。</p>
+<p><img src="/images/1566659721923.png" alt="1566659721923"></p>
+<p>此外，本工作还讨论了多头注意力机制（multi-head attention），该机制与Transformer中类似，不再赘述。</p>
+<p>实验：</p>
+<p>在Cora，Citeseer，Pubmed这三个Transductive的论文引用数据集（即不区分训练和验证集，节点数量2K-19K，边5K-44K），以及PPI这个包含24张图的Inductive数据集（蛋白质相互作用的数据集）上进行实验。并与GCN，GraphSAGE等SOTA的方法进行了详细对比，实验很充分。</p>
+<p>创新点：针对图中包含噪音以及不同邻居节点重要程度不同这一事实，把注意力机制引入到GNN中。</p>
+<p>相似工作：Kumparampil等人2018年提出直接利用余弦函数计算节点注意力权重。Lee等人2018年提出一种注意力引导的游走法，每个时间步游走到一个新的邻居节点，通过RNN来编码，并由当前步的隐状态确定下一步游走到哪个节点（和本工作的抽样法相比有所不同）。</p>
+<h3 id="2-4-其他一些有意思的工作（略读）"><a href="#2-4-其他一些有意思的工作（略读）" class="headerlink" title="2.4 其他一些有意思的工作（略读）"></a>2.4 其他一些有意思的工作（略读）</h3><p>《Compositional Fairness Constraints for Graph Embeddings》（William Hamilton组，ICML’19）</p>
+<p>面向推荐系统这个任务，为了实现公平约束（Fairness Constraints，即推荐系统学习到的表示不应该与某些属性相关，年龄或者性别），在GNN的基础上引入了一个对抗框架。</p>
+<p>《Position-aware Graph Neural Networks》（Leskovec组，Stanford，ICML’19）</p>
+<p>GraphSAGE的组的工作，希望改进现有GNN无法获取给定节点在整个图中的相对位置这一不足。首先确定图中一系列的锚节点集，然后对锚节点集进行采样，计算给定目标节点到每个锚集的距离，然后学习锚集上的非线性距离加权聚集方案。</p>
+<p>《Estimating Node Importance in Knowledge Graphs Using Graph Neural Networks》（Faloutsos组，KDD’19）</p>
+<p>聚焦估计知识图谱(KG)中节点的重要性这个任务，该任务对商品推荐和资源分配等多种下游应用十分重要。已有的方法没有充分利用KG中可用的信息，或者缺乏建模实体与其重要性之间复杂关系所需的灵活性。本文提出了一种有监督学习的GNN-based框架，通过predicate-aware注意力机制和灵活的中心性调整来执行重要性分数的聚合，而不是简单的聚合节点表示。</p>
+<p>《Graph Contextualized Self-Attention Network for Session-based Recommendation》（xiaofang zhou组，昆士兰，IJCAL’19）</p>
+<p>任务：基于会话的推荐系统。方法：利用GNN和子注意力机制结合。该方法动态地为会话序列构造一个图结构，并通过图神经网络(GNN)捕获丰富的局部依赖关系。然后，每个会话通过应用自注意力机制学习长期依赖关系。最后，每个会话都表示为全局首选项和当前会话兴趣的线性组合。</p>
+<blockquote>
+<p> 之后这三篇综述朝着不同的方向走了，Wenwu Zhu组的文章主要阐述了不同类别的神经网络方法如何被应用改造到图结构上面。</p>
+</blockquote>
+<h3 id="3-其他一些NN改造为GNN的变种"><a href="#3-其他一些NN改造为GNN的变种" class="headerlink" title="3.其他一些NN改造为GNN的变种"></a>3.其他一些NN改造为GNN的变种</h3><h4 id="1-GCN卷积图神经网络"><a href="#1-GCN卷积图神经网络" class="headerlink" title="(1) GCN卷积图神经网络"></a>(1) GCN卷积图神经网络</h4><p>a.卷积操作：产生节点的表示</p>
+<ol>
+<li>谱方法，没大看懂，缺点就是计算量大、且不同图之间无法共享参数；</li>
+<li>从效率方面的改进：ChebNet</li>
+<li>从可扩展性（多图）方面的改进：Neural FPs， DCNN</li>
+<li>框架性的，试图提出一种通用的图网络标准化操作：如MPNN</li>
+</ol>
+<p>b.Readout操作：产生图的表示</p>
+<p>这个操作必须具有顺序不变性。即如果图不变，那么节点的顺序（序号）不应该影响最终的值。</p>
+<ol>
+<li>统计方法，sum，average和max-pool都行但是不够好，也可以加一个全连接层，但是代价就是无法保证顺序不变性。</li>
+<li>层次聚类，比如DiffPool</li>
+<li>其他方法，比如接受所有其他节点和边的信息并经过NN处理得到全图的表示（MPNN）</li>
+</ol>
+<p>c.一些重要的模块与改进</p>
+<ol>
+<li>注意力机制，注意力权重可以为卷积操作中邻居的权重进行学习（而不是预定义为完全一致）</li>
+<li>残差连接，在计算节点表示的时候也一样可以用，在神经网络也可以帮助深层网络收敛。</li>
+<li>边的特征，一种选择是根据边的类型训练不同的参数，并把结果汇集起来，但这种方式只能处理离散的边特征。DCNN把边转换为头尾节点上连接的两个特殊节点；另一类方法同时学习边和节点的表示，并通过若干函数进行交互。</li>
+</ol>
+<p>d.通过采样进行加速</p>
+<p>因为图的节点的度通常服从幂律分布（长尾分布）</p>
+<ol>
+<li>总是采集固定数量的邻居节点用来更新当前节点的表达；或者使用随机游走来选择邻居（PinSage）；</li>
+<li>在卷积过程中根据节点的度（正则化之后）作为概率采样节点【FastGCN】；</li>
+</ol>
+<p>e.归纳学习的setting</p>
+<p>即在图的一部分节点/边上进行训练，并在另一部分节点/边上测试。</p>
+<p>f.随机权重</p>
+<p>没看懂，留着之后有需要再看吧。</p>
+<h4 id="2-GAE图自编码器"><a href="#2-GAE图自编码器" class="headerlink" title="(2) GAE图自编码器"></a>(2) GAE图自编码器</h4><p>a.自编码器</p>
+<p>GAE源于稀疏自编码器，将邻接矩阵$P(i, :)$或其变种作为节点$i$的raw feature，以每个节点的L2重建误差作为损失，得到节点的低维表示向量后使用K-Means可以完成节点聚类任务。</p>
+<p>SDNE进一步完整了SAE的理论，指出L2实际上对应着二阶逼近，因此在目标函数中增加一项代表一阶逼近的$\sum_{i,j=1}^N A(i,j)||h_i - h_j||_2$，这一项和拉普拉斯特征映射的目标函数很像。</p>
+<p>DRNE利用LSTM来聚合邻居信息。</p>
+<p>Graph2Gauss把每个节点映射为一个高斯分布来捕捉节点的随机性（通过学习节点属性到均值/方差的映射函数。优化的目标是KL散度，也就是如果i和j直接距离更近，那么i和j之间的KL散度也应该更小（分布更接近）。</p>
+<p>b.变分自编码器</p>
+<p>c.其他的一些研究</p>
+<h4 id="3-最近的研究"><a href="#3-最近的研究" class="headerlink" title="(3) 最近的研究"></a>(3) 最近的研究</h4><p>a.GRNN</p>
+<p>这里的GRNN指的是在图级别使用RNN，而不是在GNN的节点级别使用RNN。</p>
+<p>You等人使用两个RNN来生成节点以及边。</p>
+<p>b.GRL</p>
+<blockquote>
+<p> 而Maosong Sun组的这篇文章主要侧重于讲原始GNN在各方面的改进，以及应用场景：</p>
+</blockquote>
+<h3 id="4-GNN的变种及应用场景"><a href="#4-GNN的变种及应用场景" class="headerlink" title="4. GNN的变种及应用场景"></a>4. GNN的变种及应用场景</h3><h4 id="1-有向图"><a href="#1-有向图" class="headerlink" title="(1) 有向图"></a>(1) 有向图</h4><p>原始GNN应用在具有节点信息的无向图上，而有向边有时蕴含着更多的信息（比如信息的流动方向），ADGPM面向知识图谱，对有向边的头结点和尾节点分别使用不同的权重矩阵$W_c, W_p$来学习更好的结构化信息。</p>
+<h4 id="2-异构图"><a href="#2-异构图" class="headerlink" title="(2)异构图"></a>(2)异构图</h4><p>具有不同节点类型的图被称为异构图，可以简单的把节点类型作为feature加入输入信息中，GraphInception提出了一种metapath的思路来处理异构图。</p>
+<h4 id="3-具有边信息的图"><a href="#3-具有边信息的图" class="headerlink" title="(3)具有边信息的图"></a>(3)具有边信息的图</h4><p>比如知识图谱中的边，表征不同的关系。</p>
+<p>1.可以通过把图转化为二分图，边变成一个特殊节点，和原本连接的头节点/尾节点之间各有一条边来处理，并通过不同的参数矩阵来区分边的类型。</p>
+<h4 id="4-Propagation-Type"><a href="#4-Propagation-Type" class="headerlink" title="(4) Propagation Type"></a>(4) Propagation Type</h4><p>分析各种Aggregator和Updater的变种，Aggregator决定从当前节点的哪些相关节点如何使用哪些信息，Updator决定这些信息如何被应用于更新当前节点的hidden state。典型的这两个操作函数公式如下所示（来自GraphSAGE），其中第一个函数可以是对固定数量节点的Mean，Pooling或者LSTM操作：</p>
+<script type="math/tex; mode=display">
+h^t_{N_v} = Aggregator({h^{t-1}_u, \forall u \in N_v}) \\
+h^t_v = \sigma(W^t\cdot[h_v^{t-1}||h^t_{N_v}])</script><p>卷积：一系列的谱方法与非谱方法，谱方法基于图的谱表示而非谱方法直接在图上定义卷积操作。</p>
+<p>门限：LSTM和GRU的使用。比如在gather了邻居节点的信息后，使用GRU作为节点状态更新的单元。</p>
+<p>Attention：GraphAttentionNetwork使用类似self-attention的机制，在propagation中attend over 邻居的信息，并借鉴了multi-head-attention。比如下面的计算方式，其中$\alpha$是正则化后的注意力权重：（这个式子就是GAT的aggregator，它的update函数不改变节点表示）</p>
+<script type="math/tex; mode=display">
+h_i' = ||_{k=1}^K \sigma(\sum_{j\in N_i}\alpha^k_{ij}W^kh_j)</script><p>Skip-Connection：为了能够使多层GCN容易收敛的trick。</p>
+<h4 id="（5）训练方式的改进"><a href="#（5）训练方式的改进" class="headerlink" title="（5）训练方式的改进"></a>（5）训练方式的改进</h4><p>用原始的GCN举例，它在训练上有这样一些不足：1.需要整个图的拉普拉斯矩阵；2.第N层的节点i的表示是由第N-1层其所有的邻居节点的表示更新得到的，因为每一层邻居可能有很多，所以存在感受野爆炸问题，梯度反向传播会很慢；3.在一个固定的图上训练，泛化性能不足。</p>
+<p>对训练方式的改进主要有：</p>
+<p>以可学习的聚合函数代替原本整个图的拉普拉斯矩阵；</p>
+<p>使用各种采样的方式减少聚合时涉及到的邻居节点数量，从而减少感受野爆炸的问题</p>
+<h4 id="（6）框架性的模型尝试"><a href="#（6）框架性的模型尝试" class="headerlink" title="（6）框架性的模型尝试"></a>（6）框架性的模型尝试</h4><p>一些研究者试图提出一种更加General的框架，把多种GNN的模型操作包含在内。有以下这样一些工作：</p>
+<p>MPNN（Message Passing NN，2017）：尝试包含GCN等在内的监督学习的GNN模型，包含message passing过程和read out 过程（对应综述中的两个过程）。此外利用最后一层所有节点的表示，来计算整个图的表示。M、U和R可以有不同设置，其中M可以是邻接矩阵和w节点表示的乘积，U可以是GRU，R可以是多层DNN。</p>
+<script type="math/tex; mode=display">
+m^{t+1}_v = \sum_{w\in N_v} M_t(h^t_v, h^t_w, e_{vw}) \\
+h^{t+1}_v = U_t(h^t_v, m^{t+1}_v) \\
+\hat y = R({h^T_v|v\in G})</script><p>NLNN（Non-local NN，2017）：该框架能够在图结构上应用多种self-attention操作，f可以是点积、高斯、concat等操作，g可以是简单的仿射变换：</p>
+<script type="math/tex; mode=display">
+h_i =  \frac{1}{C(h)} \sum_{\forall j} f(h_i, h_j) g(h_j)</script><p>GN（Graph Network，2018）：尝试提出一种包含MPNN和NLNN等方法的通用框架，利用(u,H,E)三元组定义图分别表示全局属性、点集合和边集合。每一个GN Block包含三个更新和三个聚合函数（左边和右边）其中右边的函数接受不定量参数并且参数顺序不影响结果；按顺序进行如下操作：更新边的表示、根据边的表示更新计算与节点i相关的聚合表示$\bar {e’_i}$、更新节点的表示、根据边的表示更新计算全局聚合表示$\bar {e’}$，根据节点的表示更新计算全局聚合表示$\bar {h’}$，更新全局属性$u’$。</p>
+<p><img src="/images/1566612142166.png" alt="1566612142166"></p>
+<h4 id="（7）应用场景"><a href="#（7）应用场景" class="headerlink" title="（7）应用场景"></a>（7）应用场景</h4><p>交通信息、社交网络、推荐系统以及物理化学领域。下面稍微展开几个领域应用：</p>
+<p>知识图谱：利用GNN解决知识图谱补全中的未见实体问题（Out of KB Entity Problem），利用GCN解决多语言知识图谱对齐问题。</p>
+<p>NLP中的分类问题：一般是将一句话或者一个段落看做是一张图（节点是一个word），然后用GNN来得到更好的总体编码。</p>
+<p>序列标注：引入GNN的方式和分类问题类似，但是得到的顶层node表示可以用来预测标注信息。</p>
+<p>文本生成：引入语义或者语法结构，比如在翻译任务中。</p>
+<h4 id="8-关于GNN未来的改进"><a href="#8-关于GNN未来的改进" class="headerlink" title="(8) 关于GNN未来的改进"></a>(8) 关于GNN未来的改进</h4><p>现有的GNN无法应用深层神经网络，否则节点的表示会over-smoothing，即收敛到高度相似的值。</p>
+<p>GNN如何应用在动态的图结构中而建模效果不会下降太多。</p>
+<p>如何应用到大规模数据上。</p>
+<h4 id="（9）数据"><a href="#（9）数据" class="headerlink" title="（9）数据"></a>（9）数据</h4><p>实验：在主要研究GNN本身的工作中，基本上CiteSeer、Cora这几个学术论文引用的数据集，以及PPI、QM7b这种生物领域的数据集（分子或者蛋白质）已经成为事实上GNN效果判断的Benchmark。</p>
+<h2 id="二、GNN在NLP领域近期研究"><a href="#二、GNN在NLP领域近期研究" class="headerlink" title="二、GNN在NLP领域近期研究"></a>二、GNN在NLP领域近期研究</h2><h3 id="0-GNN-in-NLP-Recent-Studies"><a href="#0-GNN-in-NLP-Recent-Studies" class="headerlink" title="0.GNN in NLP, Recent Studies"></a>0.GNN in NLP, Recent Studies</h3><p>论文来自于ACL’19，论文列表中与GNN相关的有20多篇，选择其中几篇调研。</p>
+<h3 id="0-1-《Attention-Guided-Graph-Convolutional-Networks-for-Relation-Extraction》"><a href="#0-1-《Attention-Guided-Graph-Convolutional-Networks-for-Relation-Extraction》" class="headerlink" title="0.1 《Attention Guided Graph Convolutional Networks for Relation Extraction》"></a>0.1 《Attention Guided Graph Convolutional Networks for Relation Extraction》</h3><p>来自Wei Lu组，新加坡科技大学。</p>
+<p>主要思路：Dependency trees传递丰富的结构信息，这些信息对于提取文本中实体之间的关系非常有用。然而，如何有效利用相关信息而忽略Dependency trees中的无关信息仍然是一个具有挑战性的研究问题。现有的方法大多使用基于规则的hard-pruning策略来选择相关的部分依赖结构，这个工作提出了一种直接以依赖树为输入的Attention Guided图卷积网络(AGGCNs)模型，期望该模型自动学习如何有选择地关注对关系提取任务有用的相关子结构。</p>
+<p>模型框架：输入是依赖树（作为图处理），根据原有的邻接矩阵A，由多头注意力计算出N个代表不同权重的图，而后进入N个全连接层产生N个表示（可以认为代表依赖树的不同特征的N个图），最后由线性组合层产生最终的1个隐藏表示。</p>
+<p><img src="/images/1566697021918.png" alt="1566697021918"></p>
+<p>实验：在多句和单句关系抽取这两个任务上测试模型效果（TACRED &amp; SemEval），和包括GCN、GraphLSTM在内的方法进行了比较。</p>
+<h3 id="0-2-《Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale》"><a href="#0-2-《Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale》" class="headerlink" title="0.2 《Cognitive Graph for Multi-Hop Reading Comprehension at Scale》"></a>0.2 《Cognitive Graph for Multi-Hop Reading Comprehension at Scale》</h3><p>Jie Tang组，清华&amp;阿里巴巴的工作。</p>
+<p>思路：从认知科学中的对偶过程理论得到启发，通过一个隐式的抽取模块和一个显式的推理模块逐步迭代构建认知图。</p>
+<p>首先解释一下对偶过程理论，就是说认知神经学的研究认为，人的大脑首先通过注意力寻找相关的信息（这是一个无意识、自发的、直观的过程）System1，而后通过一个可控制的、显示的、有意识的推理过程来找到答案（System2）。System1很快而System2工作时间更慢，需要在working memory中对信息进行顺序的解读和思考。</p>
+<p>任务：Multi-Hop QA，其过程如下所示：其中涉及到的具有多种含义的实体，可能在相关的上下文文档中包含所需要的信息（supporting fact）。</p>
+<p><img src="/images/1566702171998.png" alt="1566702171998"></p>
+<p>方法：System 1负责产生问题+clues的表示，其中clues[x, G]就是认知图中x的前序节点的段落中的某些句子（推理所需要的句子）。同时系统1抽取上下文段落中与问题相关的实体和答案候选，实体以及相应的语义信息被用来组织为认知图（模拟working memory），System2用来对working memory进行推理，实现中就是GNN的节点表示的更新。持续推理过程直到某个答案候选概率超过阈值或认知图超过一定规模。</p>
+<p><img src="/images/1566701958352.png" alt="1566701958352"></p>
+<p>优势：可解释，答案的推理路径可知。</p>
+<p>实验：在HotpotQA数据集上进行了实验，效果比现有方法好非常多。</p>
+<h3 id="0-3-《Coherent-Comment-Generation-for-Chinese-Articles-with-a-Graph-to-Sequence-Model》"><a href="#0-3-《Coherent-Comment-Generation-for-Chinese-Articles-with-a-Graph-to-Sequence-Model》" class="headerlink" title="0.3 《Coherent Comment Generation for Chinese Articles with a Graph-to-Sequence Model》"></a>0.3 《Coherent Comment Generation for Chinese Articles with a Graph-to-Sequence Model》</h3><p>北大和腾讯的工作。</p>
+<p>任务：自动文章评论，给定一个文章，自动生成一些与文章主题相关的评论内容。</p>
+<p>以往方法的不足：对于现有的基于encoder-decoder的模型来说，新闻文档通常太长，这往往会导致一般性和不相关的评论。希望能够生成足够相关并且足够diverse的评论。</p>
+<p>思路：总体上是一个Graph-to-Sequence框架，在encoder端首先构建一个文章图，首先进行命名实体识别和关键词提取并把提取后的词作为图的节点，而后判断文章每句话中是否包含关键词，如果包含就把这句话加入到这个词所在的节点，如果不同节点之间包含的句子有相同的，那么就增加一条无向边，边的权重由两个节点内容的相似度得到。而后通过GCN来编码节点表示并得到整个图的表示。</p>
+<p><img src="/images/1566712761979.png" alt="1566712761979"></p>
+<p>实验：在一个中文数据集腾讯快报上面进行了评论生成实验，并通过人工评价流畅度信息丰富程度来和其他方法比较。</p>
+<p>创新点：以一种比较新颖的方式构建了图。 </p>
+<h3 id="0-4-《Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs》"><a href="#0-4-《Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs》" class="headerlink" title="0.4 《Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs》"></a>0.4 《Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs》</h3><p>Xiaodong He&amp;Bowen Zhou组，京东的工作。</p>
+<p>针对的任务也是需要multi-hop的RC。该任务给定1个问题，多个相关文档以及多个候选答案，需要从多个文档中进行多次推理才能找到正确答案。</p>
+<p>首先，{C}、Q、{S}作为输入，经过GRU对三者分别编码，并抽取文档中的命名实体。而后构建HDE图，图的节点包括所有文档、候选以及命名实体；边的集合由人工定义的7种规则来构建；节点表示由基于co-attention 和 self-attention的上下文编码器初始化。</p>
+<p><img src="/images/1566713648318.png" alt="1566713648318"></p>
+<p>创新点：建立的图是异构的，由不同粒度的节点组成，包括候选答案、文档以及实体，同时也包含不同类型的边；这样能够充分利用不同粒度的信息进行推理。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/" title="Survey on GNN">http://cairohy.github.io/2019/08/09/deeplearning/Survey on GNN/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/Survey/" rel="tag"><i class="fa fa-tag"></i> Survey</a>
+              <a href="/tags/GNN/" rel="tag"><i class="fa fa-tag"></i> GNN</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/24/leetcode/DP/" rel="prev" title="leetcode: DP">
+      <i class="fa fa-chevron-left"></i> leetcode: DP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/09/10/paper/ACL'19-poster/" rel="next" title="ACL'19 Poster">
+      ACL'19 Poster <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Survey-on-GNN"><span class="nav-text">Survey on GNN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、GNN相关研究Survey"><span class="nav-text">一、GNN相关研究Survey</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-Preliminary"><span class="nav-text">0.Preliminary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-简介"><span class="nav-text">1.简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-GNN"><span class="nav-text">2.GNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-GCN"><span class="nav-text">2.1 GCN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-GraphSAGE"><span class="nav-text">2.2 GraphSAGE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-GAT"><span class="nav-text">2.3 GAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-其他一些有意思的工作（略读）"><span class="nav-text">2.4 其他一些有意思的工作（略读）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-其他一些NN改造为GNN的变种"><span class="nav-text">3.其他一些NN改造为GNN的变种</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-GCN卷积图神经网络"><span class="nav-text">(1) GCN卷积图神经网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-GAE图自编码器"><span class="nav-text">(2) GAE图自编码器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-最近的研究"><span class="nav-text">(3) 最近的研究</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-GNN的变种及应用场景"><span class="nav-text">4. GNN的变种及应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-有向图"><span class="nav-text">(1) 有向图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-异构图"><span class="nav-text">(2)异构图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-具有边信息的图"><span class="nav-text">(3)具有边信息的图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Propagation-Type"><span class="nav-text">(4) Propagation Type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（5）训练方式的改进"><span class="nav-text">（5）训练方式的改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（6）框架性的模型尝试"><span class="nav-text">（6）框架性的模型尝试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（7）应用场景"><span class="nav-text">（7）应用场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-关于GNN未来的改进"><span class="nav-text">(8) 关于GNN未来的改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（9）数据"><span class="nav-text">（9）数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、GNN在NLP领域近期研究"><span class="nav-text">二、GNN在NLP领域近期研究</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-GNN-in-NLP-Recent-Studies"><span class="nav-text">0.GNN in NLP, Recent Studies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-1-《Attention-Guided-Graph-Convolutional-Networks-for-Relation-Extraction》"><span class="nav-text">0.1 《Attention Guided Graph Convolutional Networks for Relation Extraction》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-2-《Cognitive-Graph-for-Multi-Hop-Reading-Comprehension-at-Scale》"><span class="nav-text">0.2 《Cognitive Graph for Multi-Hop Reading Comprehension at Scale》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-3-《Coherent-Comment-Generation-for-Chinese-Articles-with-a-Graph-to-Sequence-Model》"><span class="nav-text">0.3 《Coherent Comment Generation for Chinese Articles with a Graph-to-Sequence Model》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-4-《Multi-hop-Reading-Comprehension-across-Multiple-Documents-by-Reasoning-over-Heterogeneous-Graphs》"><span class="nav-text">0.4 《Multi-hop Reading Comprehension across Multiple Documents by Reasoning over Heterogeneous Graphs》</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2019/08/09/deeplearning/Survey%20on%20GNN/";
+    this.page.identifier = "2019/08/09/deeplearning/Survey on GNN/";
+    this.page.title = "Survey on GNN";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '57c9599d25c3234bb27dfac49ddf615c',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最大化网格幸福感 给你四个整数 m、n、introvertsCount 和 extrovertsCount 。有一个 m x n 网格，和两种类型的人：内向的人和外向的人。总共有 introvertsCount 个内向的人和 extrovertsCount 个外向的人。 请你决定网格中应当居住多少人，并为每个人分配一个网格单元。 注意，不必 让所有人都生活在网格中。  思路每个点都有三种状态：不住">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode: DP">
+<meta property="og:url" content="http://cairohy.github.io/2019/06/24/leetcode/DP/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="最大化网格幸福感 给你四个整数 m、n、introvertsCount 和 extrovertsCount 。有一个 m x n 网格，和两种类型的人：内向的人和外向的人。总共有 introvertsCount 个内向的人和 extrovertsCount 个外向的人。 请你决定网格中应当居住多少人，并为每个人分配一个网格单元。 注意，不必 让所有人都生活在网格中。  思路每个点都有三种状态：不住">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-06-24T21:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.074Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Leetcode">
+<meta property="article:tag" content="DP">
+<meta property="article:tag" content="树形DP">
+<meta property="article:tag" content="插头DP">
+<meta property="article:tag" content="轮廓线DP">
+<meta property="article:tag" content="记忆化搜索">
+<meta property="article:tag" content="状态压缩">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/2019/06/24/leetcode/DP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>leetcode: DP | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2019/06/24/leetcode/DP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          leetcode: DP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-06-24 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-24T21:00:00+00:00">2019-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/06/24/leetcode/DP/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: DP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="最大化网格幸福感"><a href="#最大化网格幸福感" class="headerlink" title="最大化网格幸福感"></a>最大化网格幸福感</h2><blockquote>
+<p>给你四个整数 m、n、introvertsCount 和 extrovertsCount 。有一个 m x n 网格，和两种类型的人：内向的人和外向的人。总共有 introvertsCount 个内向的人和 extrovertsCount 个外向的人。</p>
+<p>请你决定网格中应当居住多少人，并为每个人分配一个网格单元。 注意，不必 让所有人都生活在网格中。</p>
+</blockquote>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>每个点都有三种状态：不住人、住内向的人或者住外向的人。</p>
+<p>1.状态压缩DP，由于矩阵大小n比较小，用长度为n的三进制数字记录每一行的状态，一共有<script type="math/tex">3^n</script>种状态，预先计算出行内和行间不同状态间的得分变化。再进行回溯就可以，回溯的单位是行，每次选择的范围是<script type="math/tex">3^n</script>。因此时间复杂度为<script type="math/tex">O(3^{2n}\cdot m \cdot n \cdot ic\cdot ec)</script>。</p>
+<p>2.插头DP（轮廓线DP），记录上一行当前元素到这一行j - 1个元素一共n个元素的状态，可以在<script type="math/tex">O(1)</script>时间算出行内和行间得分。进行记忆化搜索就可以，搜索的单位是每个点，每次选择的范围是3，时间复杂度是<script type="math/tex">O(3^n\cdot ic\cdot ec\cdot m \cdot n)</script>。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>第一种：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMaxGridHappiness_matrix_dp</span><span class="params">(self, m: int, n: int, ic: int, ec: int)</span> -&gt; int:</span></span><br><span class="line">    NO, IC, EC = <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">line_extra</span><span class="params">(cur, prev)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cur == NO <span class="keyword">or</span> prev == NO:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> cur == IC <span class="keyword">and</span> prev == IC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-60</span></span><br><span class="line">        <span class="keyword">if</span> cur == EC <span class="keyword">and</span> prev == EC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">40</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 当前行状态数量，每个格子是3种，所以是3 ** 6</span></span><br><span class="line">    state_n = <span class="number">3</span> ** n</span><br><span class="line">    <span class="comment"># 用来方便的计算下面的1和2</span></span><br><span class="line">    mask = [[<span class="number">0</span>] * n <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># 1.mask的状态对应的ic和ec数量</span></span><br><span class="line">    ic_count = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    ec_count = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># 2.mask的状态对应的行内和行间得分</span></span><br><span class="line">    line_score = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    outline_score = [[<span class="number">0</span>] * state_n <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line">    <span class="comment"># dp table</span></span><br><span class="line">    dp = [[[[<span class="number">-1</span>] * (ec + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(ic + <span class="number">1</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(m)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(state_n)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预先计算, O(3 ** n * n)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(state_n):</span><br><span class="line">        cur = i</span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> cur != <span class="number">0</span> <span class="keyword">and</span> j &lt;= n:</span><br><span class="line">            mask[i][j] = cur % <span class="number">3</span></span><br><span class="line">            cur //= <span class="number">3</span></span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="comment"># 计算ic和ec数量以及行内得分</span></span><br><span class="line">            <span class="keyword">if</span> mask[i][j] != NO:</span><br><span class="line">                <span class="keyword">if</span> mask[i][j] == IC:</span><br><span class="line">                    ic_count[i] += <span class="number">1</span></span><br><span class="line">                    line_score[i] += <span class="number">120</span></span><br><span class="line">                <span class="keyword">elif</span> mask[i][j] == EC:</span><br><span class="line">                    ec_count[i] += <span class="number">1</span></span><br><span class="line">                    line_score[i] += <span class="number">40</span></span><br><span class="line">                <span class="keyword">if</span> j &gt; <span class="number">0</span>: <span class="comment"># 计算行内相邻得分</span></span><br><span class="line">                    line_score[i] += line_extra(mask[i][j], mask[i][j - <span class="number">1</span>])</span><br><span class="line">    <span class="comment"># 计算行间得分，O(3 ** n * 3 ** n * n)</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(state_n):</span><br><span class="line">        <span class="keyword">for</span> i2 <span class="keyword">in</span> range(i, state_n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">                outline_score[i][i2] += line_extra(mask[i][j], mask[i2][j])</span><br><span class="line">            outline_score[i2][i] = outline_score[i][i2]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># O(3 ** n * 3 ** n * m * ic * ec)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(last_mask, row, ic, ec)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> row == m <span class="keyword">or</span> ic + ec == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> dp[last_mask][row][ic][ec] != <span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> dp[last_mask][row][ic][ec]</span><br><span class="line">        <span class="comment"># 做选择</span></span><br><span class="line">        best = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> range(state_n):</span><br><span class="line">            <span class="comment"># 剪枝</span></span><br><span class="line">            <span class="keyword">if</span> ic_count[state] &gt; ic <span class="keyword">and</span> ec_count[state] &gt; ec:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> ic_count[state] &gt; ic <span class="keyword">or</span> ec_count[state] &gt; ec:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            score = line_score[state] + outline_score[state][last_mask]</span><br><span class="line">            best = max(best, score + dfs(state, row + <span class="number">1</span>, ic - ic_count[state], ec - ec_count[state]))</span><br><span class="line">        dp[last_mask][row][ic][ec] = best</span><br><span class="line">        <span class="keyword">return</span> best</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dfs(<span class="number">0</span>, <span class="number">0</span>, ic, ec)</span><br></pre></td></tr></table></figure>
+<p>第二种：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMaxGridHappiness</span><span class="params">(self, m: int, n: int, ic: int, ec: int)</span> -&gt; int:</span></span><br><span class="line">    <span class="comment"># 插头DP（轮廓线DP）</span></span><br><span class="line">    first = <span class="keyword">lambda</span> x: x // (<span class="number">3</span> ** (n - <span class="number">1</span>))</span><br><span class="line">    last = <span class="keyword">lambda</span> x: x % <span class="number">3</span></span><br><span class="line">    x = <span class="keyword">lambda</span> pos: pos / n </span><br><span class="line">    y = <span class="keyword">lambda</span> pos: pos % n</span><br><span class="line">    NO, IC, EC = <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预先计算</span></span><br><span class="line">    state_n = <span class="number">3</span> ** n</span><br><span class="line">    elements = &#123;&#125;</span><br><span class="line">    n_states = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(state_n):</span><br><span class="line">        f, l = first(i), last(i)</span><br><span class="line">        elements[i] = (f, l)</span><br><span class="line">        remain = i % (<span class="number">3</span> ** (n - <span class="number">1</span>))</span><br><span class="line">        n_states[i] = (remain * <span class="number">3</span> + NO, remain * <span class="number">3</span> + IC, remain * <span class="number">3</span> + EC)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 在位置pos出，选择为choice，轮廓线状态为state的得分，O(1)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cur_score</span><span class="params">(pos, state, choice)</span>:</span></span><br><span class="line">        c_x, c_y = x(pos), y(pos)</span><br><span class="line">        p_1, p_2 = elements[state]</span><br><span class="line">        res = line_extra(choice, p_1)  <span class="comment"># 与上方邻居的额外得分</span></span><br><span class="line">        <span class="keyword">if</span> c_y &gt; <span class="number">0</span>:</span><br><span class="line">            res += line_extra(choice, p_2)  <span class="comment"># 与左侧邻居之间的额外得分</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 更新轮廓线状态，O(1)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">next_state</span><span class="params">(state, choice)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> n_states[state][choice]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">line_extra</span><span class="params">(cur, prev)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cur == NO <span class="keyword">or</span> prev == NO:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> cur == IC <span class="keyword">and</span> prev == IC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-60</span></span><br><span class="line">        <span class="keyword">if</span> cur == EC <span class="keyword">and</span> prev == EC:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">40</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># O(3 ** n * m * ic * ec)</span></span><br><span class="line"><span class="meta">    @lru_cache(None)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(pos, prev_states, ic, ec)</span>:</span></span><br><span class="line">        <span class="comment"># 到达边界，后续score为0</span></span><br><span class="line">        <span class="keyword">if</span> pos == m * n <span class="keyword">or</span> ic + ec == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="comment"># 做选择</span></span><br><span class="line">        <span class="comment"># 在当前位置啥也不放</span></span><br><span class="line">        state = next_state(prev_states, NO)</span><br><span class="line">        best = <span class="number">0</span> + dfs(pos + <span class="number">1</span>, state, ic, ec)</span><br><span class="line">        <span class="comment"># 放一个内向的</span></span><br><span class="line">        <span class="keyword">if</span> ic &gt; <span class="number">0</span>:</span><br><span class="line">            state = next_state(prev_states, IC)</span><br><span class="line">            score = <span class="number">120</span> + cur_score(pos, prev_states, IC)</span><br><span class="line">            best = max(best, score + dfs(pos + <span class="number">1</span>, state, ic - <span class="number">1</span>, ec))</span><br><span class="line">        <span class="comment"># 放一个外向的</span></span><br><span class="line">        <span class="keyword">if</span> ec &gt; <span class="number">0</span>:</span><br><span class="line">            state = next_state(prev_states, EC)</span><br><span class="line">            score = <span class="number">40</span> + cur_score(pos, prev_states, EC)</span><br><span class="line">            best = max(best, score + dfs(pos + <span class="number">1</span>, state, ic, ec - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> best</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dfs(<span class="number">0</span>, <span class="number">0</span>, ic, ec)</span><br></pre></td></tr></table></figure>
+<h2 id="k个节点的覆盖集合最小代价"><a href="#k个节点的覆盖集合最小代价" class="headerlink" title="k个节点的覆盖集合最小代价"></a>k个节点的覆盖集合最小代价</h2><blockquote>
+<p>二叉树上找到一个k个节点组成的集合，使得每一条边都与该集合中至少一个节点相连接。</p>
+<p>如果存在这样的集合，返回最小的代价，否则返回null。</p>
+</blockquote>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>对二叉树中某个点i来说，要保证一定有边与它相连接，那么有两种状态：该点在集合中or该点不在集合中。</p>
+<ul>
+<li>i未被选择且以i为根节点的子树满足要求时的最低cost和对应的节点weight，用dp[i][0]表示；</li>
+<li>i被选择且以i为根节点的子树满足要求时的最低cost和对应的节点weight，用dp[i][1]表示。</li>
+</ul>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><p>树形DP实现。时间复杂度<script type="math/tex">O(|V| * k + |V| * log |V| + k) → O(|V| * (k + log|V|))</script>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Tree.BTree <span class="keyword">import</span> Tree</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">left_c</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">right_c</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + <span class="number">2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">vertex_cover</span><span class="params">(self, tree: List, k: int)</span>:</span></span><br><span class="line">        n = len(tree)</span><br><span class="line">        <span class="keyword">if</span> n &lt; k:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        dp = [[[<span class="number">0</span>, []] <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">2</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(n)]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># O(|V| * k)，需要对每个节点遍历一次，由于需要进行列表的extend操作O(len(list2))开销，所以上限开销为←。</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">DP</span><span class="params">(curr: int)</span>:</span></span><br><span class="line">            <span class="comment"># is_leaf = all([tree[child] == '#' for child in [left_c(curr), right_c(curr)]])</span></span><br><span class="line">            <span class="comment"># 如果选当前节点或者不选当前节点的初始开销总和和weights</span></span><br><span class="line">            dp[curr][<span class="number">1</span>] = [tree[curr], [tree[curr]]]</span><br><span class="line">            dp[curr][<span class="number">0</span>] = [<span class="number">0</span>, []]</span><br><span class="line">            <span class="keyword">for</span> child <span class="keyword">in</span> [left_c(curr), right_c(curr)]:</span><br><span class="line">                <span class="keyword">if</span> child &lt; n <span class="keyword">and</span> tree[child] != <span class="string">'#'</span>:  <span class="comment"># 不为空节点</span></span><br><span class="line">                    DP(child)</span><br><span class="line">                    <span class="keyword">if</span> dp[child][<span class="number">1</span>][<span class="number">0</span>] &lt; dp[child][<span class="number">0</span>][<span class="number">0</span>]:</span><br><span class="line">                        dp[curr][<span class="number">1</span>][<span class="number">0</span>] += dp[child][<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">                        dp[curr][<span class="number">1</span>][<span class="number">1</span>] += dp[child][<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        dp[curr][<span class="number">1</span>][<span class="number">0</span>] += dp[child][<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">                        dp[curr][<span class="number">1</span>][<span class="number">1</span>] += dp[child][<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">                    dp[curr][<span class="number">0</span>][<span class="number">0</span>] += dp[child][<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">                    dp[curr][<span class="number">0</span>][<span class="number">1</span>] += dp[child][<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        DP(<span class="number">0</span>)  <span class="comment"># 从root开始</span></span><br><span class="line">        cost, weights = dp[<span class="number">0</span>][<span class="number">0</span>] <span class="keyword">if</span> dp[<span class="number">0</span>][<span class="number">0</span>] &lt; dp[<span class="number">0</span>][<span class="number">1</span>] <span class="keyword">else</span> dp[<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">if</span> len(weights) &gt; k:  <span class="comment"># 说明最小覆盖节点数要大于k，无法满足要求，返回None</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">if</span> len(weights) == k:  <span class="comment"># 如果恰好满足要求，直接返回最小开销和</span></span><br><span class="line">            <span class="keyword">return</span> cost</span><br><span class="line"></span><br><span class="line">        <span class="comment"># O(|V|)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">traverse</span><span class="params">(curr: int)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> curr == <span class="string">'#'</span>:</span><br><span class="line">                <span class="keyword">return</span> []</span><br><span class="line">            res = [tree[curr]]</span><br><span class="line">            left = traverse(left_c(curr)) <span class="keyword">if</span> left_c(curr) &lt; n <span class="keyword">and</span> tree[left_c(curr)] != <span class="string">'#'</span> <span class="keyword">else</span> []</span><br><span class="line">            right = traverse(right_c(curr)) <span class="keyword">if</span> right_c(curr) &lt; n <span class="keyword">and</span> tree[right_c(curr)] != <span class="string">'#'</span> <span class="keyword">else</span> []</span><br><span class="line">            <span class="keyword">return</span> res + left + right</span><br><span class="line"></span><br><span class="line">        all_weights = traverse(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> len(all_weights) &lt; k:  <span class="comment"># 这里是由于存储的方式的问题，所以要判断两次，这次判断的是|V|是否小于k</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="comment"># O(|V| * k)</span></span><br><span class="line">        print(weights)</span><br><span class="line">        <span class="keyword">for</span> weight <span class="keyword">in</span> weights:</span><br><span class="line">            all_weights.remove(weight)  <span class="comment"># O(|V|)</span></span><br><span class="line">        <span class="comment"># O(|V| * log|V|)</span></span><br><span class="line">        all_weights.sort()</span><br><span class="line">        <span class="comment"># O(k)</span></span><br><span class="line">        <span class="keyword">while</span> len(weights) &lt; k:</span><br><span class="line">            weights.append(all_weights.pop(<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sum(weights)</span><br></pre></td></tr></table></figure>
+<h2 id="Edit-Distance"><a href="#Edit-Distance" class="headerlink" title="Edit Distance"></a>Edit Distance</h2><p>给你两个单词 word1 和 word2，请你计算出将 word1 转换成 word2 所使用的最少操作数 。</p>
+<p>你可以对一个单词进行如下三种操作：</p>
+<p>插入一个字符<br>删除一个字符<br>替换一个字符</p>
+<p>即NLP中计算编辑距离。</p>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>使用递归式的自顶向下的动态规划，并增加重叠子问题的缓存。</p>
+<p>自底向上的动态规划，1）状态数组存储的是<script type="math/tex">word1[:i]</script>和<script type="math/tex">word2[:j]</script>的最小编辑距离，2）起始状态就是当其中一个数组为空，编辑距离是另一个数组的长度，3）计算当前时刻的状态值如果当前时刻字符不相等就选择增删改中最小的（进行了这些操作之后肯定会变成已知的一种状态）。</p>
+<p>状态列表可以优化空间到O(m + n)。</p>
+<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><p>递归的方式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minDistance</span><span class="params">(self, word1: str, word2: str)</span> -&gt; int:</span></span><br><span class="line">        mem = &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">helper</span><span class="params">(i, j)</span>:</span></span><br><span class="line">            key = <span class="string">'&#123;&#125;-&#123;&#125;'</span>.format(i, j)</span><br><span class="line">            <span class="keyword">if</span> i &lt; <span class="number">0</span>:   <span class="keyword">return</span> j + <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> j &lt; <span class="number">0</span>:   <span class="keyword">return</span> i + <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> key <span class="keyword">in</span> mem:</span><br><span class="line">                <span class="keyword">return</span> mem[key]</span><br><span class="line">            <span class="keyword">if</span> word1[i] == word2[j]:</span><br><span class="line">                res = helper(i - <span class="number">1</span>, j - <span class="number">1</span>)</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                res = min(</span><br><span class="line">                    helper(i - <span class="number">1</span>, j - <span class="number">1</span>) + <span class="number">1</span>,  <span class="comment"># 替换</span></span><br><span class="line">                    helper(i, j - <span class="number">1</span>) + <span class="number">1</span>, <span class="comment"># 插入word1的单词</span></span><br><span class="line">                    helper(i - <span class="number">1</span>, j) + <span class="number">1</span> <span class="comment"># 删除word1的单词</span></span><br><span class="line">                )</span><br><span class="line">            mem[key] = res</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        <span class="keyword">return</span> helper(len(word1) - <span class="number">1</span>, len(word2) - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>改写的迭代求解。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minDistance</span><span class="params">(self, word1: str, word2: str)</span> -&gt; int:</span></span><br><span class="line">        m, n = len(word1), len(word2)</span><br><span class="line"></span><br><span class="line">        dp = [[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(n + <span class="number">1</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(m + <span class="number">1</span>)] <span class="comment"># (m + 1) * (n + 1)，多一个模拟i - 1</span></span><br><span class="line">        dp[<span class="number">0</span>] = [j <span class="keyword">for</span> j <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m + <span class="number">1</span>):</span><br><span class="line">            dp[i][<span class="number">0</span>] = i</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> word1[i - <span class="number">1</span>] == word2[j - <span class="number">1</span>]:</span><br><span class="line">                    dp[i][j] = dp[i - <span class="number">1</span>][j - <span class="number">1</span>]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    dp[i][j] = min(</span><br><span class="line">                        dp[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>,</span><br><span class="line">                        dp[i][j - <span class="number">1</span>] + <span class="number">1</span>,</span><br><span class="line">                        dp[i - <span class="number">1</span>][j] + <span class="number">1</span></span><br><span class="line">                    )</span><br><span class="line">        <span class="keyword">return</span> dp[m][n]</span><br></pre></td></tr></table></figure></p>
+<p>两种解法时间复杂度都是O(mn)，空间复杂度第二种是O(mn)但是可以优化。</p>
+<h2 id="连通两组点的最小成本"><a href="#连通两组点的最小成本" class="headerlink" title="连通两组点的最小成本"></a>连通两组点的最小成本</h2><blockquote>
+<p>给你两组点，其中第一组中有 size1 个点，第二组中有 size2 个点，且 size1 &gt;= size2 。</p>
+<p>任意两点间的连接成本 cost 由大小为 size1 x size2 矩阵给出，其中 cost[i][j] 是第一组中的点 i 和第二组中的点 j 的连接成本。如果两个组中的每个点都与另一组中的一个或多个点连接，则称这两组点是连通的。换言之，第一组中的每个点必须至少与第二组中的一个点连接，且第二组中的每个点必须至少与第一组中的一个点连接。</p>
+<p>返回连通两组点所需的最小成本。</p>
+<ul>
+<li><code>1 &lt;= size1, size2 &lt;= 12</code></li>
+</ul>
+</blockquote>
+<h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>首先，在搜索完整路径的情况下，某一个group中两个节点连接的顺序不影响最终的结果。一次选择随机一个节点进行连接就行。</p>
+<p>直接DP的话会超时，所以把<strong>状态进行压缩</strong>用int的每一位来表示（长度不长），两个state每一位分别表示两个group中对应的节点是否已经连接，用位操作进行状态的判断和更新。</p>
+<p>自顶向下的记忆化搜索。</p>
+<h3 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connectTwoGroups</span><span class="params">(self, cost: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        s1, s2 = len(cost), len(cost[<span class="number">0</span>])</span><br><span class="line">        <span class="comment"># 因为从group1开始选择，所以先记录group2中每个节点cost最小的选择</span></span><br><span class="line">        min_group_2 = [min(cost[i][j] <span class="keyword">for</span> i <span class="keyword">in</span> range(s1)) <span class="keyword">for</span> j <span class="keyword">in</span> range(s2)]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># DP[i, j]返回的是还有i和j代表状态的节点没有连接时的cost</span></span><br><span class="line">        <span class="comment"># 自顶向下，DP[0, 0] = 0，记忆化搜索</span></span><br><span class="line">        <span class="comment"># 因为每个组都必须要连接到另一个组里面的节点，所以先从节点多的组group1开始</span></span><br><span class="line">        <span class="comment"># 每一次选择没有连接的一个点，并遍历所有可能的连接方式和记录ans</span></span><br><span class="line"><span class="meta">        @lru_cache(None)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dp</span><span class="params">(state1, state2)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> state1 == <span class="number">0</span> <span class="keyword">and</span> state2 == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            ans = float(<span class="string">'inf'</span>)</span><br><span class="line">            <span class="keyword">if</span> state1 != <span class="number">0</span>:  <span class="comment"># s1里面还有没有连接的点</span></span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(s1):</span><br><span class="line">                    <span class="keyword">if</span> state1 &amp; (<span class="number">1</span> &lt;&lt; i): <span class="comment"># 第i个点还没有连接，对它向下递归遍历并跳出</span></span><br><span class="line">                        <span class="keyword">for</span> j <span class="keyword">in</span> range(s2):</span><br><span class="line">                            new_s1, new_s2 = state1 &amp; ~(<span class="number">1</span> &lt;&lt; i), state2  &amp; ~(<span class="number">1</span> &lt;&lt; j)</span><br><span class="line">                            <span class="comment"># 更新开销为所有选择下的最小开销</span></span><br><span class="line">                            ans = min(ans, cost[i][j] + dp(new_s1, new_s2))</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># group1已经选完了，group2里的节点直接选择预先记录的最小cost边就行</span></span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> range(s2):</span><br><span class="line">                    <span class="keyword">if</span> state2 &amp; (<span class="number">1</span> &lt;&lt; j):</span><br><span class="line">                        new_s1, new_s2 = <span class="number">0</span>, state2 &amp; ~(<span class="number">1</span> &lt;&lt; j)</span><br><span class="line">                        ans = min(ans, min_group_2[j] + dp(new_s1, new_s2))</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line">            </span><br><span class="line">        </span><br><span class="line">        state1, state2 = (<span class="number">1</span> &lt;&lt; s1) - <span class="number">1</span>, (<span class="number">1</span> &lt;&lt; s2) - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp(state1, state2)</span><br></pre></td></tr></table></figure>
+<h2 id="树中距离之和"><a href="#树中距离之和" class="headerlink" title="树中距离之和"></a>树中距离之和</h2><h3 id="思路-4"><a href="#思路-4" class="headerlink" title="思路"></a>思路</h3><p>首先进行第一次搜索，找到所有节点的子图节点到该节点的距离和以及包含的子图节点个数。</p>
+<p>然后第二次DFS搜索，自顶向下用父节点的n_dis和子节点包含的子图节点数量更新距离和信息。</p>
+<p>题目默认0可以作为根节点，但是因为是无向图，所以遍历的时候需要加上双向边信息并用set记录已遍历的节点。</p>
+<h3 id="实现-4"><a href="#实现-4" class="headerlink" title="实现"></a>实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sumOfDistancesInTree</span><span class="params">(self, N: int, edges: List[List[int]])</span> -&gt; List[int]:</span></span><br><span class="line">        edge = defaultdict(list)</span><br><span class="line">        <span class="comment"># p = [-1 for _ in range(N)]</span></span><br><span class="line">        n_node = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">        n_dist = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">        <span class="keyword">for</span> s, e <span class="keyword">in</span> edges:</span><br><span class="line">            edge[s].append(e)</span><br><span class="line">            edge[e].append(s)  <span class="comment"># 默认0为根节点，但是无向图要记录双向信息</span></span><br><span class="line">            <span class="comment"># p[e] = s</span></span><br><span class="line"></span><br><span class="line">        root = <span class="number">0</span></span><br><span class="line">        visited = set()</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(cur)</span>:</span></span><br><span class="line">            visited.add(cur)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> edge[cur]:</span><br><span class="line">                n_node[cur] = <span class="number">1</span></span><br><span class="line">                <span class="keyword">return</span> <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">            n_node_cur, n_dist_cur = <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> edge[cur]:</span><br><span class="line">                <span class="keyword">if</span> each <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    n_node_c, n_dist_c = dfs(each)</span><br><span class="line">                    n_node_cur += n_node_c</span><br><span class="line">                    n_dist_cur += n_dist_c</span><br><span class="line">            n_dist_cur += n_node_cur - <span class="number">1</span></span><br><span class="line">            n_node[cur] = n_node_cur</span><br><span class="line">            n_dist[cur] = n_dist_cur</span><br><span class="line">            <span class="keyword">return</span> n_node_cur, n_dist_cur</span><br><span class="line"></span><br><span class="line">        dfs(root)  <span class="comment"># 第一次遍历，记录每个节点所在子图节点到该节点的距离</span></span><br><span class="line">        <span class="comment"># print(f'&#123;n_node&#125;\n&#123;n_dist&#125;')</span></span><br><span class="line"></span><br><span class="line">        res = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">        visited = set()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 第二次遍历，从顶向下，用父节点的n_dis和子节点包含的子图节点数量更新信息</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">calcu_dis</span><span class="params">(cur, parent)</span>:</span></span><br><span class="line">            visited.add(cur)</span><br><span class="line">            n_dist_cur = parent - n_node[cur] + (N - n_node[cur]) <span class="keyword">if</span> cur != root <span class="keyword">else</span> parent</span><br><span class="line">            res[cur] = n_dist_cur</span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> edge[cur]:</span><br><span class="line">                <span class="keyword">if</span> each <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                    calcu_dis(each, n_dist_cur)</span><br><span class="line"></span><br><span class="line">        calcu_dis(root, n_dist[root])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h2 id="交错字符串"><a href="#交错字符串" class="headerlink" title="交错字符串"></a>交错字符串</h2><blockquote>
+<p>给定三个字符串 <code>s1</code>、<code>s2</code>、<code>s3</code>，请你帮忙验证 <code>s3</code> 是否是由 <code>s1</code> 和 <code>s2</code> <strong>交错</strong> 组成的。</p>
+</blockquote>
+<h3 id="思路-5"><a href="#思路-5" class="headerlink" title="思路"></a>思路</h3><p>dp[i][j] 表示s1[:i]和s2[:j]可以交错为s3[:i + j - 1]。</p>
+<p>可以用滚动数组优化空间复杂度。</p>
+<h3 id="实现-5"><a href="#实现-5" class="headerlink" title="实现"></a>实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isInterleave</span><span class="params">(self, s1: str, s2: str, s3: str)</span> -&gt; bool:</span></span><br><span class="line">        n, m, x = len(s1), len(s2), len(s3)</span><br><span class="line">        <span class="keyword">if</span> n + m != x:  <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># dp[i][j] 表示s1[:i]和s2[:j]可以交错为s3[:i + j - 1]，空间O(m * n)</span></span><br><span class="line">        dp = [[<span class="literal">True</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">        <span class="comment"># 边缘条件，O(m + n)</span></span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">for</span> nn <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            dp[nn][<span class="number">0</span>] = dp[nn - <span class="number">1</span>][<span class="number">0</span>] <span class="keyword">and</span> (s1[nn - <span class="number">1</span>] == s3[nn - <span class="number">1</span>])</span><br><span class="line">        <span class="keyword">for</span> mm <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            dp[<span class="number">0</span>][mm] = dp[<span class="number">0</span>][mm - <span class="number">1</span>] <span class="keyword">and</span> (s2[mm - <span class="number">1</span>] == s3[mm - <span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># O(n * m)</span></span><br><span class="line">        <span class="keyword">for</span> nn <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> mm <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">                dp[nn][mm] = dp[nn - <span class="number">1</span>][mm] <span class="keyword">and</span> (s1[nn - <span class="number">1</span>] == s3[nn - <span class="number">1</span> + mm]) <span class="keyword">or</span> dp[nn][mm - <span class="number">1</span>] <span class="keyword">and</span> (s2[mm - <span class="number">1</span>] == s3[nn + mm - <span class="number">1</span>])</span><br><span class="line">        <span class="keyword">return</span> dp[n][m]</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2019/06/24/leetcode/DP/" title="leetcode: DP">http://cairohy.github.io/2019/06/24/leetcode/DP/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 自然语言处理</a>
+              <a href="/tags/Algorithm/" rel="tag"><i class="fa fa-tag"></i> Algorithm</a>
+              <a href="/tags/Leetcode/" rel="tag"><i class="fa fa-tag"></i> Leetcode</a>
+              <a href="/tags/DP/" rel="tag"><i class="fa fa-tag"></i> DP</a>
+              <a href="/tags/%E6%A0%91%E5%BD%A2DP/" rel="tag"><i class="fa fa-tag"></i> 树形DP</a>
+              <a href="/tags/%E6%8F%92%E5%A4%B4DP/" rel="tag"><i class="fa fa-tag"></i> 插头DP</a>
+              <a href="/tags/%E8%BD%AE%E5%BB%93%E7%BA%BFDP/" rel="tag"><i class="fa fa-tag"></i> 轮廓线DP</a>
+              <a href="/tags/%E8%AE%B0%E5%BF%86%E5%8C%96%E6%90%9C%E7%B4%A2/" rel="tag"><i class="fa fa-tag"></i> 记忆化搜索</a>
+              <a href="/tags/%E7%8A%B6%E6%80%81%E5%8E%8B%E7%BC%A9/" rel="tag"><i class="fa fa-tag"></i> 状态压缩</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/22/leetcode/house-robber-iii/" rel="prev" title="leetcode: house robber III">
+      <i class="fa fa-chevron-left"></i> leetcode: house robber III
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/08/09/deeplearning/Survey%20on%20GNN/" rel="next" title="Survey on GNN">
+      Survey on GNN <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#最大化网格幸福感"><span class="nav-text">最大化网格幸福感</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k个节点的覆盖集合最小代价"><span class="nav-text">k个节点的覆盖集合最小代价</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-1"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现-1"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Edit-Distance"><span class="nav-text">Edit Distance</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-2"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现-2"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连通两组点的最小成本"><span class="nav-text">连通两组点的最小成本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-3"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现-3"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#树中距离之和"><span class="nav-text">树中距离之和</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-4"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现-4"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交错字符串"><span class="nav-text">交错字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-5"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现-5"><span class="nav-text">实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2019/06/24/leetcode/DP/";
+    this.page.identifier = "2019/06/24/leetcode/DP/";
+    this.page.title = "leetcode: DP";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'ff7bf7ab3aeb549234eb8e9659f6e256',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

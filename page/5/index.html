@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="new Cairo()">
+<meta property="og:url" content="http://cairohy.github.io/page/5/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="cairo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/page/5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/05/01/basic/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8-%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/05/01/basic/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8-%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">B站-《线性代数的本质》-笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-01 12:00:00" itemprop="dateCreated datePublished" datetime="2017-05-01T12:00:00+00:00">2017-05-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/05/01/basic/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8-%E6%80%BB%E7%BB%93/" class="post-meta-item leancloud_visitors" data-flag-title="B站-《线性代数的本质》-笔记" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>闲来无事，假期把B站上《线性代数的本质》系列看了一遍，在此记录一下要点。（系列里的所有动画的程序可以在<a href="https://github.com/3b1b/manim" target="_blank" rel="noopener">https://github.com/3b1b/manim</a>获得。这个系列能够让你从变换的角度来解读和理解线性代数的一些概念。</p>
+<h4 id="一、向量是什么"><a href="#一、向量是什么" class="headerlink" title="一、向量是什么"></a>一、向量是什么</h4><p>向量(Vector)：</p>
+<ul>
+<li>物理领域，是由方向和长度确定的一个量。</li>
+<li>计算机领域，是一个有序的数字列表，比如<script type="math/tex">[1,2,3]^T</script>。</li>
+<li>数学领域，更加抽象，可以进行相加和数乘操作的任何量。</li>
+</ul>
+<p>加法：沿两个向量运动的方向运动到的的最终方向，乘法：向量在其方向上scale的大小。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/05/01/basic/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8-%E6%80%BB%E7%BB%93/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/27/deeplearning/KG-GCN-arXiv2017-%E3%80%8AModeling%20Relational%20Data%20with%20Graph%20Convolutional%20Networks%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/27/deeplearning/KG-GCN-arXiv2017-%E3%80%8AModeling%20Relational%20Data%20with%20Graph%20Convolutional%20Networks%E3%80%8B/" class="post-title-link" itemprop="url">paperWeekly知识图谱阅读小组-《Modeling Relational Data with Graph Convolutional Networks》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-27 11:00:00" itemprop="dateCreated datePublished" datetime="2017-04-27T11:00:00+00:00">2017-04-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/27/deeplearning/KG-GCN-arXiv2017-%E3%80%8AModeling%20Relational%20Data%20with%20Graph%20Convolutional%20Networks%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="paperWeekly知识图谱阅读小组-《Modeling Relational Data with Graph Convolutional Networks》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>来源于arXiv，发表于2017年3月。是paperWeekly知识图谱阅读小组的本周阅读论文。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>虽然知识图谱（知识库，Knowledge Base）得到了广泛应用，但是即使最大的知识库也是不完整的，下游的应用（QA、IR）如果使用，需要进行统计关系学习（statistical relational learning，SRL）。</p>
+<p>本文认为知识图谱中应当包含(实体，关系，实体)的三元组，以及实体对应的标签（属性），本文的研究着力于抽取缺失的关系，以及对实体进行分类（补全属性）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/27/deeplearning/KG-GCN-arXiv2017-%E3%80%8AModeling%20Relational%20Data%20with%20Graph%20Convolutional%20Networks%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/26/deeplearning/NLP-Attention-Cloze-arXiv2016-%E3%80%8AAttention-over-Attention%20Neural%20Networks%20for%20Reading%20Comprehension%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/26/deeplearning/NLP-Attention-Cloze-arXiv2016-%E3%80%8AAttention-over-Attention%20Neural%20Networks%20for%20Reading%20Comprehension%E3%80%8B/" class="post-title-link" itemprop="url">Attention上的Attention-《Attention-over-Attention Neural Networks for Reading Comprehension》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-26 23:00:00" itemprop="dateCreated datePublished" datetime="2017-04-26T23:00:00+00:00">2017-04-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/26/deeplearning/NLP-Attention-Cloze-arXiv2016-%E3%80%8AAttention-over-Attention%20Neural%20Networks%20for%20Reading%20Comprehension%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="Attention上的Attention-《Attention-over-Attention Neural Networks for Reading Comprehension》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>2016年7月发表在arXiv上，哈工大讯飞联合实验室的论文。和另一篇文章《Consensus Attention-based Neural Networks for Chinese Reading Comprehension》同时阅读。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>完形填空形式<script type="math/tex">(q,d,a)</script>的阅读理解任务的解决模型。</p>
+<p>中文的类似形式的任务所需要的数据集。</p>
+<p>以往的模型多利用文档级别的注意力机制配合RNN来做，缺少中文相关的数据集，而且模型中有很多无法训练的超参数需要调。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/26/deeplearning/NLP-Attention-Cloze-arXiv2016-%E3%80%8AAttention-over-Attention%20Neural%20Networks%20for%20Reading%20Comprehension%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/18/deeplearning/NLP-memory-NIPS2015-%E3%80%8Aend-to-end%20memory%20networks%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/18/deeplearning/NLP-memory-NIPS2015-%E3%80%8Aend-to-end%20memory%20networks%E3%80%8B/" class="post-title-link" itemprop="url">End2End-memory系列之-《end-to-end memory networks》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-18 16:00:00" itemprop="dateCreated datePublished" datetime="2017-04-18T16:00:00+00:00">2017-04-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/18/deeplearning/NLP-memory-NIPS2015-%E3%80%8Aend-to-end%20memory%20networks%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="End2End-memory系列之-《end-to-end memory networks》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>本文是Facebook的研究工作，发表在NIPS2015上。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>文章认为，智能模型的关键在以下两点：</p>
+<ul>
+<li>在完成任务或者回答问题的时候如何执行多步的计算；</li>
+<li>如何描述序列中的长时依赖。</li>
+</ul>
+<p>已有的工作：</p>
+<ul>
+<li>memory network，不连续，无法端到端的训练因此无法用于很多实际任务中。而且该模型需要数据集中具有更多的信息。</li>
+<li>RNNSearch，产生一个输出的时候没有进行多步计算（hop），而本文实验表明，多步计算对于取得良好效果很关键。而且，长时依赖用RNN的状态表示，是不可见和不稳定的。再有就是，RNNSearch使用的注意力机制用于整句话中，而本文的memory可以用于更大的范围</li>
+<li>神经图灵机NTM，相对于NTM，本文的模型更简单，不需要锐化等操作，而且在实验方面，本文进行的是文本推理任务，而NTM进行了复制、排序等任务。</li>
+</ul>
+<p>本文提出了一个类似于《Memory Networks》的网络，但是能够端到端的训练，可以看做是RNNsearch的扩展。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/18/deeplearning/NLP-memory-NIPS2015-%E3%80%8Aend-to-end%20memory%20networks%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/18/deeplearning/NLP-memory-2014-%E3%80%8ANeural%20Turing%20Machines%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/18/deeplearning/NLP-memory-2014-%E3%80%8ANeural%20Turing%20Machines%E3%80%8B/" class="post-title-link" itemprop="url">最早的memory?-memory系列之-《Neural Turing Machines》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-18 11:00:00" itemprop="dateCreated datePublished" datetime="2017-04-18T11:00:00+00:00">2017-04-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/18/deeplearning/NLP-memory-2014-%E3%80%8ANeural%20Turing%20Machines%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="最早的memory?-memory系列之-《Neural Turing Machines》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>本文是Google的研究工作，发表在arXiv2014上。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>计算机程序的三个基本原理：初等变换、逻辑流控制、外部存储。</p>
+<p>之前的机器学习研究，很大程度上忽视了后面两者。</p>
+<p>而在神经认知领域，working memory是认知领域与初等变换结合的很紧密的一个方向，也涉及到信息的短时操作。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/18/deeplearning/NLP-memory-2014-%E3%80%8ANeural%20Turing%20Machines%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/13/deeplearning/NLP-memory-ICLR2015-%E3%80%8AMEMORY%20NETWORKS%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/13/deeplearning/NLP-memory-ICLR2015-%E3%80%8AMEMORY%20NETWORKS%E3%80%8B/" class="post-title-link" itemprop="url">attention之外还需要memory-memory系列之-《MEMORY NETWORKS》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-13 15:00:00" itemprop="dateCreated datePublished" datetime="2017-04-13T15:00:00+00:00">2017-04-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/13/deeplearning/NLP-memory-ICLR2015-%E3%80%8AMEMORY%20NETWORKS%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="attention之外还需要memory-memory系列之-《MEMORY NETWORKS》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>Facebook AI的研究人员发表在ICLR2015上的论文，引入了一种新的学习模型——memory networks，并利用该模型解决QA及其他自然语言理解任务。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>大多数机器学习模型缺少一种能够将信息以某种方式写入长时记忆组件、并从中读出加以利用的方式。虽然RNN号称能够记住过去的信息，但是这种信息是以隐层状态和权重的方式存在的，信息量不足。</p>
+<p>在长文本理解、视频内容理解等任务中，这种长时记忆是必需的。</p>
+<p>已有的方法：</p>
+<p>2011年之前传统的QA任务模型使用文档作为memory，通过信息检索方式获取答案；</p>
+<p>2014年，利用知识库作为memory，把问题映射到逻辑查询；</p>
+<p>同时，2014年之后，基于神经网络的方法也得到了了使用，但是没有提过memory。（LSTM不算的话）</p>
+<p>2014年和本文同时发表在arXiv上的《Neural Turing Machine》是和本文最相关的工作。</p>
+<p>2014年的RNNSearch这个翻译模型中的对齐表，也可以认为是一种memory，但是这里的memory只限于一定的位置。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/13/deeplearning/NLP-memory-ICLR2015-%E3%80%8AMEMORY%20NETWORKS%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/12/deeplearning/NLP-vocab-ACL-IJCNLP2015-%E3%80%8AOn%20Using%20Very%20Large%20Target%20Vocabulary%20for%20Neural%20Machine%20Translation%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/12/deeplearning/NLP-vocab-ACL-IJCNLP2015-%E3%80%8AOn%20Using%20Very%20Large%20Target%20Vocabulary%20for%20Neural%20Machine%20Translation%E3%80%8B/" class="post-title-link" itemprop="url">当你的词表过大时，请看-《On Using Very Large Target Vocabulary for Neural Machine Translation》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-12 16:00:00" itemprop="dateCreated datePublished" datetime="2017-04-12T16:00:00+00:00">2017-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/12/deeplearning/NLP-vocab-ACL-IJCNLP2015-%E3%80%8AOn%20Using%20Very%20Large%20Target%20Vocabulary%20for%20Neural%20Machine%20Translation%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="当你的词表过大时，请看-《On Using Very Large Target Vocabulary for Neural Machine Translation》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>132</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>蒙特利尔大学的研究人员，发表在IJCNLP2015会议上的一篇论文。讨论了关于词表过大时的一种优化方法。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>因为机器翻译最后一层是softmax分类（其实很多自然语言处理任务都是这样），对于每个词其条件概率如下：</p>
+<script type="math/tex; mode=display">
+P(y_t|y_{<t},x) = \frac {1}{Z} exp \{w^T_t\phi (y_{t-1},z_t,c_t)+b_t\}</script><p>其中Z是所有词的条件概率分子之和。因为对于每个词，都要计算一遍，开销比较大（尤其是训练的时候，开销那么大不能忍）。</p>
+<p>已有的解决方法主要有：</p>
+<ul>
+<li>利用其它的方法，去逼近softmax的概率，比如：基于noise-contrastive estimation （NCE）的方法</li>
+<li>分层softmax</li>
+</ul>
+<p>这两种方法都只能减少训练时的开销，无法减少测试时的开销。</p>
+<p>还有一种方法，就是减少词表的大小，比如说对于低频词用OOV代表。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/12/deeplearning/NLP-vocab-ACL-IJCNLP2015-%E3%80%8AOn%20Using%20Very%20Large%20Target%20Vocabulary%20for%20Neural%20Machine%20Translation%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/11/deeplearning/NLP-Hyperparams-train-arXiv2017-%E3%80%8AMassive%20Exploration%20of%20Neural%20Machine%20Translation%20Architectures%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/11/deeplearning/NLP-Hyperparams-train-arXiv2017-%E3%80%8AMassive%20Exploration%20of%20Neural%20Machine%20Translation%20Architectures%E3%80%8B/" class="post-title-link" itemprop="url">seq2seq的NMT模型怎样训练-论文《Massive Exploration of Neural Machine Translation Architectures》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-11 15:00:00" itemprop="dateCreated datePublished" datetime="2017-04-11T15:00:00+00:00">2017-04-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/11/deeplearning/NLP-Hyperparams-train-arXiv2017-%E3%80%8AMassive%20Exploration%20of%20Neural%20Machine%20Translation%20Architectures%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="seq2seq的NMT模型怎样训练-论文《Massive Exploration of Neural Machine Translation Architectures》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>来源于arXiv2017，Google Brain利用超过25万个GPU小时，对循环神经网络的训练做出了一些工作，得到了一些经验性的做法。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>NMT（神经机器翻译）网络虽然效果不错，但是经常需要几天甚至几周才能训练完成，如果加上调超参数那训练时间更加无法忍受。</p>
+<p>已有的方法就是如同炼丹一样，依靠调参的人的经验，尽量减少开销。Google Brain通过自家GPU，给出了encoder-decoder模型下NMT任务超参数选择的一些规则，并分析了超参数的选择会对性能产生怎样的影响。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/11/deeplearning/NLP-Hyperparams-train-arXiv2017-%E3%80%8AMassive%20Exploration%20of%20Neural%20Machine%20Translation%20Architectures%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/04/08/ml-coding-summarize/as-reader%E5%9C%A8tensorflow%E5%92%8Ckeras%E4%B8%8B%E6%94%B9%E5%86%99%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/04/08/ml-coding-summarize/as-reader%E5%9C%A8tensorflow%E5%92%8Ckeras%E4%B8%8B%E6%94%B9%E5%86%99%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">as-reader在tensorflow和keras下改写总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-04-08 22:00:00" itemprop="dateCreated datePublished" datetime="2017-04-08T22:00:00+00:00">2017-04-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">编程总结</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/04/08/ml-coding-summarize/as-reader%E5%9C%A8tensorflow%E5%92%8Ckeras%E4%B8%8B%E6%94%B9%E5%86%99%E6%80%BB%E7%BB%93/" class="post-meta-item leancloud_visitors" data-flag-title="as-reader在tensorflow和keras下改写总结" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、搬了什么砖，在什么条件下搬的砖"><a href="#1、搬了什么砖，在什么条件下搬的砖" class="headerlink" title="1、搬了什么砖，在什么条件下搬的砖"></a>1、搬了什么砖，在什么条件下搬的砖</h4><p>在tensorflow和keras上复现了ACL2016的一篇论文《Text Understanding with the Attention Sum Reader Network》里的模型attention-sum-reader。能够跑CBT的数据。</p>
+<p>论文可以在<a href="http://arxiv.org/abs/1603.01547" target="_blank" rel="noopener">http://arxiv.org/abs/1603.01547</a>下载，具体代码见这里<a href="https://github.com/zhanghaoyu1993/attention-sum-reader" target="_blank" rel="noopener">https://github.com/zhanghaoyu1993/attention-sum-reader</a>。</p>
+<p>搬砖环境：</p>
+<ul>
+<li>windows10</li>
+<li>python-3.5.2</li>
+<li>tensorflow-1.0.1</li>
+<li>keras-2.0.2</li>
+</ul>
+<h4 id="2、遇到了哪些坑，怎么踩过-进-去的"><a href="#2、遇到了哪些坑，怎么踩过-进-去的" class="headerlink" title="2、遇到了哪些坑，怎么踩过(进)去的"></a>2、遇到了哪些坑，怎么踩过(<del>进</del>)去的</h4><p>因为原作者是在theano上的blocks和fuel两个框架下实现的，所以算是改写吧，写的过程中在这么几个点上花的时间比较多：</p>
+<ul>
+<li>1.结合keras和tf，简单标准化的层用keras提供的，特殊的操作使用K.*这种API结合Lambda层，再特殊的操作使用tf.*这种API完成。</li>
+<li>2.tensorflow的scan函数，如果你想对tensor进行一些迭代操作而库函数里没有直接提供的话，就要使用scan函数了，这个函数在tensorflow和theano下面都有。</li>
+</ul>
+<p>tf.scan有下面几个主要参数，依靠他们来完成对一个或者多个tensor的迭代：</p>
+<p>fn：一个函数接受两个参数表示上一轮的输出和这一轮的输入，注意！！：这个函数的输出只需要提供这一轮的就可以了，没有必要和上一轮的拼起来，scan会自己帮你concat。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/04/08/ml-coding-summarize/as-reader%E5%9C%A8tensorflow%E5%92%8Ckeras%E4%B8%8B%E6%94%B9%E5%86%99%E6%80%BB%E7%BB%93/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/30/deeplearning/NLP-charLSTM-ACL2016-%E3%80%8AA-Character-Level-Decoder-without-Explicit-Segmentation-for-Neural-Machine-Translation%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/30/deeplearning/NLP-charLSTM-ACL2016-%E3%80%8AA-Character-Level-Decoder-without-Explicit-Segmentation-for-Neural-Machine-Translation%E3%80%8B/" class="post-title-link" itemprop="url">NLP-charLSTM-ACL2016-《A Character-Level Decoder without Explicit Segmentation for Neural Machine Translation》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-30 12:00:00" itemprop="dateCreated datePublished" datetime="2017-03-30T12:00:00+00:00">2017-03-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/30/deeplearning/NLP-charLSTM-ACL2016-%E3%80%8AA-Character-Level-Decoder-without-Explicit-Segmentation-for-Neural-Machine-Translation%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-charLSTM-ACL2016-《A Character-Level Decoder without Explicit Segmentation for Neural Machine Translation》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>440</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>蒙特利尔大学的Junyoung Chung 以及Bengio（三作）发表在ACL2016上，针对机器翻译任务提出了一种字符级别的RNN译码器。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>已有的phrased-based和神经网络的机器翻译系统，都是基于词级别的模型。</p>
+<p>本文就是想探究，有没有可能更细粒度的模型即字符级别的模型也可以work。（就不需要分词了）</p>
+<p>已有的方法（encoder-decoder模型）：</p>
+<script type="math/tex; mode=display">
+正向Encoder：\vec z_t =\vec \phi(e_x(x_t), \vec z_{t-1})</script><script type="math/tex; mode=display">
+反向Encoder： z^\leftarrow_t =\phi^\leftarrow(e_x(x_t),  z^\leftarrow_{t+1})</script><script type="math/tex; mode=display">
+Encoder的输出：C = [z_1,...,z_{T_x}],其中z_t = [\vec {z_t}, z^\leftarrow_t]</script><script type="math/tex; mode=display">
+Decoder：h_{t'} = \phi (e_y(y_{t'-1},h_{t'-1},c_{t'}))</script><script type="math/tex; mode=display">
+P(y_{t'}|y_{<t'},X) \propto e^{f^{y_{t'}}_{out}(e_y(y_{t'}-1),h_{t'},c_{t'})}</script><p>其中，<script type="math/tex">e_x,e_y</script>分别是源语言和目标语言的词向量映射，而<script type="math/tex">c_{t'}</script>是一种软对齐机制（即注意力机制）。</p>
+<p>其中，已有模型将单词或者sub-word（2015）作为$x_t$，即使将字符作为$x_t$，也依赖分词这样一个过程（2015）。</p>
+<p>那么为什么以往的模型以词为单位进行分析呢？</p>
+<ul>
+<li>1.单词是意义的最小单位，从字符映射到其意义可能更加困难，比如“quite”、“quit”和“quiet”三个单词从字符层面上很像但意义却完全不同。</li>
+<li>2.数据稀疏性，基于计数的模型会受到数据稀疏的影响，比如一个后继序列的概率取决于其在语料库中出现的次数，这样的模型将字符作为基本单元的话状态空间会更大。</li>
+<li>梯度消失，由于字符的序列会更长，RNN及其变种中梯度消失问题更严重。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/30/deeplearning/NLP-charLSTM-ACL2016-%E3%80%8AA-Character-Level-Decoder-without-Explicit-Segmentation-for-Neural-Machine-Translation%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/29/deeplearning/NLP-ICML2016-%E3%80%8AExploring-the-Limits-of-Language-Modeling%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/29/deeplearning/NLP-ICML2016-%E3%80%8AExploring-the-Limits-of-Language-Modeling%E3%80%8B/" class="post-title-link" itemprop="url">NLP-ICML2016-《Exploring the Limits of Language Modeling》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-29 12:00:00" itemprop="dateCreated datePublished" datetime="2017-03-29T12:00:00+00:00">2017-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/29/deeplearning/NLP-ICML2016-%E3%80%8AExploring-the-Limits-of-Language-Modeling%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-ICML2016-《Exploring the Limits of Language Modeling》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>Google Brain团队的研究人员发表在ICML2016。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>大规模数据集（语料库）对于训练复杂模型是必要的，而复杂模型对解决自然语言理解这种复杂任务是必要的。本文旨在在大规模的语料库（one billion word benchmark）上训练语言模型。</p>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><ul>
+<li>一、背景</li>
+</ul>
+<p>词表较大时的softmax改进：重要性采样importance sampling，话说softmax的改进分为两种：各种softmax变种（分层softmax、分片softmax、等）以及基于采样的方法。</p>
+<p>基于采样的方法：</p>
+<p>蒙特卡洛采样，估计一个函数$f(x)$的积分，如果函数无法解析，那么就随机取一些点$x_1,x_2,…,x_n$，用这些点的函数值求区间积分，就是用小矩形面积之和估计函数面积的思想。</p>
+<p>重要性采样，就是在蒙特卡洛采样的基础上，根据一个重要性函数$p(x)$，根据这个值确定当前的x代表的矩阵的宽度，$p(x)$越大说明这个点附近越重要，要多采样几个点，宽度就要降低。具体到这里，就是选择1个正确单词和k-1个错误单词，进行k类分类并优化。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/29/deeplearning/NLP-ICML2016-%E3%80%8AExploring-the-Limits-of-Language-Modeling%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/28/deeplearning/NLP-EncoDecoRepr-EMNLP2014-%E3%80%8ALearning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/28/deeplearning/NLP-EncoDecoRepr-EMNLP2014-%E3%80%8ALearning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation%E3%80%8B/" class="post-title-link" itemprop="url">NLP-EncoDecoRepr-EMNLP2014-《Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-28 12:00:00" itemprop="dateCreated datePublished" datetime="2017-03-28T12:00:00+00:00">2017-03-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/28/deeplearning/NLP-EncoDecoRepr-EMNLP2014-%E3%80%8ALearning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-EncoDecoRepr-EMNLP2014-《Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>630</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p><a href="http://www.kyunghyuncho.me/" target="_blank" rel="noopener">Kyunghyun Cho</a>博士（蒙特利尔大学）发表在EMNLP2014的一篇论文，提出了RNN Encoder-Decoder模型用于机器翻译。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>机器翻译问题，之前的方法都是SMT（统计机器翻译）的方法，少有NMT（神经网络机器翻译）的。</p>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><p>模型由两个RNN组成。</p>
+<p>第一个RNN（编码器）将输入序列编码为固定长度的向量（表示），即下图的C，是t时刻RNN的隐藏状态$h_t$；</p>
+<p>第二个RNN（译码器）将中间表示译码生成输出序列，和RNN不同的是$h_t,y_t$都和C相关。</p>
+<script type="math/tex; mode=display">h_t=f(h_{t-1},y_{t-1},C)</script><script type="math/tex; mode=display">y_t=g(h_t,y_{t-1},C)</script><p>两个RNN被联合训练，最大化对数条件概率。</p>
+<p><img src="http://jycloud.9uads.com/web/GetObject.aspx?filekey=4f7c0adce3ffef4b8c5f8e3a58d0e858" alt="1"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/28/deeplearning/NLP-EncoDecoRepr-EMNLP2014-%E3%80%8ALearning-Phrase-Representations-using-RNN-Encoder%E2%80%93Decoder-for-Statistical-Machine-Translation%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/27/deeplearning/NLP-CNN-EMNLP2014-%E3%80%8AConvolutional-neural-networks-for-sentence-classification%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/27/deeplearning/NLP-CNN-EMNLP2014-%E3%80%8AConvolutional-neural-networks-for-sentence-classification%E3%80%8B/" class="post-title-link" itemprop="url">NLP-CNN-EMNLP2014-《Convolutional neural networks for sentence classification》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-27 14:00:00" itemprop="dateCreated datePublished" datetime="2017-03-27T14:00:00+00:00">2017-03-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/27/deeplearning/NLP-CNN-EMNLP2014-%E3%80%8AConvolutional-neural-networks-for-sentence-classification%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-CNN-EMNLP2014-《Convolutional neural networks for sentence classification》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>871</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>纽约大学的Kim Y发表在EMNLP2014，使用CNN进行文本分类的经典论文。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>CNN已经在计算机视觉领域得到广泛应用，但是自然语言处理方面之前的研究热点在词向量。</p>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><p>未登录词的词向量可以用0或者随机小的正数表示。</p>
+<p>使用Google预训练的长度为k的word2vec词向量，句子长度为n，那么输入就是一个n*k的矩阵。对于每个卷积核，其卷积窗口为h，那么对第i个单词进行卷积的结果$c_i$如下公式：</p>
+<script type="math/tex; mode=display">c_i=f(w\cdot x_{i:i+h-1}+b)</script><p>该卷积核卷积的Feature Map如下：</p>
+<script type="math/tex; mode=display">c = [c_1,c_2,...,c_{n-h+1}]</script><p>而后通过一个max-pooling层，$\hat c = max{c}$，这可以认为是一个卷积核产生的对句子影响最大的特征。</p>
+<p>如果我们有m个卷积核，那么这m个卷积核得到的结果拼接起来送到一个全连接层并进行softmax分类。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/27/deeplearning/NLP-CNN-EMNLP2014-%E3%80%8AConvolutional-neural-networks-for-sentence-classification%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/23/deeplearning/NLP-DCNN-ACL2014-%E3%80%8AA-convolutional-neural-network-for-modeling-sentences%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/23/deeplearning/NLP-DCNN-ACL2014-%E3%80%8AA-convolutional-neural-network-for-modeling-sentences%E3%80%8B/" class="post-title-link" itemprop="url">NLP-DCNN-ACL2014-《A convolutional neural network for modeling sentences》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-23 12:00:00" itemprop="dateCreated datePublished" datetime="2017-03-23T12:00:00+00:00">2017-03-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/23/deeplearning/NLP-DCNN-ACL2014-%E3%80%8AA-convolutional-neural-network-for-modeling-sentences%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-DCNN-ACL2014-《A convolutional neural network for modeling sentences》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>N.Kal等人发表在ACL2014，提出了一种DCNN模型，解决句子的语义建模问题。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>句子建模，目的是分析和表示句子的语义内容，以进一步进行分类或者生成，是很多NLP任务的基础。其核心是一个特征函数，定义了如何根据单词和n-gram的特征抽取句子的特征。</p>
+<p>已有的方法：</p>
+<ul>
+<li>基于组合的模型，通过对单词向量之间的组合操作得到句子的表示；组合函数可以是代数运算，也可以是通过学习得出的与句法结构和词性相关的操作；</li>
+<li>自动抽取逻辑形式来表示句子（Zettle  et.2005）；</li>
+<li>基于神经网络的模型。</li>
+</ul>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><ul>
+<li>一、网络的定义</li>
+</ul>
+<p>提出一个基于神经网络的模型解决句子建模的问题，该模型反复叠加一维卷积层和动态k-max池化层。我们以下图为例来解释：</p>
+<p>设词向量长度为d，下图中d=4；</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/23/deeplearning/NLP-DCNN-ACL2014-%E3%80%8AA-convolutional-neural-network-for-modeling-sentences%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/22/deeplearning/NLP-RNTN-EMNLP2013-%E3%80%8ARecursive-deep-models-for-semantic-compositionality-over-a-sentiment-treebank%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/03/22/deeplearning/NLP-RNTN-EMNLP2013-%E3%80%8ARecursive-deep-models-for-semantic-compositionality-over-a-sentiment-treebank%E3%80%8B/" class="post-title-link" itemprop="url">NLP-RNTN-EMNLP2013-《Recursive deep models for semantic compositionality over a sentiment treebank》</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-22 21:00:00" itemprop="dateCreated datePublished" datetime="2017-03-22T21:00:00+00:00">2017-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/22/deeplearning/NLP-RNTN-EMNLP2013-%E3%80%8ARecursive-deep-models-for-semantic-compositionality-over-a-sentiment-treebank%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="NLP-RNTN-EMNLP2013-《Recursive deep models for semantic compositionality over a sentiment treebank》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>Richard Socher、Andrew.Ng等斯坦福大学的研究人员在EMNLP2013发表的关于递归张量神经网络的论文。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>关于递归神经网络（RNN），一般认为分为时间递归神经网络（也就是循环神经网络，Recurrent Neural Network）和结构递归网络（Recursive Neural Network），本文的模型属于后者，后者通常用于NLP的语义解析等过程。</p>
+<p>本文的工作和NLP的5个方面相关：</p>
+<ul>
+<li>语义向量空间，最主要的方法就是比较词汇之间的相似度度量，比如TF-IDF、同一语义上下文环境下共现频率以及利用词向量进行比较等；</li>
+<li>向量空间组合</li>
+<li>形式逻辑</li>
+<li>深度学习</li>
+<li>情感分析</li>
+</ul>
+<p>本文要解决的，是以往情感分析方法无法准确的判断<strong>情感词作用范围</strong>以及词序对句子情感程度的影响，造成准确率无法提高的问题。</p>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><p>Stanford Sentiment TreeBank语料库能够给出递归式的语义解析以及情感打分，是进行这个研究的基础。</p>
+<p><img src="http://jycloud.9uads.com/web/GetObject.aspx?filekey=9376cccc34bea508c257c47f456921bb" alt="1"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/03/22/deeplearning/NLP-RNTN-EMNLP2013-%E3%80%8ARecursive-deep-models-for-semantic-compositionality-over-a-sentiment-treebank%E3%80%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+
+    </div>
+</body>
+</html>

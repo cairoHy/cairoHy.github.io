@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="摘要基于堆叠去噪自编码器来建立用于分类的深度网络可以将分类性能提高到接近或者超过DBN的水平。这种无监督式的学习方式学习到的高级表示也能够提高后续的SVM分类器的性能。定性实验表明，相比于经典的自编码器，去噪自编码器能够从图像块中学习到Gabor-like边缘检测器和stroke detectors。这些工作说明了，在非监督方式下，使用去噪自编码器是学习有用的高级表示的好方法。 关键字：深度学习，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》">
+<meta property="og:url" content="http://cairohy.github.io/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="摘要基于堆叠去噪自编码器来建立用于分类的深度网络可以将分类性能提高到接近或者超过DBN的水平。这种无监督式的学习方式学习到的高级表示也能够提高后续的SVM分类器的性能。定性实验表明，相比于经典的自编码器，去噪自编码器能够从图像块中学习到Gabor-like边缘检测器和stroke detectors。这些工作说明了，在非监督方式下，使用去噪自编码器是学习有用的高级表示的好方法。 关键字：深度学习，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/FnQ1M5oqxpdiV2zSI4tKaLpbXmiI.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fi9NTwcuwSrh4J6Oke0M_uIicbfh.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FgkB9s0fjiCXKlbbAl43JfD361sC.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FvzQaS6sKU7kyGf9pdgxj1SvK3VX.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FiOUeLvmSFwJJaA4ELrEziFXiMTF.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FolOOw8jEMUK2sugJzVzEjOLQ5dW.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FqAZwfFJ7slk4mfgcPteNJnm8Tz9.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FkgOBra5wx92nRD1z06-eNZ0gBdz.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FvxxjnjZnc8vClnGyWawr0I972hY.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Ftyn4FnHkh_cwZWsZxSKG3GpgVHn.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fo8dJ4ce3eoWBQif23FJSnsisfsZ.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FirpluS_Eu5C2qsm5qkJeN3oqduq.jpg">
+<meta property="article:published_time" content="2015-11-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.076Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="阅读笔记">
+<meta property="article:tag" content="自编码器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/FnQ1M5oqxpdiV2zSI4tKaLpbXmiI.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-11-05 16:00:00" itemprop="dateCreated datePublished" datetime="2015-11-05T16:00:00+00:00">2015-11-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/" class="post-meta-item leancloud_visitors" data-flag-title="阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>基于堆叠去噪自编码器来建立用于分类的深度网络可以将分类性能提高到接近或者超过<code>DBN</code>的水平。这种无监督式的学习方式学习到的高级表示也能够提高后续的SVM分类器的性能。定性实验表明，相比于经典的自编码器，去噪自编码器能够从图像块中学习到<code>Gabor-like</code>边缘检测器和<code>stroke detectors</code>。这些工作说明了，在非监督方式下，使用去噪自编码器是学习有用的高级表示的好方法。</p>
+<p>关键字：深度学习，非监督特征学习，深度置信网络，自编码器，去噪</p>
+<h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><p>长久以来神经网络方面的研究认为很多非线性层的组合才能够有效的对变量间的复杂关系建模并在复杂的识别任务中有更好的泛化性能。但是由于多层神经网络的非凸优化问题，很长一段时间超过一到两层隐藏层的神经网络无法得到期望的结果。因此很多机器学习方面的研究转向了能够进行凸优化的浅层模型。最近它的复兴得益于<code>Hinton</code>教授等人提出的能够有效训练参数的新方法。在他2006年将这个方法应用于深度置信网络（<code>DBN</code>）之后很多类似的技术和改进被提出。但是，所有这些改进都基于相同的原理，总结如下：</p>
+<ul>
+<li>1.深度网络的训练，随机初始化参数、并直接通过监督式学习的方式以梯度下降法优化损失函数，这样的方式效果不好；</li>
+<li>2.效果更好的方式是：首先通过局部的非监督式方式依次对每一层进行预训练，学习的目的是由前一层的低级表示输出有用的高级表示；然后再通过监督式学习来进行参数微调。</li>
+</ul>
+<p>但是我们还不知道一个表示是好还是坏是由什么决定的。我们只知道一些算法的效果非常好，比如受限玻尔兹曼机（<code>RBM</code>）2006、自编码器（<code>autoencoders</code>）2007、以及<code>semi-supervised embedding</code>2008和核主成分分析(<code>Kernel PCA</code>)2010。</p>
+<p>值得注意的是RBM和经典的自编码器在函数形式上非常相似，虽然他们的解释和训练过程很不同。尤其是，这两个模型将输入映射到平均隐藏表示的决定函数是相同的。一个不同是确定的自编码器将平均值作为它的隐藏表示而随机的RBM从均值中抽样出一个二进制的隐藏表示；但是，RBM预训练完成后，堆栈式叠加是通过真实的均值传递而进行的，这点更符合自编码器的解释。自编码器的重建误差可以看作RBM的对数似然梯度的近似，尤其是RBM使用<code>对比差异更新</code>2009。所以使用自编码器堆叠的深度网络具有接近DBN的分类性能，但是为什么只是接近而不是超过呢？本研究的一个初始动机就是找到一种方法来缩小这个性能差距。</p>
+<p>在第二节我们从信息保存的直观概念出发，给出经典自编码器的泛化形式化表达，而后指出它的局限性。第三节我们推导出去噪自编码器的模型，并给出直观的几何解释。之后会在基本模型的基础上推导更多的扩展。第四节讨论相关的工作和方法。第五节进行实验，定性的学习不同条件下单层去噪自编码器学习到的特征检测器。第六节描述在多层去噪自编码器形成的网络进行实验，对比它和其他优秀模型的分类性能。第七节尝试把SDaE应用在实际的生成模型中，对比它和DBN生成的样本。第八节总结我们的工作和发现。</p>
+<p><strong>1.1 使用的符号</strong></p>
+<p><strong>1.2 基本设置</strong></p>
+<p>我们考虑一般的监督式学习的设置，$n$对训练集$D_n = { (x^{(1)},t^{(1)})  …, (x^{(n)},t^{(n)}) }$，训练集来自于从未知联合分布$q(X,T)$以及边缘分布$q(X)$和$q(T)$中<code>i.i.d</code>抽样。我们把样本$D_n$的经验分布定义为$q^0(X,T)$和$q^0(X)$。$X$是一个$d$维随机向量，即$X\in R^d$或者$X\in [0,1]^d$。</p>
+<p>我们的工作主要关心给出一个$X$的新的高级表示$Y$。$Y$是一个$d’$维随机变量，如果$d’ &gt; d$那么我们讨论过完备表示，而如果$d’ &lt; d$则变成了欠完备表示。Y和X由一个确定性的或者随机的映射$q(Y|X;\theta)$来表示，其参数是向量$\theta$。</p>
+<h3 id="二、什么才是一个好的表示？从互信息到自编码器"><a href="#二、什么才是一个好的表示？从互信息到自编码器" class="headerlink" title="二、什么才是一个好的表示？从互信息到自编码器"></a>二、什么才是一个好的表示？从互信息到自编码器</h3><p>我们从一开始就可以从实用主义观点给出好的表示的定义，那就是让系统在使用这些表示之后性能有提高。比如我们根据最顶层的分类器的分类性能来判定“表示”的好坏。但是，最近深度网络训练技术的突破给我们带来的启示是，不要把狭隘的分类任务定义的分类误差作为指导“表示学习”的唯一准则。首先，实验证明，即使仅针对无监督标准优化，一些特定的分类问题仍然可以得到性能的提升，而这些性能提升并非得益于特征表示的学习。其次可以肯定，人类能够很快熟悉新任务的能力来自于他们之前面对类似任务时学到了什么（先验）。</p>
+<p>这一节，从保留信息（<code>retaining information</code>）开始，从一个更好的角度对传统的自编码器范式进行介绍。</p>
+<p><strong>2.1 输入的保留信息</strong></p>
+<p>我们希望学习以$\theta$为参数的一个$X$到$Y$的映射$q(Y|X;\theta)$。一个自然的评判准则就是好的表示就是相对于输入保留更多的信息，从信息论的角度也就是最大化$X$和$Y$之间的互信息$I(X;Y)$，这是1989年Linsker提出的<code>infomax定理</code>的内容。</p>
+<p>互信息可以被分解为一个熵和一个条件熵的形式，如下所示。</p>
+<script type="math/tex; mode=display">I(X;Y) = H(Y) - H(Y|X)</script><script type="math/tex; mode=display">I(X;Y) = H(X) - H(X|Y)</script><p>这里我们选择第二个式子，因为$X$来自于一个不受参数影响的未知分布$q(X)$，所以$H(X)$是一个未知常数。这样的话<code>infomax定理</code>简化为以下形式：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+ argmax_\theta I(X;Y) &= argmax_\theta - H(X|Y) \\
+ &= argmax_\theta E_{q(X,Y)}[\log {q(X|Y)}]
+\end{align*}</script><p>对于任何$p(X|Y)$，我们有：</p>
+<script type="math/tex; mode=display">E_{q(X,Y)} [\log {p(X|Y)}] \leq E_{q(X,Y)} [\log {q(X|Y)}] = -H(X|Y)</script><p>考虑分布$p(X|Y;\theta’)$和下面的优化：</p>
+<script type="math/tex; mode=display">max_{\theta,\theta'} E_{q(X,Y;\theta)} [\log {p(X|Y;\theta')}]</script><p>由之前的不等式可知，这对应着最大化$-H(X|Y)$的下界也就是最大化互信息。也就是<br>找到$\exists \theta’ s.t. q(X|Y) = p(X|Y;\theta’)$</p>
+<p>由于$Y = f_\theta(X) $，因此优化式如下：</p>
+<script type="math/tex; mode=display">max_{\theta,\theta'} E_{q(X)} 
+[\log {p(X|Y=f_\theta(X);\theta')}]</script><p>因为$q(X)$未知，因此使用样本估计的分布$q_0(X)$，优化式变为：</p>
+<script type="math/tex; mode=display">max_{\theta,\theta'} E_{q_0(X)} 
+[\log {p(X|Y=f_\theta(X);\theta')}]</script><p>在下一节我们可以看到这个等式对应着自编码器的重建误差。</p>
+<p><strong>2.2 传统自编码器</strong></p>
+<ul>
+<li>1.编码器：</li>
+</ul>
+<script type="math/tex; mode=display">\begin{align*}
+& y = f_\theta(x) = s(Wx + b) \\
+& \theta = \{W,b\} \\
+& W \in R^{ d' \times d} \\
+& b \in R^{d'}
+\end{align*}</script><ul>
+<li>2.解码器：</li>
+</ul>
+<script type="math/tex; mode=display">\begin{align*}
+& z = g_{\theta'}(y) = s(W'y + b') \\
+& \theta' = \{W',b'\} \\
+& W \in R ^ {d \times d'} \\
+& b' \in R^{d}
+\end{align*}</script><p>总之$z$不能被理解为$x$的一个确定的重建，而是一个概率项$p(X|Z=z)$中概率最高的$z$。</p>
+<script type="math/tex; mode=display">p(X|Y = y) = p(X|Z = g_{\theta'}(y))</script><p>那么重建误差可以被优化为如下形式：</p>
+<script type="math/tex; mode=display">L(x,z) \varpropto - \log{p(x|z)}</script><p>一般$p(x|z)$和$L(x,z)$的选择有以下两种：</p>
+<ul>
+<li><p>1.如果$x\in R^d$那么$X|z \sim N(z,\sigma^2 I)$，$L(x,z) = C(\sigma^2)||x - z||^2$，因为$C(\sigma^2)$是仅与$\sigma^2$有关的常数，因此可以在优化时忽略。这是经典自编码器中常见的均方误差目标。这种设定下，译码器通常不使用非线性函数如<code>sigmoid</code>函数。</p>
+</li>
+<li><p>1.对于二进制向量输入$x\in {0,1}^d$那么$X|z \sim B(z)$，此时通常使用<code>sigmoid</code>这样的非线性函数。那么有$L(x,z) = L_H(x,z) = -\sum_j[x_jlogz_j + (1 - x_j)log(1 - z_j)] = H(B(x)||B(z))$，也被称为交叉误差，因为这是两个独立的多元伯努利分布的交叉熵。这种方式对于$x\in[0,1]^d$也可以适用。</p>
+</li>
+</ul>
+<p>编码器和解码器的函数和损失函数还可以有其他的形式。在Vincent2009年的论文中说明了一个更复杂的编码器函数的作用，我们进行了研究。但我们在这里做一个限制，那就是<code>仿射</code>+<code>sigmoid</code>编码器，搭配一个<code>仿射</code>解码器+均方根误差损失函数或者一个<code>仿射</code>+<code>sigmoid</code>解码器+交叉熵损失函数。还可以增加一个权重绑定的限制，也就是令<code>W&#39; = W^T</code>，这样可以加速RBM的训练。</p>
+<p>自编码器的训练目的是最小化重建误差，也就是下面的优化式：</p>
+<script type="math/tex; mode=display">min_{\theta,\theta'} E_{q_0(x)} [L(x,z(x))]</script><p>从我们对$L(x,z)$的定义，推导上式为：</p>
+<script type="math/tex; mode=display">
+ min_{\theta,\theta'} E_{q_0(x)} [p(X|Z = g_{\theta'}(f_\theta(x)))] =min_{\theta,\theta'} E_{q_0(x)} [p(X|Y = f_\theta(x))]</script><p>这个优化式就是我们之前推导的最大化$X$和$Y$的互信息下界的式子。因此训练一个自编码器就是要最大化输入和潜在表示之间互信息的下界。</p>
+<p><strong>2.3 仅仅保留信息是不够的</strong></p>
+<p>$Y$应当保留尽可能多的$X$的信息这一准则足够产生一个有用的表示。但是实际上设置$Y=X$就可以最大化互信息。如果$Y$的维度大于等于$X$的维度，那么自编码器很有可能通过学习出一个自映射来得到不错的重建误差，但这样的表示却没有什么用。比如如果是仿射编码那么可以学习出$Y = X$，如果是<code>sigmoid</code>那可以保证权重<code>W</code>的项足够小来保持在线性部分。</p>
+<p>所以必须应用更多的准则来把有用信息从噪音里分离出来。传统的自编码器使用$d’&lt; d$来产生<code>欠完备</code>的表示。当使用这种方法以及一个线性仿射函数和均方根误差时，本质上是在做<code>主成分分析</code>[1989,第4篇文献]。当使用非线性函数、交叉熵损失函数以及权值绑定时，可以避免自编码器学习到的表示停留在<code>sigmoid</code>的线性部分。</p>
+<p>当然可以想到的是使用另一种策略而不是低维度。使用<code>过完备</code>（$d’&gt;d$）而稀疏的表示的方法在之后得到了关注。因为首先大脑就是这样工作的[1996年稀疏编码的论文]；其次稠密的表示容易扰乱信息（原始信息稍有改变表示就会变化很多）而稀疏表示易于解释和被后面的分类器使用。这些方法已经被加入到传统的自编码器架构中来学习稀疏的表示。稀疏过完备表示可以被认为是数据的另一种压缩方式，通过大量的零而不是降低数据的维度来压缩。</p>
+<h3 id="三、使用去噪准则"><a href="#三、使用去噪准则" class="headerlink" title="三、使用去噪准则"></a>三、使用去噪准则</h3><p>我们可以看到，仅仅使用重建准则并不能获得很好的表示，有时会简单的复制输入有时会无用的最大化互信息但得到我们不感兴趣的表示。虽然可以通过对表示增加一些限制解决这个问题。</p>
+<p>这里我们使用一种不同的策略：清洁被部分污染的输入数据。我们把一个好的表示的定义改为如下：</p>
+<blockquote>
+<blockquote>
+<p>一个好的表示要能够从被污染的输入中获取而且能够被用来重建干净的原始输入。</p>
+</blockquote>
+</blockquote>
+<p>这有两个隐含意思：</p>
+<ul>
+<li><p>1.在被污染输入下高级表示应该更稳定和鲁棒。</p>
+</li>
+<li><p>2.通过去噪要能够抽取特征，这些特征包含了输入分布的有用结构。</p>
+</li>
+</ul>
+<p>我们的目的不是去噪本身，而是通过去噪来建立一个训练准则学习如何找出有用的特征。</p>
+<p><strong>3.1 去噪自编码器算法</strong></p>
+<p>如下图所示是dA的原理：</p>
+<p><img src="/images/FnQ1M5oqxpdiV2zSI4tKaLpbXmiI.jpg" alt=""></p>
+<p>与自编码器的不同是原始输入$x$被通过映射$q_D$随机污染为$\tilde x$,$\tilde x \sim q_D(\tilde x|x)$。</p>
+<p><strong>3.2 几何解释</strong></p>
+<p>去噪的过程，可以给出一种直观的几何解释，也就是基于<code>流行假设</code>[Chapelle，2006年提出]的解释。它认为高维的自然数据集中靠近低维度的非线性流型。如下图所示：</p>
+<p><img src="/images/Fi9NTwcuwSrh4J6Oke0M_uIicbfh.jpg" alt=""></p>
+<p>在去噪过程中，我们学习到一个随机算子$p(X|\tilde X)$把污染数据映射到原始数据。由于污染数据比未被污染数据更可能出现在流型之外更远的距离。随机算子$p(X|\tilde X)$学习到一个映射，该映射倾向于从低概率点$\tilde X$到附近的高概率点$X$，在流型附近。当$\tilde X$远离流型时，随机算子需要学习迈更大的步子来到达流型。成功的去噪意味着算子把离流型很远的点映射到了流型附近的很小区域。</p>
+<p>去噪自编码器可以看做是定义和学习出一个流型的方法。如果我们约束$d’ &lt; d$，那么$Y = f(X)$就可以被解释为流型上的点的坐标系统。</p>
+<p><strong>3.3 污染的种类</strong></p>
+<p>污染的过程中可以使用很多先验知识，但是在目前我们主要探究那些可以广泛应用到所有场景的技术，尤其是那些可以用在堆栈式去噪自编码器学习的技术。所以我们把讨论和实验条件限定在下面的简单污染过程：</p>
+<ul>
+<li><p>1.附加各向同性高斯噪声<code>GS</code>：$\tilde x|x \sim N(x,\sigma^2 I)$</p>
+</li>
+<li><p>2.掩码噪声<code>MN</code>：输入的一些位被置为0</p>
+</li>
+<li><p>3.<code>Salt-and-pepper</code>噪声<code>SP</code>：随机把输入的一段置为最大（最小）值，具体置为哪一种也是随机的</p>
+</li>
+</ul>
+<p>GS通常在实际输入($x\in R^d$)被经常使用，而在二进制输入或者接近二进制输入（例如黑白图像）中通常使用MN。但实际我们在工作中关注掩码噪声，因为它可以看做是缺失了一些值，而去噪自编码器应该设法把这些“空白”填补上。</p>
+<p>我们要提醒读者的是，MN和SP这两种方式，实际上污染了输入的一段而没有管其他的部分。去噪，就是利用其他的部分恢复被污染部分的过程，这个恢复过程只有高维分布中维度之间有相关性的时候才有用，否则去噪的过程没有意义。也就是如果问题的维度太低，就没有必要使用去噪这个方法了。</p>
+<p><strong>3.4 扩展：被污染的维度上的着重措施</strong></p>
+<p>因为MN和SP这两种方式实际上是污染了输入的一个变化的子集，所以我们可以直接的扩展一下它的去噪自编码器的训练准则。那就是，对于输入的污染部分和未污染部分，给予不同的权重矩阵，这里我们用$\alpha,\beta$来表示，它们被认为是模型的超参数，下面是这种措施下的均方误差损失函数和交叉熵损失函数：</p>
+<script type="math/tex; mode=display">
+L_{2,\alpha}(x,z)=\alpha (\sum_{j\in\tau(\tilde x)} (x_j - z_j)^2)+\beta (\sum_{j\notin\tau(\tilde x)} (x_j - z_j)^2)</script><script type="math/tex; mode=display">
+L{2,\alpha}(x,z) = \alpha (-\sum{j\in\tau(\tilde x)} [x_jlogz_j + (1-x_j)log(1-z_j)])+\beta (-\sum_{j\notin\tau(\tilde x)} [x_jlogz_j + (1-x_j)log(1-z_j)])</script><p>我们把这个扩展叫做着重去噪自编码器。一个特例就是当$\alpha=1,\beta=0$的时候我们只把对被污染值的预测计入重建误差。</p>
+<p><strong>3.5 利用堆栈式去噪自编码器建立深度结构</strong></p>
+<p>利用<code>SdA</code>建立深度网络的方法与利用<code>RBM</code>建立<code>DBN</code>的方法以及利用原始自编码器建立深度网络的方式基本上相同。注意我们只在逐层预训练的时候对输入进行污染。而预训练时仅仅污染当前层接受的原始数据，数据仅在当前层进行一次污染过程。网络的最顶层可以加一层接受最高级表示的监督学习算法层，例如<code>SVM</code>或者<code>softmax</code>。然后利用梯度下降法对整个网络的参数进行微调。SdA建立的网络结构图如下：</p>
+<p><img src="/images/FgkB9s0fjiCXKlbbAl43JfD361sC.jpg" alt=""></p>
+<h3 id="四、文献中相关的方法"><a href="#四、文献中相关的方法" class="headerlink" title="四、文献中相关的方法"></a>四、文献中相关的方法</h3><p>本节我们主要介绍三个方向之前的相关工作。</p>
+<p><strong>4.1 之前训练神经网络用于去噪的工作</strong></p>
+<p>在去噪任务中利用<code>BP</code>算法训练多层感知机的方法最早在1987年就被<code>Lecun</code>提出了，1987年提出了一个相似的方法来学习自感知存储。这些之前的工作，无论是模型还是训练方法与本文提出的去噪自编码器都很类似。不同之处有两点，二进制输入数据在使用sigmoid函数后它们使用了均方根误差损失函数而我们使用了交叉熵损失函数；它们的去噪过程经过自编码器网络循环进行很多次，就像在一个自循环网络中一样。</p>
+<p>尽管如此，我们的动机和目标很不一样，<code>Lecun</code>的目标是训练网络的记忆能力，也就是测试网络能够想起多少测试输入片段，这个工作也利用了一个非线性隐藏层。而我们的动机是探究和理解用来初始化深度网络的非监督预训练准则。因此我们的兴趣在于利用去噪来学习出好的特征提取器，然后组合这些特征提取器初始化深度网络。</p>
+<p>另外一个与我们工作相关的是1998年Seung的工作，使用一个递归神经网络和BP训练得到被污染的数据。这项工作与我们的工作的主要不同是它：a）主要关注递归神经网络；b）关注图像去噪任务本身。所以该工作大量的使用到了图像拓扑学的先验知识，而我们的去噪过程是一个更加泛化的过程。</p>
+<p>最近Jain和Seung在2008年提出了使用深度卷积神经网络<code>CNN</code>来进行图像去噪的成功方法。这个方法的性能超过了马尔科夫随机场和小波方法。</p>
+<p><strong>4.2 利用含噪声输入训练分类器</strong></p>
+<p>利用含噪声输入（或者叫抖动）来训练神经网络[1988年被提出]被证明可以提高监督学习任务的泛化性能[1991,1992,1996年的论文]。这方面的研究跟自编码器和去噪没有什么关联。</p>
+<p><strong>4.3 伪似然度和依赖网络</strong></p>
+<p>把去噪训练看作是“填补空白”以及着重在被污染区域训练这两个观点与1975年的伪相似度和2000年的依赖网络很相似。伪似然度提出把似然项$p(X)$替换为条件概率之积$\prod<em>{i=1}^d p(X_i|X</em>\neg i)$，其中$X<em>i$代表输入向量的第$i$维，而$X</em>\neg i$代表除了第$i$维之外的输入向量。依赖网络也同样考虑学习$d$个条件分布，每一个被用来使用输入的其余部分预测输入的第$i$位。这两种思想和<code>着重去噪自编码器</code>很像。</p>
+<p>这段关于相关工作和本论文的相似处和区别部分没有仔细读。</p>
+<h3 id="五、单个去噪自编码器的实验：定性的评估学习到的特征检测器"><a href="#五、单个去噪自编码器的实验：定性的评估学习到的特征检测器" class="headerlink" title="五、单个去噪自编码器的实验：定性的评估学习到的特征检测器"></a>五、单个去噪自编码器的实验：定性的评估学习到的特征检测器</h3><p>本节实验使用简单的dA，也就是没有堆栈式叠加或者监督式微调。实验的目的是测试对于不同的噪音种类，dA和经典的自编码器学习到的特征检测器有什么不同。</p>
+<p>在图像数据上进行训练的第一个隐藏层的特征检测器的输出可以直接可视化表示。每一个神经元$y_j$由对应的权重向量$W_j$和输入向量叉乘产生，对应着图像的某一个部分。</p>
+<p><strong>5.1 从自然图像中学到的特征检测器</strong></p>
+<p>我们使用12*12的白噪声化自然图像训练经典自编码器和dA。对于这些自然输入，我们使用线性解码器和均方误差，参数进行随机初始化，使用SGD方法进行训练，学习率0.05，使用权值绑定（即使不使用学习到的权重矩阵也差不多是一样的）。</p>
+<p>下图是训练结果，欠完备的自编码器看起来学习到了一些没什么用的局部对象检测器，而过完备的自编码器看起来完全是随机输出：</p>
+<p><img src="/images/FvzQaS6sKU7kyGf9pdgxj1SvK3VX.jpg" alt=""></p>
+<ul>
+<li><p>左边：一些用来被训练的12*12图像</p>
+</li>
+<li><p>中间：被经典欠完备自编码器学习到的过滤器，使用50个隐藏单元，权值绑定和L2惩罚项</p>
+</li>
+<li><p>右边：被经典过完备自编码器学习到的过滤器，使用200个隐藏单元，L2惩罚项</p>
+</li>
+</ul>
+<p>我们接下来训练了过完备的带L2权重衰减的经典自编码器（输入无噪音）和200个隐藏单元的去噪自编码器（输入带高斯噪声，无L2）。注意噪声等级是0的去噪自编码器就是一个正则化的经典自编码器，所以噪声等级接近0的dA结果应该和上图结果差不多。</p>
+<p>如果有足够大的噪声等级（$\sigma = 0.5$），如下图，去噪自编码器就可以学习到<code>Gabor-like局部有向边检测器</code>，这和<code>稀疏编码</code>[1996]或者<code>ICA</code>[1997]得到的结果类似。但是带L2的欠完备的自编码器，尽管我们尝试了很多不同的正则化超参数的值，但只能学习到一些没用的大对象检测器。从实验中我们可以得出以下结论：</p>
+<blockquote>
+<blockquote>
+<p>如4.2中所述，对于非线性自编码器来说，带足够多噪声输入的训练和带权重衰减项训练性质完全不同。</p>
+</blockquote>
+</blockquote>
+<p><img src="/images/FiOUeLvmSFwJJaA4ELrEziFXiMTF.jpg" alt=""></p>
+<p>下图考虑了另外两种噪声的类型，<code>SP</code>和<code>MN</code>。我们试验了三个噪声等级：10%，25%，55%。隐藏单元是100个，但是对于50或者200个结果也没有什么不同。</p>
+<p><img src="/images/FolOOw8jEMUK2sugJzVzEjOLQ5dW.jpg" alt=""></p>
+<p>我们发现，SP可以产生<code>Gabor-like局部有向边检测器</code>，而MN产生了该滤波器和<code>光栅滤波器</code>的混合体。确实不同的噪声类型可以产生不同的过滤器，但是我们发现这三种类型的噪声都可以帮助产生有用的边缘检测器。</p>
+<p><strong>5.2 从手写数字中学到的特征检测器</strong></p>
+<p>我们使用<code>Mnist</code>数据集（包含28*28的灰阶手写数字图像）来训练dA。当噪声等级为0%的时候，过滤器的输出看起来是随机的；增加噪声等级后，过滤器的输出看起来有用的多，比如局部相关<code>stroke</code>检测器和数字部分检测器。</p>
+<p><img src="/images/FqAZwfFJ7slk4mfgcPteNJnm8Tz9.jpg" alt=""></p>
+<h3 id="六、堆栈式去噪自编码器的实验"><a href="#六、堆栈式去噪自编码器的实验" class="headerlink" title="六、堆栈式去噪自编码器的实验"></a>六、堆栈式去噪自编码器的实验</h3><p>本节对比<code>SDAE</code>、<code>SAE</code>和<code>DBN</code>在分类问题上的基准测试性能。</p>
+<p><strong>6.1 考虑分类问题和实验方法</strong></p>
+<p>使用十个测试数据集进行测试。</p>
+<p>采用下面的方式对参数进行初始化：</p>
+<ul>
+<li><p>1.MLP：随机</p>
+</li>
+<li><p>2.DBN：RBM预训练</p>
+</li>
+<li><p>3.SAE：自编码器预训练</p>
+</li>
+<li><p>4.SDAE：去噪自编码器预训练</p>
+</li>
+</ul>
+<p>对于超参数，根据验证集性能进行调整。</p>
+<p><strong>6.2 深度网络训练策略的经验比较</strong></p>
+<p>实验结果，SDAE-3超过了作为基准的SVM和SAE-3（这里的3指三层隐藏层）。除了一个结果外，其他结果SDAE-3都超过了SAE-3和DBN。</p>
+<p><strong>6.3 网络层数、隐藏层单元数量和污染等级的影响</strong></p>
+<p>现在我们讨论一下一些重要的超参数设置对于性能的影响。这里我们选择数据集中最复杂参数最多的bg-img-rot，这个数据集是Mnist手写数字数据集的图像进行随机旋转和加背景图片得来的。网络层数、隐藏层单元数量对于三个模型的影响如下图：</p>
+<p><img src="/images/FkgOBra5wx92nRD1z06-eNZ0gBdz.jpg" alt=""></p>
+<p>网络层数、污染等级对于SDAE的影响如下图：</p>
+<p><img src="/images/FvxxjnjZnc8vClnGyWawr0I972hY.jpg" alt=""></p>
+<p><strong>6.4 去噪预训练 VS 含噪声输入训练</strong></p>
+<p>SDAE使用去噪训练准则来学习初始的特征提取器然后使用无噪声输入进行监督式学习，这和进行含噪声输入训练是非常不一样的。你可以只在预训练部分添加噪声，也可以在微调部分也添加噪声。我们使用三个数据集进行测试，两种方法对于SDAE的影响如下图：</p>
+<p><img src="/images/Ftyn4FnHkh_cwZWsZxSKG3GpgVHn.jpg" alt=""></p>
+<p>我们可以看到，使用含噪声输入训练对SDAE并没有明显的性能增益（相比于SAE），有时还会下降。</p>
+<p><strong>6.5 去噪自编码器的变种：使用交替污染种类和着重训练</strong></p>
+<p>本系列实验，我们准备探究交替污染种类和进行被污染区域着重训练的效果。实验结果说明：</p>
+<ul>
+<li><p>1.明智的根据数据选择污染种类和进行着重训练有利于提高训练结果</p>
+</li>
+<li><p>2.bg-rand数据集中，SDAE-3性能始终不如DBN-3，给出的解释是bg-rand问题中的数据非常适合于RBM学习它的表示[2007年Larochelle的论文]。</p>
+</li>
+</ul>
+<p><strong>6.6 SDAE非监督式学习到的特征对于SVM有用吗</strong></p>
+<p>接下来的实验中，我们希望确定学习到的高级表示对于不是神经网络中的算法是否有用，比如<code>SVM</code>。</p>
+<p>我们把SDAE学习到的表示提供给<code>线性SVM</code>和<code>核SVM</code>（使用RBF核），实验结果显示，学习到的表示能够提高SVM的性能。（为了证明是SDAE提高了性能而不是随机的非线性变换，把同一个神经网络随机初始化参数得出的表示传递给SVM，表现要低得多）而且越高级的表示，SVM的性能就越好。线性SVM，显然能够从我们非线性的表示中获益；但让我们吃惊的是，使用RBF核的SVM同样可以从SDAE学习出的非线性映射中得到提高。</p>
+<p><img src="/images/Fo8dJ4ce3eoWBQif23FJSnsisfsZ.jpg" alt=""></p>
+<h3 id="七、从SdA网络中生成样本"><a href="#七、从SdA网络中生成样本" class="headerlink" title="七、从SdA网络中生成样本"></a>七、从SdA网络中生成样本</h3><p><strong>7.1 给予一个顶层表示自上而下生成可见样本</strong></p>
+<p>给予一个顶层表示，那么DBN就是一个图模型可以自上而下的取样，也就是从基于上一层在本层取样，直到最下面的一层。在一个simoid深度置信网络中，有$X|Y \sim B(g<em>{\theta’} (Y))$，而$g</em>{\theta ‘}$和自编码器中的是相同的形式，因此SAE和SDAE也可以用相似的方式来生成。</p>
+<p><strong>7.2 对于给定输入自下而上推导顶层表示</strong></p>
+<p>在SAE/SDAE架构中，最底层给定一个输入表示，可以通过确定的自下而上的过程给出相应得的高级表示。在DBN中相同的过程在图模型的角度可以看做是给定底层输入对因子的顶层伯努利分布进行近似推理，顶层表示可以理解为真实输入的因子伯努利分布的参数。</p>
+<p><strong>7.3 对于SAE，SDAE，DBN使用同样过程生成样本</strong></p>
+<p><img src="/images/FirpluS_Eu5C2qsm5qkJeN3oqduq.jpg" alt=""></p>
+<p>通过对比生成的样本可以看出三种模型学习到的表示优劣。</p>
+<h3 id="八、总结和未来工作"><a href="#八、总结和未来工作" class="headerlink" title="八、总结和未来工作"></a>八、总结和未来工作</h3><p>我们的工作受最近训练深度网络的方法的启发。动机是弥补使用SAE网络与DBN之间的性能差距。这让我们去探究传统的自编码器的理论缺陷。经过改进训练准则，SDAE生成的表示能够提高浅层分类器比如<code>Kernel SVM</code>的效果。对于特征抽取器的仔细试验表明，去噪自编码器可以学习到数据中有用的结构（比如自然图像中的<code>Gabor-like</code>边缘检测器）而正则化自编码器学习不到。</p>
+<p>我们基于易理解的容易实现的传统编码器改进算法。而且仅仅使用简单直接的噪声类型和噪声等级的微调就可以得到不错的结果。我们的去噪过程和权值衰减并不相同，也和监督学习中加入含噪声输入不一样。</p>
+<blockquote>
+<blockquote>
+<p>我们的实验表明，使用去噪训练准则作为非监督学习的目标能够学习出有用的高级表示。这是我们工作中最重要的贡献。</p>
+</blockquote>
+</blockquote>
+<p>希望我们的工作能够使更多的人研究这个方向。理论上的（研究去噪过程和表示学习之间的关系）以及实践中的（基于理论设计更好的算法）。</p>
+<p>肯定有比我们这种简单的局部训练更好的使用去噪训练方式的方法。尤其是，虽然SDAE可以帮助建立深度网络，但是去噪自编码器本身确实浅层的模型，我们只是把它们叠加起来了。探索深度去噪自编码器并把它们叠加在一起建立高级表示一定很有意思。污染过程的类型选择和其所扮演的角色一样值得研究。如果更多的污染类型被证明效果不错，它们可以被根据数据类型参数化叠加，从而污染类型不需要手动的进行选择，而是从数据中自动生成。</p>
+<h3 id="我的总结"><a href="#我的总结" class="headerlink" title="我的总结"></a>我的总结</h3><p>该篇论文是去噪自编码器的原始论文，论文让人印象深刻的地方有：</p>
+<ul>
+<li>1.论文中对于去噪自编码器从<code>信息论</code>和<code>流形学习</code>的角度解释很特别（虽然这两个角度来自自编码器论文）。</li>
+<li>2.论文的实验部分记录详尽完善、数据充分、不同模型对比结果让人信服。</li>
+<li>3.相关工作部分从多个方面阐述了与自己工作相关的论文，对两者相同和不同之处进行说明。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/" title="阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》">http://cairohy.github.io/2015/11/05/machine-learning/阅读笔记-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 阅读笔记</a>
+              <a href="/tags/%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/" rel="tag"><i class="fa fa-tag"></i> 自编码器</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/11/05/machine-learning/%E5%A0%86%E6%A0%88%E5%BC%8F%E5%8E%BB%E5%99%AA%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8/" rel="prev" title="堆栈式去噪自编码器">
+      <i class="fa fa-chevron-left"></i> 堆栈式去噪自编码器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/11/16/leetcode/leetcode-Bulls-and-Cows/" rel="next" title="leetcode:Bulls and Cows">
+      leetcode:Bulls and Cows <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要"><span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、介绍"><span class="nav-text">一、介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、什么才是一个好的表示？从互信息到自编码器"><span class="nav-text">二、什么才是一个好的表示？从互信息到自编码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、使用去噪准则"><span class="nav-text">三、使用去噪准则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、文献中相关的方法"><span class="nav-text">四、文献中相关的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、单个去噪自编码器的实验：定性的评估学习到的特征检测器"><span class="nav-text">五、单个去噪自编码器的实验：定性的评估学习到的特征检测器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、堆栈式去噪自编码器的实验"><span class="nav-text">六、堆栈式去噪自编码器的实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、从SdA网络中生成样本"><span class="nav-text">七、从SdA网络中生成样本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、总结和未来工作"><span class="nav-text">八、总结和未来工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#我的总结"><span class="nav-text">我的总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2015/11/05/machine-learning/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/";
+    this.page.identifier = "2015/11/05/machine-learning/阅读笔记-Stacked-Denoising-Autoencoders-Learning-Useful-Representations-in-a-Deep-Network-with-a-Local-Denoising-Criterion/";
+    this.page.title = "阅读笔记:《Stacked Denoising Autoencoders： Learning Useful Representations in a Deep Network with a Local Denoising Criterion》";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '39dd9ac4a11483fcd7275b3f4137e520',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

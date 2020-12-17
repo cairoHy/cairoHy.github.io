@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、最小生成树 给你一个points 数组，表示 2D 平面上的一些点，其中 points[i] &#x3D; [xi, yi] 。 连接点 [xi, yi] 和点 [xj, yj] 的费用为它们之间的 曼哈顿距离 ：|xi - xj| + |yi - yj| ，其中 |val| 表示 val 的绝对值。 请你返回将所有点连接的最小总费用。只有任意两点之间 有且仅有 一条简单路径时，才认为所有点都已连接。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode: 图">
+<meta property="og:url" content="http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="一、最小生成树 给你一个points 数组，表示 2D 平面上的一些点，其中 points[i] &#x3D; [xi, yi] 。 连接点 [xi, yi] 和点 [xj, yj] 的费用为它们之间的 曼哈顿距离 ：|xi - xj| + |yi - yj| ，其中 |val| 表示 val 的绝对值。 请你返回将所有点连接的最小总费用。只有任意两点之间 有且仅有 一条简单路径时，才认为所有点都已连接。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-25T21:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.075Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Leetcode">
+<meta property="article:tag" content="BFS">
+<meta property="article:tag" content="Graph">
+<meta property="article:tag" content="并查集">
+<meta property="article:tag" content="最小生成树">
+<meta property="article:tag" content="Greedy">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>leetcode: 图 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          leetcode: 图
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-25 21:00:00" itemprop="dateCreated datePublished" datetime="2020-05-25T21:00:00+00:00">2020-05-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/25/leetcode/%E5%9B%BE/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode: 图" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、最小生成树"><a href="#一、最小生成树" class="headerlink" title="一、最小生成树"></a>一、最小生成树</h3><blockquote>
+<p>给你一个points 数组，表示 2D 平面上的一些点，其中 points[i] = [xi, yi] 。</p>
+<p>连接点 [xi, yi] 和点 [xj, yj] 的费用为它们之间的 曼哈顿距离 ：|xi - xj| + |yi - yj| ，其中 |val| 表示 val 的绝对值。</p>
+<p>请你返回将所有点连接的最小总费用。只有任意两点之间 有且仅有 一条简单路径时，才认为所有点都已连接。</p>
+</blockquote>
+<p>Prim：从点的视角出发，优点就是不用一次计算所有的边的权重。某个节点出发，把它放到队列里面。</p>
+<p>然后循环以下操作直到所有节点都已经访问：从队列中弹出距离最小的节点，如果还没访问就设置为访问，加入总代价。然后计算当前节点和所有没访问的节点之间的权重，放到优先级队列里面。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> PriorityQueue</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minCostConnectPoints</span><span class="params">(self, points: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        calcu_distance = <span class="keyword">lambda</span> x, y: abs(points[x][<span class="number">0</span>] - points[y][<span class="number">0</span>]) + abs(points[x][<span class="number">1</span>] - points[y][<span class="number">1</span>])   </span><br><span class="line">        n = len(points)</span><br><span class="line">        pq = PriorityQueue()  <span class="comment"># 利用优先级队列以logN时间开销存储</span></span><br><span class="line">        un_visit = set([i <span class="keyword">for</span> i <span class="keyword">in</span> range(n)])</span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        cur = (<span class="number">0</span>, <span class="number">0</span>)  <span class="comment"># distance, node index</span></span><br><span class="line">        pq.put(cur)</span><br><span class="line">        <span class="keyword">while</span> un_visit:</span><br><span class="line">            dist, cur = pq.get()</span><br><span class="line">            <span class="comment"># print('&#123;&#125;'.format(un_visit))</span></span><br><span class="line">            <span class="keyword">if</span> cur <span class="keyword">not</span> <span class="keyword">in</span> un_visit:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            un_visit.remove(cur)</span><br><span class="line">            res += dist</span><br><span class="line">            <span class="keyword">for</span> each <span class="keyword">in</span> un_visit:</span><br><span class="line">                dist = calcu_distance(cur, each)</span><br><span class="line">                pq.put((dist, each))</span><br><span class="line">            <span class="comment"># print('&#123;&#125;'.format(list(pq.queue)))</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<p>kruskal算法 + 并查集实现：从边的视角出发。初始化并查集。</p>
+<p>1.计算出所有边的权重并排序。</p>
+<p>2.在边的集合中按从小到大循环：</p>
+<p>如果加入当前边会形成环（也就是两个节点已经有通路了，并查集），那么就跳过。</p>
+<p>否则就加入当前边（加入总代价，并连通两个节点）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minCostConnectPoints</span><span class="params">(self, points: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        n = len(points)</span><br><span class="line">        uf = &#123;i: i <span class="keyword">for</span> i <span class="keyword">in</span> range(n)&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(x)</span>:</span></span><br><span class="line">            <span class="keyword">while</span> x != uf[x]:</span><br><span class="line">                x = uf[x]</span><br><span class="line">            <span class="keyword">return</span> x</span><br><span class="line">            </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(p, q)</span>:</span></span><br><span class="line">            <span class="keyword">return</span> find(p) == find(q)</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(p, q)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> connect(p, q):</span><br><span class="line">                uf[find(p)] = find(q)</span><br><span class="line">        </span><br><span class="line">        edges = defaultdict(int)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>, n):</span><br><span class="line">                edges[(i, j)] = abs(points[i][<span class="number">0</span>] - points[j][<span class="number">0</span>]) + abs(points[i][<span class="number">1</span>] - points[j][<span class="number">1</span>])</span><br><span class="line">        edges = sorted(edges.items(), key=<span class="keyword">lambda</span> item:item[<span class="number">1</span>]) <span class="comment"># 排序后的边</span></span><br><span class="line">        <span class="comment"># print(edges)</span></span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        total = <span class="number">0</span></span><br><span class="line">       </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(edges)):</span><br><span class="line">            (x, y), dist = edges[i]</span><br><span class="line">            <span class="comment"># print('x: &#123;&#125;, y: &#123;&#125;'.format(find(x), find(y)))</span></span><br><span class="line">            <span class="keyword">if</span> find(x) != find(y):  <span class="comment"># 如果还没有连通</span></span><br><span class="line">                total += <span class="number">1</span></span><br><span class="line">                res += dist</span><br><span class="line">                <span class="comment"># print('&#123;&#125;, &#123;&#125;, &#123;&#125;'.format((x, y), res, total))</span></span><br><span class="line">                <span class="keyword">if</span> total == n - <span class="number">1</span>: <span class="comment"># 所有节点都已经连通</span></span><br><span class="line">                    <span class="keyword">return</span> res</span><br><span class="line">                union(x, y)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<h3 id="二、判断二分图"><a href="#二、判断二分图" class="headerlink" title="二、判断二分图"></a>二、判断二分图</h3><blockquote>
+<p>给定一个无向图graph，当这个图为二分图时返回true。</p>
+<p>如果我们能将一个图的节点集合分割成两个独立的子集A和B，并使图中的每一条边的两个节点一个来自A集合，一个来自B集合，我们就将这个图称为二分图。</p>
+</blockquote>
+<p>染色，对于每个边连接的节点，他们一定属于A和B这两个不同集合，BFS或者DFS搜索，如果出现颜色矛盾说明不能构成二分图。</p>
+<p>对于不连通的子图，可以作为两个图看待，这个子图里面随机从一个点开始进行染色就行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"><span class="string">"""BFS、并查集"""</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isBipartite</span><span class="params">(self, graph: List[List[int]])</span> -&gt; bool:</span></span><br><span class="line">        n = len(graph)</span><br><span class="line">        parent = [i <span class="keyword">for</span> i <span class="keyword">in</span> range(n)]</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(node)</span>:</span></span><br><span class="line">            <span class="keyword">while</span> parent[node] != node:</span><br><span class="line">                node = parent[node]</span><br><span class="line">            <span class="keyword">return</span> node</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(node1, node2)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> find(node1) != find(node2):</span><br><span class="line">                parent[find(node1)] = find(node2)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i, each <span class="keyword">in</span> enumerate(graph):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> each:</span><br><span class="line">                union(i, j)</span><br><span class="line">        <span class="comment"># 所有子图中，每个子图找一个随机节点</span></span><br><span class="line">        roots = set()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            cur = find(i)</span><br><span class="line">            <span class="keyword">if</span> cur <span class="keyword">not</span> <span class="keyword">in</span> roots:</span><br><span class="line">                roots.add(cur)</span><br><span class="line">        visited = defaultdict(bool)  <span class="comment"># 要把每个节点都遍历</span></span><br><span class="line">        undo, green, red = <span class="number">0</span>, <span class="number">1</span>, <span class="number">-1</span></span><br><span class="line">        color = defaultdict(int)  <span class="comment"># 0.未着色，1.蓝色，-1.红色</span></span><br><span class="line">        cur_color = <span class="number">1</span></span><br><span class="line">        q = Queue()</span><br><span class="line">        <span class="comment"># print(roots)</span></span><br><span class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> roots:</span><br><span class="line">            q.put(each)</span><br><span class="line">            visited[each] = <span class="literal">True</span></span><br><span class="line">            color[each] = red</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            cur = q.get()</span><br><span class="line">            cur_color = color[cur]</span><br><span class="line">            wanted_color = red <span class="keyword">if</span> cur_color == green <span class="keyword">else</span> green</span><br><span class="line">            <span class="keyword">for</span> nei <span class="keyword">in</span> graph[cur]:</span><br><span class="line">                <span class="keyword">if</span> color[nei] == undo:</span><br><span class="line">                    color[nei] = wanted_color</span><br><span class="line">                <span class="keyword">elif</span> color[nei] != wanted_color:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                color[nei] = wanted_color</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> visited[nei]:</span><br><span class="line">                    visited[nei] = <span class="literal">True</span></span><br><span class="line">                    q.put(nei)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="三、图连通"><a href="#三、图连通" class="headerlink" title="三、图连通"></a>三、图连通</h3><blockquote>
+<p>有 n 座城市，编号从 1 到 n 。编号为 x 和 y 的两座城市直接连通的前提是： x 和 y 的公因数中，至少有一个 严格大于 某个阈值 threshold 。更正式地说，如果存在整数 z ，且满足以下所有条件，则编号 x 和 y 的城市之间有一条道路：</p>
+<p>x % z == 0<br>y % z == 0<br>z &gt; threshold<br>给你两个整数 n 和 threshold ，以及一个待查询数组，请你判断每个查询 queries[i] = [ai, bi] 指向的城市 ai 和 bi 是否连通（即，它们之间是否存在一条路径）。</p>
+<p>返回数组 answer ，其中answer.length == queries.length 。如果第 i 个查询中指向的城市 ai 和 bi 连通，则 answer[i] 为 true ；如果不连通，则 answer[i] 为 false 。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UF</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        self.uf = [<span class="number">-1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n)]</span><br><span class="line">        self.count_= n</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">        ux, uy = self.find(x), self.find(y)</span><br><span class="line">        <span class="keyword">if</span> ux == uy:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="comment"># 规模小的优先合并</span></span><br><span class="line">        <span class="keyword">if</span> self.uf[ux] &lt; self.uf[uy]:</span><br><span class="line">           self.uf[ux] += self.uf[uy]</span><br><span class="line">           self.uf[uy] = ux</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">           self.uf[uy] += self.uf[ux]</span><br><span class="line">           self.uf[ux] = uy</span><br><span class="line">        self.count_ -= <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        r = x</span><br><span class="line">        <span class="keyword">while</span> self.uf[x] &gt;= <span class="number">0</span>:</span><br><span class="line">            x = self.uf[x]</span><br><span class="line">        <span class="comment"># 路径压缩</span></span><br><span class="line">        <span class="keyword">while</span> r != x:</span><br><span class="line">            self.uf[r],r = x,self.uf[r]</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">areConnected</span><span class="params">(self, n: int, threshold: int, queries: List[List[int]])</span> -&gt; List[bool]:</span></span><br><span class="line">        uf = UF(n + <span class="number">1</span>)</span><br><span class="line">        <span class="comment"># 通过连接大于阈值的因子与所有可能的节点来判断连通，时间复杂度O(n·logn)</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(threshold + <span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">2</span> * i, n + <span class="number">1</span>, i):</span><br><span class="line">                uf.union(i, j)</span><br><span class="line"></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="keyword">for</span> a, b <span class="keyword">in</span> queries:</span><br><span class="line">            ans.append(<span class="literal">True</span> <span class="keyword">if</span> uf.find(a) == uf.find(b) <span class="keyword">else</span> <span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+<h3 id="四、最长连续序列"><a href="#四、最长连续序列" class="headerlink" title="四、最长连续序列"></a>四、最长连续序列</h3><blockquote>
+<p>给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。</p>
+<p>进阶：你可以设计并实现时间复杂度为 O(n) 的解决方案吗？</p>
+</blockquote>
+<p>转换为图连通问题，用并查集处理相邻数字代表的节点，时间复杂度O(n)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnionFind</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        self.uf = [<span class="number">-1</span>] * n</span><br><span class="line">        self.count_ = n</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        r = x</span><br><span class="line">        <span class="keyword">while</span> self.uf[x] &gt;= <span class="number">0</span>:</span><br><span class="line">            x = self.uf[x]</span><br><span class="line">        <span class="comment"># x为根节点</span></span><br><span class="line">        <span class="comment"># 路径压缩，摊平</span></span><br><span class="line">        <span class="keyword">while</span> r != x:</span><br><span class="line">            self.uf[r], r = x, self.uf[r]</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">        ux, uy = self.find(x), self.find(y)</span><br><span class="line">        <span class="keyword">if</span> ux == uy:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="comment"># 按秩合并，把规模大的合并到规模小的群里，群的元素数量是-uf[root]</span></span><br><span class="line">        <span class="keyword">if</span> self.uf[ux] &lt; self.uf[uy]:</span><br><span class="line">            self.uf[ux] += self.uf[uy]</span><br><span class="line">            self.uf[uy] = ux</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.uf[uy] += self.uf[ux]</span><br><span class="line">            self.uf[ux] = uy</span><br><span class="line">        self.count_ -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">(self)</span>:</span>  <span class="comment"># 连通子图的数量</span></span><br><span class="line">        <span class="keyword">return</span> self.count_</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">longestConsecutive</span><span class="params">(self, nums: List[int])</span> -&gt; int:</span></span><br><span class="line">        uf = UnionFind(len(nums))</span><br><span class="line">        value2idx = &#123;&#125;</span><br><span class="line">        <span class="comment"># O(n)</span></span><br><span class="line">        <span class="keyword">for</span> i, a <span class="keyword">in</span> enumerate(nums):</span><br><span class="line">            <span class="keyword">if</span> a <span class="keyword">not</span> <span class="keyword">in</span> value2idx:</span><br><span class="line">                value2idx[a] = i</span><br><span class="line">        </span><br><span class="line">        visited = set()</span><br><span class="line">		</span><br><span class="line">        <span class="comment"># O(n)</span></span><br><span class="line">        <span class="keyword">for</span> i, a <span class="keyword">in</span> enumerate(nums):</span><br><span class="line">            <span class="keyword">if</span> a <span class="keyword">in</span> visited:  <span class="comment"># 排除已经处理的中间值</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            visited.add(a)</span><br><span class="line">            <span class="keyword">if</span> a + <span class="number">1</span> <span class="keyword">in</span> value2idx <span class="keyword">and</span> a + <span class="number">1</span> <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                uf.union(i, value2idx[a + <span class="number">1</span>])</span><br><span class="line">            <span class="keyword">if</span> a - <span class="number">1</span> <span class="keyword">in</span> value2idx <span class="keyword">and</span> a - <span class="number">1</span> <span class="keyword">not</span> <span class="keyword">in</span> visited:</span><br><span class="line">                uf.union(i, value2idx[a - <span class="number">1</span>])</span><br><span class="line">        </span><br><span class="line">        max_ = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)):</span><br><span class="line">            max_ = max(max_, -uf.uf[uf.find(i)])</span><br><span class="line">        <span class="keyword">return</span> max_</span><br></pre></td></tr></table></figure>
+<h3 id="五、二分图最大匹配"><a href="#五、二分图最大匹配" class="headerlink" title="五、二分图最大匹配"></a>五、二分图最大匹配</h3><blockquote>
+<p>你有一块棋盘，棋盘上有一些格子已经坏掉了。你还有无穷块大小为1 * 2的多米诺骨牌，你想把这些骨牌不重叠地覆盖在完好的格子上，请找出你最多能在棋盘上放多少块骨牌？这些骨牌可以横着或者竖着放。</p>
+</blockquote>
+<p>因为是1×2的棋子，所以一个棋子必须在横向或者纵向占两个格子，把棋盘相邻的格子看作点，并连接起来，则问题转换为一个二分图上的最大匹配问题。</p>
+<p>这一题也可以用轮廓线DP来做（如代码），不过速度要慢很多。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">domino</span><span class="params">(self, n: int, m: int, broken: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        <span class="string">"""匈牙利算法，二分图最大匹配"""</span></span><br><span class="line">        edges = defaultdict(set)</span><br><span class="line">        broken = set([i * m + j <span class="keyword">for</span> i, j <span class="keyword">in</span> broken])</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">neighbor</span><span class="params">(x, y)</span>:</span></span><br><span class="line">            <span class="keyword">if</span> x &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">yield</span> (x - <span class="number">1</span>) * m + y</span><br><span class="line">            <span class="keyword">if</span> y &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">yield</span> x * m + y - <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> x + <span class="number">1</span> &lt; n:</span><br><span class="line">                <span class="keyword">yield</span> (x + <span class="number">1</span>) * m + y</span><br><span class="line">            <span class="keyword">if</span> y + <span class="number">1</span> &lt; m:</span><br><span class="line">                <span class="keyword">yield</span> x * m + y + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 建一个二分图, O(m * n)</span></span><br><span class="line">        left_nodes = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(m):</span><br><span class="line">                    point = i * m + j</span><br><span class="line">                    <span class="keyword">if</span> point <span class="keyword">in</span> broken:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="keyword">if</span> (i + j) % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                        left_nodes.append(point)</span><br><span class="line">                    <span class="keyword">for</span> each <span class="keyword">in</span> neighbor(i, j):</span><br><span class="line">                        <span class="keyword">if</span> each <span class="keyword">not</span> <span class="keyword">in</span> broken:</span><br><span class="line">                            edges[point].add(each)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 匈牙利算法求最大匹配数量，O(|V| * |E|) = O(m * n * m * n)</span></span><br><span class="line">        match_l = defaultdict(<span class="keyword">lambda</span>: <span class="literal">None</span>)</span><br><span class="line">        match_r = defaultdict(<span class="keyword">lambda</span>: <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(p, visited)</span>:</span></span><br><span class="line">            <span class="keyword">nonlocal</span> match_l, match_r</span><br><span class="line">            visited.add(p)</span><br><span class="line">            <span class="keyword">for</span> neighbor_p <span class="keyword">in</span> edges[p]:</span><br><span class="line">                <span class="comment"># 直接找到了一个连接非匹配点的非匹配边</span></span><br><span class="line">                <span class="keyword">if</span> match_r[neighbor_p] <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                    match_l[p] = neighbor_p</span><br><span class="line">                    match_r[neighbor_p] = p</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> neighbor_p <span class="keyword">in</span> edges[p]:</span><br><span class="line">                nxt = match_r[neighbor_p]</span><br><span class="line">                <span class="keyword">if</span> nxt <span class="keyword">in</span> visited:  <span class="comment"># 增广路不要涉及重复节点</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 递归寻找下一组  左 -&gt; 右，如果右边是非匹配节点，那么递归的逆转增广路选择</span></span><br><span class="line">                <span class="keyword">if</span> dfs(nxt, visited):  </span><br><span class="line">                    match_l[p] = neighbor_p</span><br><span class="line">                    match_r[neighbor_p] = p</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        res = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> left_nodes:</span><br><span class="line">            <span class="keyword">if</span> dfs(node, set()):</span><br><span class="line">                res += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">domino_dp</span><span class="params">(self, n: int, m: int, broken: List[List[int]])</span> -&gt; int:</span></span><br><span class="line">        <span class="string">"""插头DP"""</span></span><br><span class="line">        valid = defaultdict(bool)</span><br><span class="line">        NO, HENG, SHU = <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">        <span class="comment"># 记录坏掉的地板，这里不能放东西</span></span><br><span class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> broken:</span><br><span class="line">            valid[x * m + y] = <span class="literal">True</span></span><br><span class="line">        <span class="comment"># 最后增加一行坏掉的地板，表示最后一行只能横着放</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> (m * n, (m + <span class="number">1</span>) * n):</span><br><span class="line">            valid[i] = <span class="literal">True</span></span><br><span class="line">        <span class="comment"># 0代表不放，1代表横着放，2代表竖着放，用m位三进制表示轮廓线的状态</span></span><br><span class="line">        <span class="comment"># [3 ^ m, 3]</span></span><br><span class="line">        states_transition = [[<span class="literal">None</span>] * <span class="number">3</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">3</span> ** m)]</span><br><span class="line">        elements = &#123;&#125;</span><br><span class="line">        first = <span class="keyword">lambda</span> s: s // (<span class="number">3</span> ** (m - <span class="number">1</span>))  <span class="comment"># 轮廓线第一个元素的状态，在当前元素上方</span></span><br><span class="line">        second = <span class="keyword">lambda</span> s: s % (<span class="number">3</span> ** (m - <span class="number">1</span>)) // (<span class="number">3</span> ** (m - <span class="number">2</span>)) </span><br><span class="line">        last = <span class="keyword">lambda</span> x: x % <span class="number">3</span>  <span class="comment"># 轮廓线最后一个元素的状态，在当前元素左边（如果x &gt; 0）</span></span><br><span class="line">        row = <span class="keyword">lambda</span> p: p // m</span><br><span class="line">        col = <span class="keyword">lambda</span> p: p % m</span><br><span class="line">        <span class="comment"># 预先计算轮廓线状态转移</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span> ** m):</span><br><span class="line">            f, l = first(i), last(i)</span><br><span class="line">            sec = second(i)</span><br><span class="line">            elements[i] = (f, sec, l)</span><br><span class="line">            remain = i % (<span class="number">3</span> ** (m - <span class="number">1</span>))</span><br><span class="line">            states_transition[i] = [</span><br><span class="line">                remain * <span class="number">3</span> + NO,</span><br><span class="line">                remain * <span class="number">3</span> + HENG,</span><br><span class="line">                remain * <span class="number">3</span> + SHU</span><br><span class="line">            ]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">        @lru_cache(None)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(pos, state)</span>:</span></span><br><span class="line">            x, y = row(pos), col(pos)</span><br><span class="line">            <span class="comment"># 终止条件</span></span><br><span class="line">            <span class="keyword">if</span> pos == m * n:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            first, second, last = elements[state]</span><br><span class="line">            <span class="comment"># 当前位置不能放置</span></span><br><span class="line">            new_state = states_transition[state][NO]</span><br><span class="line">            ans = dfs(pos + <span class="number">1</span>, new_state)</span><br><span class="line">            <span class="keyword">if</span> first == SHU <span class="keyword">or</span> (y &gt; <span class="number">0</span> <span class="keyword">and</span> last == HENG) <span class="keyword">or</span> valid[pos]:</span><br><span class="line">                ...</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 可以横着放</span></span><br><span class="line">                <span class="keyword">if</span> y + <span class="number">1</span> &lt; m <span class="keyword">and</span> <span class="keyword">not</span> valid[pos + <span class="number">1</span>] <span class="keyword">and</span> second != SHU:</span><br><span class="line">                    new_state = states_transition[state][HENG]</span><br><span class="line">                    ans = max(ans, <span class="number">1</span> + dfs(pos + <span class="number">1</span>, new_state))</span><br><span class="line">                <span class="comment"># 可以竖着放</span></span><br><span class="line">                <span class="keyword">if</span> x + <span class="number">1</span> &lt; n <span class="keyword">and</span> <span class="keyword">not</span> valid[pos + m]:</span><br><span class="line">                    new_state = states_transition[state][SHU]</span><br><span class="line">                    ans = max(ans, <span class="number">1</span> + dfs(pos + <span class="number">1</span>, new_state))</span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dfs(<span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/" title="leetcode: 图">http://cairohy.github.io/2020/05/25/leetcode/图/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Algorithm/" rel="tag"><i class="fa fa-tag"></i> Algorithm</a>
+              <a href="/tags/Leetcode/" rel="tag"><i class="fa fa-tag"></i> Leetcode</a>
+              <a href="/tags/BFS/" rel="tag"><i class="fa fa-tag"></i> BFS</a>
+              <a href="/tags/Graph/" rel="tag"><i class="fa fa-tag"></i> Graph</a>
+              <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" rel="tag"><i class="fa fa-tag"></i> 并查集</a>
+              <a href="/tags/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 最小生成树</a>
+              <a href="/tags/Greedy/" rel="tag"><i class="fa fa-tag"></i> Greedy</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/04/nlp/Recent%20Language%20Models/" rel="prev" title="Recent Language Model Papers">
+      <i class="fa fa-chevron-left"></i> Recent Language Model Papers
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/04/nlp/When%20Bert%20Forgets%20How%20To%20POS/" rel="next" title="When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions">
+      When Bert Forgets How To POS： Amnesic Probing of Linguistic Properties and MLM Predictions <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、最小生成树"><span class="nav-text">一、最小生成树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、判断二分图"><span class="nav-text">二、判断二分图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、图连通"><span class="nav-text">三、图连通</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、最长连续序列"><span class="nav-text">四、最长连续序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、二分图最大匹配"><span class="nav-text">五、二分图最大匹配</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2020/05/25/leetcode/%E5%9B%BE/";
+    this.page.identifier = "2020/05/25/leetcode/图/";
+    this.page.title = "leetcode: 图";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '6d5001924fa383faa05b9e387ba5247b',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

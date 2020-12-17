@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1、文章来源AAAI-2017年论文。研究关于NLG（Natural Language Generation，自然语言生成）的问题。 2、要解决的问题及已有方法面向转述（释义）的NLG任务中，有Copy和Rewrite两种生成方式，但是之前的Seq2Seq模型只用了一个decoder。 Seq2Seq模型，也就是encoder-decoder模型，从源文本中编码为上下文向量，而后对其进行解码生成目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》">
+<meta property="og:url" content="http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="1、文章来源AAAI-2017年论文。研究关于NLG（Natural Language Generation，自然语言生成）的问题。 2、要解决的问题及已有方法面向转述（释义）的NLG任务中，有Copy和Rewrite两种生成方式，但是之前的Seq2Seq模型只用了一个decoder。 Seq2Seq模型，也就是encoder-decoder模型，从源文本中编码为上下文向量，而后对其进行解码生成目">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/FuiQlYnNKCSuJMRHbvkydhnoc3Mb.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fm2phK62FqDIMZM-4D0v_ocA667U.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FiL5q7OQcx1O_MhMKfo-JqEpmmz8.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fk9NnUXyhCYwsRJRgD1HJatsB6HJ.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FtXBoyM82zEJRKyqZ9nalTS2MnIz.jpg">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/03/09/58c10ed75e93e.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FvI4jFh8roLACqeQjSzw7r1MNeEa.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FiXTCVLVIc_EEVZxqdTvKBOVEV71.jpg">
+<meta property="article:published_time" content="2017-03-09T11:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.071Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="自然语言处理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/FuiQlYnNKCSuJMRHbvkydhnoc3Mb.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-03-09 11:00:00" itemprop="dateCreated datePublished" datetime="2017-03-09T11:00:00+00:00">2017-03-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/" class="post-meta-item leancloud_visitors" data-flag-title="《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1、文章来源"><a href="#1、文章来源" class="headerlink" title="1、文章来源"></a>1、文章来源</h4><p>AAAI-2017年论文。研究关于NLG（Natural Language Generation，自然语言生成）的问题。</p>
+<h4 id="2、要解决的问题及已有方法"><a href="#2、要解决的问题及已有方法" class="headerlink" title="2、要解决的问题及已有方法"></a>2、要解决的问题及已有方法</h4><p>面向转述（释义）的NLG任务中，有Copy和Rewrite两种生成方式，但是之前的Seq2Seq模型只用了一个decoder。</p>
+<p>Seq2Seq模型，也就是encoder-decoder模型，从源文本中编码为上下文向量，而后对其进行解码生成目标文本。但是典型的Seq2Seq模型无法反映出Copy-Mechanism，这样的话，出现频率较低的命名实体可能被识别为UNK。</p>
+<p>另外，之前工作中的decoder通常根据当前上下文，从词库中选择可能性最高的词汇。这样做，时间开销和词库数量线性相关（$10^4-10^5$），而且可能生成不相关的<strong>命名实体</strong>或者<strong>数字</strong>。</p>
+<p>已有方法：</p>
+<ul>
+<li>COPYNET（2016）：增加了一个额外的attention-like层，用来预测copy权重分布，而后同一个生成译码器的输出竞争。<ul>
+<li>缺点1：无法解释Copy和Gen的贡献；</li>
+<li>缺点2：没有使用两种writing模式（Copy和Gen）进行监督式训练；</li>
+<li>缺点3：引入了更多的参数；</li>
+<li>缺点4：Gen译码器只产生频繁词，丢弃了很多rewriting-pattern。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3、提出的解决方法"><a href="#3、提出的解决方法" class="headerlink" title="3、提出的解决方法"></a>3、提出的解决方法</h4><p>提出一种Seq2Seq模型，CoRe。包含两个译码器。coping decoder使用<strong>注意力</strong>模型判断复制的位置；generative decoder产生【源文本-目标文本词汇对齐表+一个很小的频繁词表】中的词汇。增加一个predictor来判断使用哪个decoder，这个预测器可以通过训练集进行训练。</p>
+<ul>
+<li>一、编码器，使用GRU，双向RNN，注意力机制。</li>
+<li>二、复制译码器C：</li>
+</ul>
+<p>复制输入的每个词汇$x<em>\tau $的概率，等于注意力参数$\alpha </em>{t\tau}$。</p>
+<p><img src="/images/FuiQlYnNKCSuJMRHbvkydhnoc3Mb.jpg" alt="1"></p>
+<ul>
+<li>三、受限制的生成译码器G：</li>
+</ul>
+<p>利用IBM2013年提出的模型，预先训练对齐表$A$，A包含了很多有代表性的rewrite模式，在实验中对每个词保留可能性最高的10个模式。而后增加一个额外的常用词表$U$。最后该译码器G利用的词表为：$ V_G=A(X)\cup U $。</p>
+<p>该译码器与典型的Seq2Seq模型中译码器的区别就是，减少了备选词的数量，提高了效率，同时避免了模型生成一些不相关的词汇。</p>
+<ul>
+<li>四、预测器：</li>
+</ul>
+<p>预测器的学习，判断在当前上下文中，使用生成还是复制的方式产生下一个词。</p>
+<script type="math/tex; mode=display">\lambda _t = \sigma(W_CS_t)</script><script type="math/tex; mode=display">P(y_t|y<t,X) = \lambda _tP_C + (1-\lambda _t)P_G</script><p>而正确的标签$\lambda _t^*$如下：</p>
+<p><img src="/images/Fm2phK62FqDIMZM-4D0v_ocA667U.jpg" alt="2"></p>
+<p>也就是，源语句中出现了这个词，那么就是Copy模式才是对的，否则就应该用Rewrite模式。</p>
+<ul>
+<li>五、学习过程：</li>
+</ul>
+<p>学习下面两个交叉熵损失函数，分别对应<em>结果序列的误差</em>和<em>预测器的预测任务误差</em>，使用RmsProp优化算法进行学习。</p>
+<p><img src="/images/FiL5q7OQcx1O_MhMKfo-JqEpmmz8.jpg" alt="3"></p>
+<p><img src="/images/Fk9NnUXyhCYwsRJRgD1HJatsB6HJ.jpg" alt="4"></p>
+<p>贡献：</p>
+<ul>
+<li>1.模拟了转述过程中人的思考方式：Copy和Generate。</li>
+<li>2.预测writing模式，利用了额外的信息。</li>
+<li>3.给生成译码器增加限制，生成更加相关的信息。</li>
+<li>4.相比于CopyNet等之前利用Copy-Mechenism的模型，更加容易解释清楚Copy和Rewrite起的作用，比如下面这个。</li>
+</ul>
+<p><img src="/images/FtXBoyM82zEJRKyqZ9nalTS2MnIz.jpg" alt="3"></p>
+<h4 id="4、对该方法的实验评估"><a href="#4、对该方法的实验评估" class="headerlink" title="4、对该方法的实验评估"></a>4、对该方法的实验评估</h4><ul>
+<li>一、数据集</li>
+</ul>
+<p>单句抽象式摘要：使用了Google-Deepmind团队在2015年论文《Teaching Machines to Read and Comprehend 》中生成的语料库，得到<strong>&lt;新闻，摘要&gt;</strong>对。</p>
+<p>文本缩写：使用了2013年某个论文中维基百科的<strong>&lt;维基文本，简化维基文本&gt;</strong></p>
+<ul>
+<li>二、工具</li>
+</ul>
+<p>Theano，dl4mt，Fast Align</p>
+<ul>
+<li>三、Baseline</li>
+</ul>
+<p>LEAD：直接选择输入中当前概率最高的词作为输出。</p>
+<p>Moses（2007）：利用词和短语的共现度进行翻译的模型。</p>
+<p>ABS（2015）：一个使用了注意力机制的Seq2Seq模型。</p>
+<ul>
+<li>四、评价及结果</li>
+</ul>
+<p><img src="https://ooo.0o0.ooo/2017/03/09/58c10ed75e93e.jpg" alt=""></p>
+<h4 id="5、方法的优缺点"><a href="#5、方法的优缺点" class="headerlink" title="5、方法的优缺点"></a>5、方法的优缺点</h4><p>文章自己已经把优点讲的差不多了，个人观点，不足有两个：</p>
+<ul>
+<li>1.将词汇是否出现在源语句中作为使用Copy-Mechenism的依据，会不会不准确。比如对于一些in、at之类的介词，可能只是偶然性的重复而不是Copy过来的。</li>
+<li>2.生成译码器限制了词典数量，固然提高了效率，但是限制了生成模型的多样度，有利有弊。</li>
+</ul>
+<h4 id="【参考文献】"><a href="#【参考文献】" class="headerlink" title="【参考文献】"></a>【参考文献】</h4><ul>
+<li>Rewrite译码器参考的文献：</li>
+</ul>
+<p>《A convolutional attention network for extreme summarization of source code. 》：带Attention的卷积神经网络，与本文看起来关联性不是很高，只是DNN应用于NLP的另外一个例子。</p>
+<p>《Neural machine translation by jointly learning to align and translate 》：将Attention用于End2End机器翻译的文章。</p>
+<p>《On using very large target vocabulary for neural machine translation. 》：在机器翻译任务中如何扩展当前词表到一个很大的词表，同时不增加训练的时间复杂度。</p>
+<p>《A simple, fast, and effective reparameterization of ibm model 2. 》：2013年NAACL，一个快速的词对齐工具；在训练后，能够根据长度为n的源语句，确定目标语句的长度m，并生成对齐表$a={a_1,a_2,…,a_m}$，其中$a_i\in {0,n}\cup NULL$。</p>
+<ul>
+<li>Copy译码器参考的文献：</li>
+</ul>
+<p>《Incorporating copying mechanism in sequence-to-sequence learning. 》：CopyNet，提出了Copy-Mechenism，被本文借鉴。使用两种模式g（生成）和c（复制）的混合概率决定t时刻的输出。</p>
+<p><img src="/images/FvI4jFh8roLACqeQjSzw7r1MNeEa.jpg" alt="0"></p>
+<p><img src="/images/FiXTCVLVIc_EEVZxqdTvKBOVEV71.jpg" alt="1"></p>
+<p>《Pointer Networks 》：2015年NIPS，提出了一种根据attention寻找copy的位置的方法，被本文借鉴。将attention作为指针，来决定将输入序列的哪几位作为输出。</p>
+<ul>
+<li>其他文献：</li>
+</ul>
+<p>《On the Properties of Neural Machine Translation: Encoder–Decoder Approaches》：Bengio发表在ACL2014上的论文，评估了Seq2Seq模型，并提出了两个新的Seq2Seq模型。</p>
+<p>《Teaching machines to read and comprehend. 》：2015年NIPS，提出一种生成大规模语料库的方法，并在此基础上训练并对比不同模型的机器阅读理解能力。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/" title="《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》">http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-《Joint-Copying-and-Restricted-Generation-for-Paraphrase》/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 自然语言处理</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/07/deeplearning/NLP-RC-NIPS2015-%E3%80%8ATeaching-Machines-to-Read-and-Comprehend%E3%80%8B/" rel="prev" title="《Teaching Machines to Read and Comprehend》">
+      <i class="fa fa-chevron-left"></i> 《Teaching Machines to Read and Comprehend》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/03/09/deeplearning/NLP-Attention-ICLR2015-%E3%80%8ANeural-machine-translation-by-jointly-learning-to-align-and-translate%E3%80%8B/" rel="next" title="Attention-ICLR2015-《Neural machine translation by jointly learning to align and translate》">
+      Attention-ICLR2015-《Neural machine translation by jointly learning to align and translate》 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、文章来源"><span class="nav-text">1、文章来源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、要解决的问题及已有方法"><span class="nav-text">2、要解决的问题及已有方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、提出的解决方法"><span class="nav-text">3、提出的解决方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、对该方法的实验评估"><span class="nav-text">4、对该方法的实验评估</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、方法的优缺点"><span class="nav-text">5、方法的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#【参考文献】"><span class="nav-text">【参考文献】</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2017/03/09/deeplearning/NLP-AAAI2017-%E3%80%8AJoint-Copying-and-Restricted-Generation-for-Paraphrase%E3%80%8B/";
+    this.page.identifier = "2017/03/09/deeplearning/NLP-AAAI2017-《Joint-Copying-and-Restricted-Generation-for-Paraphrase》/";
+    this.page.title = "《AAAI2017-Joint Copying and Restricted Generation for Paraphrase 》";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '7df4b0b6a88f3cb326171392e73dce3a',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

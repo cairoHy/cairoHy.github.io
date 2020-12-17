@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一、文件系统文件系统最初用来解决信息的长期存储，也就是把信息以一个单元——文件的形式存储在磁盘上。1965年开发的Multics（Unix的前身）就已经详细设计了文件系统。 1.1 问题：  1.文件是什么  文件是命名的，存储在设备中的信息的字节流。  1.文件由什么组成  文件名，数据，以及其他必要信息即文件的元数据（诸如文件创建日期、文件长度等信息)。  2.文件如何命名  一般使用一定长度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式文件系统GFS">
+<meta property="og:url" content="http://cairohy.github.io/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="一、文件系统文件系统最初用来解决信息的长期存储，也就是把信息以一个单元——文件的形式存储在磁盘上。1965年开发的Multics（Unix的前身）就已经详细设计了文件系统。 1.1 问题：  1.文件是什么  文件是命名的，存储在设备中的信息的字节流。  1.文件由什么组成  文件名，数据，以及其他必要信息即文件的元数据（诸如文件创建日期、文件长度等信息)。  2.文件如何命名  一般使用一定长度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/Ft4mZNqvLSfi-KlUHQb9Q00E2Fmu.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FkstRZ0uKGdBarUI5wf71Pwgt9GR.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FhitOgZnLScOLPwzA7rhlAO-qG-3.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/Fl--CX5Us-kHsGbNXn-Z8SA4NtSY.jpg">
+<meta property="og:image" content="http://cairohy.github.io/images/FgNxBZ9EgDRmTPvtd8ufU_pIaQ9O.jpg">
+<meta property="article:published_time" content="2015-11-21T10:19:56.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.076Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="分布式系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/Ft4mZNqvLSfi-KlUHQb9Q00E2Fmu.jpg">
+
+<link rel="canonical" href="http://cairohy.github.io/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>分布式文件系统GFS | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分布式文件系统GFS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-11-21 10:19:56" itemprop="dateCreated datePublished" datetime="2015-11-21T10:19:56+00:00">2015-11-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82/" itemprop="url" rel="index"><span itemprop="name">杂</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/" class="post-meta-item leancloud_visitors" data-flag-title="分布式文件系统GFS" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、文件系统"><a href="#一、文件系统" class="headerlink" title="一、文件系统"></a><strong>一、文件系统</strong></h3><p>文件系统最初用来解决信息的长期存储，也就是把信息以一个单元——<code>文件</code>的形式存储在磁盘上。1965年开发的<code>Multics</code>（Unix的前身）就已经详细设计了文件系统。</p>
+<p><strong>1.1 问题：</strong></p>
+<ul>
+<li>1.文件是什么</li>
+</ul>
+<p>文件是命名的，存储在设备中的信息的字节流。</p>
+<ul>
+<li>1.文件由什么组成</li>
+</ul>
+<p>文件名，数据，以及其他必要信息即文件的<code>元数据</code>（诸如文件创建日期、文件长度等信息)。</p>
+<ul>
+<li>2.文件如何命名</li>
+</ul>
+<p>一般使用一定长度的字符串来命名。</p>
+<ul>
+<li>3.如何保护文件</li>
+</ul>
+<p>由权限控制来保护。</p>
+<ul>
+<li>4.可以对文件进行哪些操作</li>
+</ul>
+<p>应该具有创建、修改、删除、读取、移动、设置属性等操作。</p>
+<ul>
+<li>5.文件的组织</li>
+</ul>
+<p>一般使用<code>目录</code>和<code>目录树</code>的概念。目录作为存储一组文件和目录的虚拟容器。利用<code>分隔符</code>加<code>目录名</code>来定位文件所在的<code>路径</code>。使用目录的文件系统会形成一个目录树，从根目录开始。文件由文件所在路径及文件名定位。</p>
+<p><strong>1.2 文件系统：</strong></p>
+<ul>
+<li>1.如何组织文件的物理存储结构</li>
+</ul>
+<p>文件的物理存储结构是文件在设备上的存取方式，而不同的存储设备会以不同方式把存储空间以单元划分。以磁盘为例，它的基础存取单元就是<code>扇区</code>——一个扇区一般是<code>4096Byte</code>。而文件的数据通常也会以一定数量来进行划分——一个文件的数据划分为一个或多个逻辑存储单元。</p>
+<p>物理存储单元和逻辑存储单元的关联关系一般有下面三种方式：</p>
+<p>（1）<code>连续分配方式</code>：简单，直接把文件的N个逻辑块映射到连续的N个物理块上，但浪费存储空间、且可能出现连续存储空间不够导致大文件无法存储。</p>
+<p>（2）<code>链接表</code>：每个逻辑块的携带文件下一个物理块的位置，这样劣势在于随机读取效率太低，必须顺序读取。</p>
+<p>（3）<code>索引链式表</code>：取出每个存储设备单元的指针字段，把它们存储到一张索引表中，文件的第一块地址存储在目录项中。系统加载后该表存储在内存中，<code>MS-DOS</code>使用这种文件物理结构。</p>
+<p><img src="/images/Ft4mZNqvLSfi-KlUHQb9Q00E2Fmu.jpg" alt=""></p>
+<ul>
+<li>2.如何管理目录</li>
+</ul>
+<p>目录要存储的数据主要是其子目录和文件的记录，在存储设备中把目录当做一种特殊的结构化文件保存，目录的数据项就是指向其子文件和子目录的元数据的指针。</p>
+<ul>
+<li>3.如何管理物理存储空间</li>
+</ul>
+<p>当进行文件系统中操作时，如何判断文件系统所在设备的空闲空间数量。存储空间管理的主要方法有：空闲文件目录、空闲块链、位示图等。</p>
+<ul>
+<li>4.如何保护文件</li>
+</ul>
+<p>文件系统的保护，涉及到共享、保密和保护这三个问题。分别对应着对文件读、写、执行的权限。通常使用<code>存取控制表</code>和<code>权限表</code>来进行访问控制。</p>
+<p>存取控制表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>访问控制表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bin/file1</td>
+<td>(root,RWX),(cairo,RX),(Tom,x)</td>
+</tr>
+<tr>
+<td>/bin/file2</td>
+<td>(Bin,RW),(cairo,RWX)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>用户cairo的权限表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>权限</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>RX</td>
+<td>指向/bin/file1的指针</td>
+</tr>
+<tr>
+<td>1</td>
+<td>RWX</td>
+<td>指向/bin/file2的指针</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="二、The-Google-File-System"><a href="#二、The-Google-File-System" class="headerlink" title="二、The Google File System"></a><strong>二、The Google File System</strong></h3><p><strong>2.1. 假设和适用环境</strong></p>
+<ul>
+<li>1.硬件失效是常态</li>
+<li>2.文件大小比较大，文件数量多</li>
+<li>3.文件操作主要是尾部追加写而不是覆盖写或者随机写入，主要是批量读写而不是随机读写，一次写入多次读取是常见访问方式</li>
+<li>4.需要支持并发写操作，对于吞吐率要求高于对于延迟要求</li>
+</ul>
+<p><strong>2.2. 架构</strong></p>
+<p>一个GFS集群包含：一个逻辑上的<code>Master</code>、多个<code>chunkServer</code>，Master存储文件的<code>元数据</code>并将文件分为chunk（<strong>64MB</strong>）存储在多个chunkServer上（每个块在不同的chunkServer存储多份提供可靠性保证），存储在chunkServer上的文件基于<code>Linux</code>的文件系统，使用64位的<code>chunk标识</code>来区别，无需额外的缓存设计。GFS的架构如下图：</p>
+<p><img src="/images/FkstRZ0uKGdBarUI5wf71Pwgt9GR.jpg" alt=""></p>
+<p><strong>2.3. 用户接口</strong></p>
+<ul>
+<li>创建</li>
+<li>删除</li>
+<li>打开</li>
+<li>关闭</li>
+<li>修改元数据</li>
+<li>写入数据（随机）</li>
+<li>读取</li>
+<li><strong>快照</strong></li>
+<li><strong>追加写入</strong></li>
+</ul>
+<p><strong>2.4. 设计点</strong></p>
+<ul>
+<li>1.元数据操作相关的设计——读写锁、检查点和日志</li>
+</ul>
+<p><code>读写锁</code>用来确保在Master中进行的元数据操作串行化。在进行需要原子性的元数据修改操作时申请写锁来确保操作的原子性。</p>
+<p><code>操作日志</code>是元数据变化的历史纪录，起到定义<code>元数据</code>操作顺序的逻辑时间线，以避免Master失效导致元数据修改丢失的作用。</p>
+<p><code>检查点</code>机制定期把操作日志的影响写入<code>检查点文件</code>（也就是写入了当前的元数据），可以避免日志过大影响Master重新启动花费的时间。</p>
+<p>注意，元数据的持久化只针对<code>名字空间</code>和<code>文件与chunk</code>的映射表，而<code>chunk与所在位置</code>的映射表由Master向chunk server获取并更新。</p>
+<ul>
+<li>2.数据一致性相关的设计——租约（Lease）、版本号（Version）和校验码（Checksum）</li>
+</ul>
+<p><code>租约</code>是每个chunk元数据中的内容，用来保证并发写入时多个chunk server写入块中数据具有最终一致性（即写入完成后数据是一致的），由Master授予一个chunk server租约，并规定不同客户端写入同一个chunk文件的顺序并发送至其他chunk server。</p>
+<p><code>版本号</code>是每个chunk元数据中的内容，用来防止chunk server失效等原因造成数据不一致，每次Master授予租约时提高版本号，并把新的版本号应用在所有未失效的块节点上。这样失效的chunk server回到集群时，相应的失效块就能够被检测出来具有较低的版本号判定为失效块。客户端由于请求Master时获得了新版本号也不会获得错误的旧数据。</p>
+<p><code>校验码</code>：每个chunk被分为64KB的小块，每个小块具有一个校验码。它用来防止磁盘错误等原因造成数据不一致，校验码在写入时一并发送到每个块所在的chunk server，并在chunk server空闲时或者读取块数据时进行扫描比对数据和校验码，若比对不一致则会报告给Master标识此chunk失效。</p>
+<p><img src="/images/FhitOgZnLScOLPwzA7rhlAO-qG-3.jpg" alt=""></p>
+<ul>
+<li>3.失效处理相关的设计——热备份</li>
+</ul>
+<p>Master在进行任何修改元数据的操作时，都会存储操作日志到<code>shadow Master(s)</code>中，存储成功后再向客户端返回成功消息，而检查点文件也会在shadow master机器上定时创建。因此当Master失效时，外部运行的监控系统（比如chubby）会选举shadow master(s)中的一台机器成为新的Master节点。</p>
+<p><img src="/images/Fl--CX5Us-kHsGbNXn-Z8SA4NtSY.jpg" alt=""></p>
+<ul>
+<li>4.懒惰式（周期化）处理的设计——快照、文件删除、再负载均衡</li>
+</ul>
+<p>对于一些操作，GFS采用了懒惰式设计，把开销较大的操作部分分摊到系统运行的一个较长时间中，减少系统性能的颠簸。</p>
+<p><code>快照</code>，用来保存文件或目录的当前状态，GFS使用<code>COW</code>(copy-on-write)技术来实现。在建立快照时仅复制一份原有文件或目录的元数据指向同样的chunk，然后在chunk被修改的时候才真正的复制chunk数据并把快照元数据指向复制后的chunk。</p>
+<p><code>文件删除</code>，删除时仅仅对元数据进行重命名，在删除操作一段时间后删除元数据，并在周期性的Master-chunkServer交互中告知chunk server该chunk已被删除，真正删除chunk文件。</p>
+<p><code>再负载均衡</code>，移动部分chunk使集群中chunk server的负载较为平均，不会存在性能瓶颈。GFS的Master在空闲时周期性的扫描chunk-位置映射表，发现负载热点或者负载较低节点（比如新加入chunk server）时 <strong>逐渐地</strong>进行负载均衡操作。</p>
+<p><strong>2.5. 其他一些问题</strong></p>
+<ul>
+<li>并发操作支持吗？</li>
+</ul>
+<p>对于并发的读操作是支持的。并发写操作要分两种情况，并发的修改数据和并发的修改元数据。GFS支持多个Writer并发写入一个文件，但是对于元数据的修改必须串行化，这是使用Master中目录树节点的<code>读写锁</code>（共享-互斥锁）来实现的。</p>
+<ul>
+<li>如何保证并发写的副本一致性？</li>
+</ul>
+<p>对于写操作，使用Master授予租约给chunk所在的某一个服务器。若多个client同时写入一个chunk，那么该服务器首先确定写入顺序并保存在日志中，然后以改顺序修改自己保存的chunk数据，并把日志分发到另外几个<code>二级副本</code>（块所在的其他几个chunk server）中，让他们以相同顺序执行。</p>
+<ul>
+<li>若副本执行失败，一致性如何保证？</li>
+</ul>
+<p>如果主副本或其他任意副本执行修改操作失败，返回失败信息或超时并由客户端重试；由于写入操作规定了写入的偏移量，所以重试成功后会覆盖写入失败的数据，各副本一致性能够保证。</p>
+<ul>
+<li>原子性的追加写入？</li>
+</ul>
+<p>追加写入由于client不规定写入偏移量，写入前主副本序列化写入顺序时，会选择当前文件的末尾，所以在并发追加写时不会出现各客户端写入数据混杂的情况，所以追加写入相对于随机写入具有原子性，写入的片段一定是完整的。而随机写入即使操作本质上是串行的也可能写入数据不完整。</p>
+<ul>
+<li>如何保证append at least once？</li>
+</ul>
+<p>追加写入失败后自动重试，直到在所有chunk server上操作成功。但是由于追加写入的偏移量重新进行了选择，所以chunk server上会出现多段追加写入的数据，或者数据片段。但是每个chunk server在最后成功返回client的偏移量之后一定都有一段完整的数据片段。</p>
+<ul>
+<li>并发追加写的结果？</li>
+</ul>
+<p>GFS保证了每个client的写操作都会追加成功至少一次，而且不同client的数据不会交叉追加在文件尾部，但并不保证追加顺序，也可能重复追加。</p>
+<ul>
+<li>客户端缓存元数据的时间和策略？如果缓存的这段时间文件副本所在的chunkserver失效怎么办？如果读取时文件被改变怎么办？</li>
+</ul>
+<p>client缓存元数据直到元数据过期或者重新打开文件。如果chunkserver失效就重新请求Master获取元数据。读取时Master会对文件元数据加读锁，文件元数据不会改变，也就是文件（及所在namespace）不会被删除、重命名（移动）或者快照，但是不保证不会被修改。</p>
+<ul>
+<li>Master如何确定新建chunk及其副本的物理位置？</li>
+</ul>
+<p>根据Master内存中存储的chunk和chunk sever的映射，以<code>低磁盘利用率优先</code>、<code>最近无大量创建chunk优先</code>、<code>副本不能全部分配在同一个机架</code>这三个策略来确定chunk副本的物理服务器存储位置。</p>
+<h3 id="三、HDFS"><a href="#三、HDFS" class="headerlink" title="三、HDFS"></a><strong>三、HDFS</strong></h3><p><img src="/images/FgNxBZ9EgDRmTPvtd8ufU_pIaQ9O.jpg" alt=""></p>
+<p>主要对比HDFS和GFS的差异，仅对于论文中讨论的HDFS版本有效（2010年之前的某个版本）：</p>
+<p><strong>3.1 HDFS具有更加简单的一致性模型</strong></p>
+<p>由于HDFS不支持并发写操作和并发追加写操作，所以不需要使用租约（lease）机制来保证副本一致性。不过即使是但客户端的追加写操作，也可能由于chunk server失效产生重复记录或者记录片段，需要客户端进行额外处理。</p>
+<p><strong>3.2 HDFS相对于GFS减少的功能</strong></p>
+<ul>
+<li>HDFS不具有具体文件快照功能，只支持整个系统存在一个快照（Hadoop2.6.0已经开发）</li>
+<li>HDFS不支持覆盖写，写入数据无法改变</li>
+<li>HDFS没有采用惰性删除文件</li>
+<li>HDFS不支持Master的热备份，单点故障（Secondary Namenode）后需要手动介入</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><p>《Hadoop技术内幕》</p>
+</li>
+<li><p><a href="https://eportal.stust.edu.tw/eshare/EshareFile/2013_6/2013_6_07e25b90.pdf" target="_blank" rel="noopener">The Hadoop Distributed File System - Konstantin Shvachko, Hairong Kuang, Sanjay Radia, Robert Chansler, Sunnyvale, California USA, {authors}@Yahoo-Inc.com, IEEE2010
+</a></p>
+</li>
+<li><p><a href="http://dl.acm.org/citation.cfm?id=1165389.945450" target="_blank" rel="noopener">Ghemawat S, Gobioff H, Leung S T. The Google file system[J]. Acm Sigops Operating Systems Review, 2003, 37:29-43.</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/" title="分布式文件系统GFS">http://cairohy.github.io/2015/11/21/machine-learning/分布式文件系统GFS/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="tag"><i class="fa fa-tag"></i> 分布式系统</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/11/17/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-k%E8%BF%91%E9%82%BB%E6%B3%95/" rel="prev" title="阅读笔记：《统计学习方法》-K近邻法">
+      <i class="fa fa-chevron-left"></i> 阅读笔记：《统计学习方法》-K近邻法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/12/19/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93BigTable/" rel="next" title="分布式数据库BigTable">
+      分布式数据库BigTable <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、文件系统"><span class="nav-text">一、文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、The-Google-File-System"><span class="nav-text">二、The Google File System</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、HDFS"><span class="nav-text">三、HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2015/11/21/machine-learning/%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FGFS/";
+    this.page.identifier = "2015/11/21/machine-learning/分布式文件系统GFS/";
+    this.page.title = "分布式文件系统GFS";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : '2b5141a4cc0ea59ce44041ad7ffe575a',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

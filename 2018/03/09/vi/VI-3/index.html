@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="变分推断（三）：指数族变分推断一、坐标更新公式在指数族下的变换之前的博文中讨论了GMM中的变分推断和CAVI算法，这篇文章中，把它推广到更一般的情况，也就是分布是指数分布族（exponential family）的情况。  指数分布族，是对常见分布的性质经过总结和泛化归纳出来的一类分布，具有形如f(x|\theta)&#x3D;h(x)exp(\eta(\theta)\cdot T(x) - A(\thet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="变分推断（三）：指数族变分推断">
+<meta property="og:url" content="http://cairohy.github.io/2018/03/09/vi/VI-3/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="变分推断（三）：指数族变分推断一、坐标更新公式在指数族下的变换之前的博文中讨论了GMM中的变分推断和CAVI算法，这篇文章中，把它推广到更一般的情况，也就是分布是指数分布族（exponential family）的情况。  指数分布族，是对常见分布的性质经过总结和泛化归纳出来的一类分布，具有形如f(x|\theta)&#x3D;h(x)exp(\eta(\theta)\cdot T(x) - A(\thet">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-03-09T19:15:00.000Z">
+<meta property="article:modified_time" content="2020-12-17T05:47:53.078Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="变分推断">
+<meta property="article:tag" content="贝叶斯">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://cairohy.github.io/2018/03/09/vi/VI-3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>变分推断（三）：指数族变分推断 | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2018/03/09/vi/VI-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          变分推断（三）：指数族变分推断
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-09 19:15:00" itemprop="dateCreated datePublished" datetime="2018-03-09T19:15:00+00:00">2018-03-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/03/09/vi/VI-3/" class="post-meta-item leancloud_visitors" data-flag-title="变分推断（三）：指数族变分推断" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="变分推断（三）：指数族变分推断"><a href="#变分推断（三）：指数族变分推断" class="headerlink" title="变分推断（三）：指数族变分推断"></a>变分推断（三）：指数族变分推断</h2><h3 id="一、坐标更新公式在指数族下的变换"><a href="#一、坐标更新公式在指数族下的变换" class="headerlink" title="一、坐标更新公式在指数族下的变换"></a>一、坐标更新公式在指数族下的变换</h3><p>之前的博文中讨论了GMM中的变分推断和CAVI算法，这篇文章中，把它推广到更一般的情况，也就是分布是<strong>指数分布族</strong>（exponential family）的情况。</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Exponential_family" target="_blank" rel="noopener">指数分布族</a>，是对常见分布的性质经过总结和泛化归纳出来的一类分布，具有形如<script type="math/tex">f(x|\theta)=h(x)exp(\eta(\theta)\cdot T(x) - A(\theta))</script>形式的概率密度函数/概率质量函数。其中，T(x)是充分统计量（能够完全表征一个概率分布的所有量）。</p>
+</blockquote>
+<p>可以用指数族来简化CAVI中坐标更新的公式，我们假定完全条件概率(complete conditional)为如下的指数族形式：</p>
+<script type="math/tex; mode=display">
+p(z_j|z_{-j},x)=h(z_j)exp\{\eta_j(z_{-j},x)\cdot z_j - \alpha(\eta_j(z_{-j},x))\}</script><p>那么利用平均场假设，可对坐标更新公式做如下变换：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+q(z_j)&\propto exp\{ E[\log(p(z_j|z_{-j},x))] \}\\
+&=exp\{ \log h(z_j) + E[\eta_j(z_{-j},x)]\cdot z_j - E[\alpha(\eta_j(z_{-j},x))] \}\\
+&\propto \log h(z_j)\cdot exp\{ E[\eta_j(z_{-j},x)]\cdot z_j\}
+\end{aligned}</script><p>所以对当前变分参数<script type="math/tex">\mathcal{v}_j</script>，我们只需将其更新到其隐变量<script type="math/tex">z_j</script>对应的条件概率的期望参数<script type="math/tex">E[\eta_j(z_{-j},x)]</script>即可。</p>
+<h3 id="二、条件共轭模型"><a href="#二、条件共轭模型" class="headerlink" title="二、条件共轭模型"></a>二、条件共轭模型</h3><p>带<strong>局部变量</strong>和<strong>全局变量</strong>的条件共轭模型是指数族模型的一种重要的特例。</p>
+<p>在这里局部变量指的是只对<strong>某个数据点</strong>起作用的变量，而全局变量指的是对<strong>所有数据</strong>都起作用的变量。比如，在之前的GMM模型中，描述K个高斯分布均值的变量<script type="math/tex">\mu</script>就是全局变量，而描述第i个数据点属于哪个模型的变量<script type="math/tex">z</script>就是局部变量。</p>
+<p>现在，假设模型拥有全局变量<script type="math/tex">\beta</script>，局部变量<script type="math/tex">z</script>和数据<script type="math/tex">x</script>，那么联合概率可以写成<script type="math/tex">p(z,\beta,x) = p(\beta)\prod_{i=1}^{n}p(z_i,x_i|\beta)</script>的形式。</p>
+<ul>
+<li>全局变量</li>
+</ul>
+<p>我们假定所有的complete conditional都是指数族分布，<script type="math/tex">z_i,x_i</script>的联合概率可以写成下面的指数族形式：</p>
+<script type="math/tex; mode=display">
+p(z_i,x_i|\beta) = h(z_i,x_i)\cdot exp\{\beta\cdot t(z_i,x_i)-\alpha(\beta)\}</script><p>认为全局变量<script type="math/tex">\beta</script>具有对应的先验共轭分布（为什么？），其中<script type="math/tex">\eta=[\eta_1,\eta_2]</script>是其自然参数，而充分统计量是<script type="math/tex">\beta</script>和局部变量概率密度的对数标准化项：</p>
+<script type="math/tex; mode=display">
+p(\beta)=h(\beta)exp\{\eta\cdot [\beta,-\alpha(\beta)]- \alpha(\eta)\}</script><p>有了这个共轭先验，全局变量<script type="math/tex">\beta</script>的完全条件概率（就是求坐标更新公式需要的那个<script type="math/tex">p(\beta|z,x)</script>）的参数<script type="math/tex">\hat\eta</script>可以由<script type="math/tex">\eta</script>和<script type="math/tex">z,x</script>求得，如下公式。</p>
+<script type="math/tex; mode=display">
+\hat\eta = [\eta_1 + \sum_{i=1}^n t(z_i,x_i), \eta_2 +n]</script><ul>
+<li>局部变量</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(z_i|z_{-i},x,\beta)&=p(z_i|x_i,\beta,x_{-i},z_{-i})\\
+&=p(z_i|x_i,\beta)
+\end{aligned}</script><ul>
+<li>CAVI的坐标更新公式</li>
+</ul>
+<p>我们用<script type="math/tex">\varphi</script>和<script type="math/tex">\lambda</script>分别代表隐变量<script type="math/tex">z</script>和<script type="math/tex">\beta</script>的变分参数，用<script type="math/tex">q</script>来表示变分分布（也是指数族分布），那么每一步CAVI只需将变分参数的值更新为自然参数的期望。</p>
+<p>局部变分参数<script type="math/tex">\varphi</script>，只需要应用CAVI坐标更新公式在指数族模型上的泛化公式即可：</p>
+<script type="math/tex; mode=display">
+\varphi_i=E_\lambda[\eta_i(\beta,x_i)]</script><p>全局变分参数<script type="math/tex">\lambda</script>，只需要更新到我们上面算出的<script type="math/tex">\beta</script>的完全条件概率的参数<script type="math/tex">\hat\eta</script>的期望：</p>
+<script type="math/tex; mode=display">
+\lambda = E_\varphi [\hat\eta] = [\eta_1+\sum_{i=1}^n E_{\varphi_i}[t(z_i,x_i)],\eta_2+n]</script><ul>
+<li>CAVI的ELBO计算</li>
+</ul>
+<p>有上面的指数族概率公式，我们可以在每一轮更新隐变量参数之后，计算ELBO直到收敛。</p>
+<p>CAVI能够用于GMM、LDA等模型的优化。</p>
+<h3 id="三、随机变分推断"><a href="#三、随机变分推断" class="headerlink" title="三、随机变分推断"></a>三、随机变分推断</h3><p>上面的CAVI算法在每次迭代都要遍历所有的数据，因此无法在较大规模的数据上使用。现在我们介绍一种更高效的优化方法——随机变分推断（SVI）。</p>
+<p>首先，我们介绍ELBO的自然梯度（natural gradient）用来更新全局变量的参数<script type="math/tex">\lambda</script>，Hoffman在2013年的SVI论文中推导出了ELBO的欧式梯度<script type="math/tex">\bigtriangledown_\lambda ELBO</script>和自然梯度<script type="math/tex">g(\lambda)</script>，如下公式。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bigtriangledown_\lambda ELBO&=\alpha''(\lambda) (E_\varphi [\hat\eta]-\lambda)\\
+g(\lambda)&=E_\varphi [\hat\eta]-\lambda
+\end{aligned}</script><p>基于自然梯度的优化在确定步长<script type="math/tex">\epsilon_t</script>之后，更新<script type="math/tex">\lambda_t</script>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\lambda_{t+1}&=\lambda_t + \epsilon_tg(\lambda_t)\\
+&=(1-\epsilon_t)\lambda_t+\epsilon_tE_\varphi[\hat\eta]
+\end{aligned}</script><p>上面的更新公式计算速度和CAVI的更新公式一样，都需要遍历所有数据，因此还是达不到大数据集的要求。</p>
+<p>而随机优化算法证明了，在步长满足一定条件的前提下，使用noisy and unbiased gradient能够得到目标函数的最优值（可能是局部最优），因此首先，我们将自然梯度扩展为Noisy gradient，定义如下。</p>
+<script type="math/tex; mode=display">
+g(\lambda) = \eta + [\sum_{i=1}^n E_{\varphi_i^*}[t(z_i,x_i)],n] - \lambda</script><p>这个定义中的<script type="math/tex">\varphi_i^*</script>是在固定全局参数<script type="math/tex">\lambda</script>的情况下，在i数据点的最优局部变分参数。</p>
+<p>SVI的步骤如下：</p>
+<ul>
+<li>1.随机从所有数据中选择数据点t；</li>
+<li>2.计算noisy gradient：<script type="math/tex">\hat g(\lambda)=\eta + n[E_{\varphi _i^*}[t(z_t,x_t)],1 - \lambda]</script>，也就是把原来的第二项改成当前数据点t计算出来的值乘以数据总量（就是以当前数据点来估计所有数据的梯度）；</li>
+<li>3.可以证明，这个noisy natural gradient是无偏的：<script type="math/tex">E[\hat g(\lambda)]=g(\lambda)</script>；</li>
+<li>4.这个梯度计算很快，而且可以推广到mini-batch的形式，只需要修改第二项scale的值即可；</li>
+<li>5.步长的设置需要满足一定的条件，才能保证收敛。</li>
+</ul>
+<p>最后，这是自己的第100篇博客，加油！</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2018/03/09/vi/VI-3/" title="变分推断（三）：指数族变分推断">http://cairohy.github.io/2018/03/09/vi/VI-3/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/" rel="tag"><i class="fa fa-tag"></i> 变分推断</a>
+              <a href="/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF/" rel="tag"><i class="fa fa-tag"></i> 贝叶斯</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/09/ml-coding-summarize/nlp%20implementations%20for%20common%20methods/" rel="prev" title="NLP implementations for common methods">
+      <i class="fa fa-chevron-left"></i> NLP implementations for common methods
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/15/deeplearning/MRC/FusionNet/" rel="next" title="融合所有层次的表示就能够找到正确答案-FusionNet">
+      融合所有层次的表示就能够找到正确答案-FusionNet <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#变分推断（三）：指数族变分推断"><span class="nav-text">变分推断（三）：指数族变分推断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、坐标更新公式在指数族下的变换"><span class="nav-text">一、坐标更新公式在指数族下的变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、条件共轭模型"><span class="nav-text">二、条件共轭模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、随机变分推断"><span class="nav-text">三、随机变分推断</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2018/03/09/vi/VI-3/";
+    this.page.identifier = "2018/03/09/vi/VI-3/";
+    this.page.title = "变分推断（三）：指数族变分推断";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'f3be07f7b0bf64ec49c2d0c92b60db76',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

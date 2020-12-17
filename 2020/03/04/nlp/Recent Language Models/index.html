@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+  <link rel="mask-icon" href="/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cairohy.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}}},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":2,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Recent Language Model Papers最近的语言模型和词嵌入的文章，有的读的仔细点，有的略读，不断更新中。 1.AlBerthttps:&#x2F;&#x2F;openreview.net&#x2F;forum?id&#x3D;H1eA7AEtvS ，ICLR’20, by Google, SOTA in GLUE. 一个轻量级的BERT但是效果更好。它所做的修改主要有：  首先把词向量矩阵分解了，这样使词向量矩阵的维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Recent Language Model Papers">
+<meta property="og:url" content="http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/index.html">
+<meta property="og:site_name" content="new Cairo()">
+<meta property="og:description" content="Recent Language Model Papers最近的语言模型和词嵌入的文章，有的读的仔细点，有的略读，不断更新中。 1.AlBerthttps:&#x2F;&#x2F;openreview.net&#x2F;forum?id&#x3D;H1eA7AEtvS ，ICLR’20, by Google, SOTA in GLUE. 一个轻量级的BERT但是效果更好。它所做的修改主要有：  首先把词向量矩阵分解了，这样使词向量矩阵的维">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200604223912770.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200609010426759.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200609005724949.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200609011508175.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200609151756717.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200609154814456.png">
+<meta property="og:image" content="http://cairohy.github.io/images/image-20200711172501833.png">
+<meta property="article:published_time" content="2020-03-04T17:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-07T11:00:00.000Z">
+<meta property="article:author" content="cairo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="Language Model">
+<meta property="article:tag" content="Word Embedding">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cairohy.github.io/images/image-20200604223912770.png">
+
+<link rel="canonical" href="http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Recent Language Model Papers | new Cairo()</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">new Cairo()</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Happy reading and coding.</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">116</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">129</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="cairo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="new Cairo()">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Recent Language Model Papers
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-04 17:00:00" itemprop="dateCreated datePublished" datetime="2020-03-04T17:00:00+00:00">2020-03-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">自然语言处理</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/04/nlp/Recent%20Language%20Models/" class="post-meta-item leancloud_visitors" data-flag-title="Recent Language Model Papers" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Recent-Language-Model-Papers"><a href="#Recent-Language-Model-Papers" class="headerlink" title="Recent Language Model Papers"></a>Recent Language Model Papers</h3><p>最近的语言模型和词嵌入的文章，有的读的仔细点，有的略读，不断更新中。</p>
+<h4 id="1-AlBert"><a href="#1-AlBert" class="headerlink" title="1.AlBert"></a>1.AlBert</h4><p><a href="https://openreview.net/forum?id=H1eA7AEtvS" target="_blank" rel="noopener">https://openreview.net/forum?id=H1eA7AEtvS</a> ，ICLR’20, by Google, SOTA in GLUE.</p>
+<p>一个轻量级的BERT但是效果更好。它所做的修改主要有：</p>
+<ul>
+<li><p>首先把词向量矩阵分解了，这样使词向量矩阵的维度和hidden_size解耦，否则词向量矩阵参数量太大。</p>
+</li>
+<li><p>把每层的参数共享了，减少参数数量。</p>
+</li>
+<li><p>在这个基础上，能够把hidden_size提高到6144这种量级。</p>
+</li>
+<li><p>为了对句子级别进行建模，ALBERT增加了一个sentence order prediction（SOP）任务而不是被证明太简单基本无效的NSP任务，给定当前句子与其下一句，或者是顺序翻转的两句话，希望模型预测句子序是否准确。</p>
+</li>
+</ul>
+<h4 id="2-GPT-3，一个看看就好的单向语言模型"><a href="#2-GPT-3，一个看看就好的单向语言模型" class="headerlink" title="2.GPT-3，一个看看就好的单向语言模型"></a>2.GPT-3，一个看看就好的单向语言模型</h4><p><a href="http://arxiv.org/abs/2005.14165" target="_blank" rel="noopener">http://arxiv.org/abs/2005.14165</a> ，By OpenAI。</p>
+<p>回想去年年底，我在尝试在GPT-2 Small（127M参数）模型的基础上搞点东西的时候，还在想这玩意fine-tune有点慢，batch size设不大啊。害，现在拿到论文只能看看人实验结果了，连下载模型的想法都不会有~</p>
+<p>GPT-3，一个最大175Billion参数的基于Transformer-decoder的单向自回归语言模型。希望解决的就是pretrain-fineTune这套框架。他们觉得这套框架虽然解决了task-specific Model的问题，但是没有解决task-specific data的问题，所以领域相关数据还是导致应用很受限。</p>
+<p>因此，他们提出来了三种使用预训练模型的方式：<strong>Zero-shot</strong>、<strong>One-shot</strong>和<strong>Few-shot</strong>，但是这和我们通常所理解的这几个概念不同，它这几种setting，本质上都是zero-shot。预训练只使用了大规模的无标记语料（45TB！），而在做某个任务的时候，在一句自然语言的prompt之后，会跟上0, 1, n个例子，就像是英语听力考试的时候前面那个示例题。那这是不是作弊呢？反正，没有反向传播过程，模型是不会记得自己见过这些数据的，而且这几个随机选择的例子和任务中的sample可能差别很大。</p>
+<p>所以在这种Train&amp;Use的setting下，这位model structure和GPT-2相同仅仅是参数量、数据量提高若干倍的选手，它的成绩是：</p>
+<p>Cloze任务，Lambada SOTA，其他两个接近。QA任务，TrivialQA SOTA，其他两个还行。NMT：1/6接近SOTA，NMT要是再这样就SOTA那就没得玩了。CSR-QA，离SOTA差一些。SuperGlUE离SOTA差挺多的。。。。实验的任务挺多，就不细说了。Learning and using novel words这个实验里举的例子还是挺有意思的。</p>
+<p>最后，新闻要放在一起看。希望OpenAI别去做Code Generation。-_-</p>
+<p><img src="/images/image-20200604223912770.png" alt="人类成功分辨GPT-3和人工文章的准确率与微软用AI替换新闻编辑"></p>
+<h4 id="3-Analysing-Lexical-Semantic-Change-with-Contextualised-Word-Representations"><a href="#3-Analysing-Lexical-Semantic-Change-with-Contextualised-Word-Representations" class="headerlink" title="3. Analysing Lexical Semantic Change with Contextualised Word Representations"></a>3. Analysing Lexical Semantic Change with Contextualised Word Representations</h4><p><a href="http://arxiv.org/abs/2004.14118" target="_blank" rel="noopener">http://arxiv.org/abs/2004.14118</a> ，ACL’20，by 阿姆斯特丹大学。</p>
+<h5 id="（0）术语翻译和理解"><a href="#（0）术语翻译和理解" class="headerlink" title="（0）术语翻译和理解"></a>（0）术语翻译和理解</h5><p>词汇语义：word meaning/lexical semantic，每个词汇(word and sub-word)表达的概念。</p>
+<p>词形：word form。类似’girl’和’girls’。</p>
+<p>词义：word sense，在不同context下一个单词表现出的语义，同一个word form可能有不同的word sense。在本文中和word usage意义接近，但是是一种更加离散化的usage。可以对应中文“义项”。</p>
+<p>word usage：语料中word的每次出现。</p>
+<p>历时性语料：diachronic corpus，由不同时期的文本所组成的语料，可以用来分析词汇语义变化。</p>
+<p>silhouette score：一种计算聚类得分的方式，类内元素一致性越高&amp;类间元素相似度越低，则该得分越高。</p>
+<h5 id="（1）解决的问题"><a href="#（1）解决的问题" class="headerlink" title="（1）解决的问题"></a>（1）解决的问题</h5><p>预训练的词向量使用一个语义向量来表示一个单词的语义，现在的预训练词向量工作能够衡量不同语境context下的语义。但是每一种自然语言实际上都是在不断演化的。同样地，语言中词汇的语义也是随着时间变化的，比如，英语中的“girl”在14世纪表示小孩子而现在表示小女孩。如何去表示、比较单词在不同时期的语义呢。</p>
+<p><strong>词义变化检测</strong>（lexical semantic change detection）尝试检测以及归纳词汇语义变化的规律，并用可以量化和复现的方式评估这个过程。</p>
+<p>似乎这个词也会被翻译为<strong>历时词义演变</strong>。</p>
+<h5 id="（2）已有的方法"><a href="#（2）已有的方法" class="headerlink" title="（2）已有的方法"></a>（2）已有的方法</h5><p>已有的词义变化检测方法可以归纳为两种，</p>
+<p>第一种是form-based方法。这种方法在历时性语料上面的不同时间区间（time interval）训练单独的模型。同一个时间区间中每个word由一个语义向量表达其语义，通过计算同一单词不同时期的语义向量的距离来度量语义的变化。【由于同一个词在不同usage不同context下语义是不一样的，这种方式的假设是一个语义向量足以表示这些值】。这些工作大都基于分布式词嵌入，把每种词形（word form）抽象为一个语义表示，但是这可能导致多种word sense只有一个表示，而语义变化可能是在更细粒度下的改变（比如说只在某种特殊语境下单词语义发生改变）。</p>
+<p>第二种是sense-based方法，这种方法也是训练出time-dependent的语义表示，但是考虑分开表示每个word在不同sense下的语义，比如把word的语义表示为所有word sense下的多项式分布。现有的这种方法的局限性在于，a) 依赖于上下文的词袋模型来区分word sense；以及b)监督式的方法大都需要预先确定sense的数量。</p>
+<h5 id="（2）这篇文章提出的解决方法"><a href="#（2）这篇文章提出的解决方法" class="headerlink" title="（2）这篇文章提出的解决方法"></a>（2）这篇文章提出的解决方法</h5><p>一种<strong>无监督</strong>的方法来<strong>结合上下文相关词向量</strong>BERT处理<strong>词义变化</strong>。</p>
+<ul>
+<li>首先产生每个word的<strong>usage Representations</strong>，也就是在所有不同context下的语义。给定一个单词 $w$和它出现的（window-size=128）的上下文$s = (v_1, \cdots, v_i, \cdots, v_n), v_i=w$，用BERT对这个上下文进行编码并把每一层的hidden state加起来作为$w$在这种语境下的表示。（这里用加是因为无论是concat所有层还是选择其中某一层，不同时段的word representation都无法产生足以比较的向量距离差异）那么对于语料中单词$w$出现的N次Usage，可以得到一个Usage矩阵$U_w = (w_1, \cdots, w_N)$，同时，对每次usage除了usage representation，还存储了对应的context以及temporal label $t_i$来标记时段。</li>
+</ul>
+<p><img src="/images/image-20200609010426759.png" alt="Usage representations和聚类并计算得到的不同时刻的usage分布"></p>
+<ul>
+<li>聚类到Usage Types：对每个word的N个usage representations，用K-Means把它们聚类为2-10个类别（usage type），最终选择的类别数量K通过比较聚类结束时的silhouette score选择。而后可以计算出给定单词$w$在$t$时刻每个usage type所出现的次数$f^t_w$，并在归一化后得到$t$时刻的usage分布$u^t_w\in R^{K_w}$。上面这张图是Usage representations和聚类并计算得到的不同时刻的usage分布的一个例子。</li>
+</ul>
+<p><img src="/images/image-20200609005724949.png" alt="t时段每个Usage Type k的出现次数"></p>
+<ul>
+<li>语义变化的量化：<ul>
+<li>Entropy Difference(ED)：计算$t$和$t’$时段usage分布的熵的差值，通过熵来衡量这个分布的不确定性，一个单词的分布熵越大代表这个词的含义越丰富，因此ED值的增加意味着从$t$到$t’$时段该单词的词义变得广泛(broad)。比如下图（<a href="https://clsw2020.lt.cityu.edu.hk/repo/posters/slides/CLSW2020-139-slides.pdf" target="_blank" rel="noopener">出处</a>）所示汉字危的词义分布比较先秦和元明清时期，ED值是增加的。</li>
+<li>Jensen-Shannon divergence(JSD)：引入这一项用来衡量两个usage分布的差异。较大的JSD意味着从$t$到$t’$该单词的usage发生了明显改变。<ul>
+<li>Average pairwise distance (APD)：为了避免聚类为usage type时引入的噪音影响历时语义分析加入这一项。直接在两个时段的usage representation计算平均点对点距离。（拿出两个时段所有usage representation向量计算距离并求这$N<em>t\cdot N</em>{t’}$项距离的均值）</li>
+<li>判断多个连续时期的历时语义偏移。比如下图这种超过两个时段的情况，对相邻两个时段用上面三种metric中的一种依次计算一个得分，最终的得分向量的均值可以判断语义偏移的总体程度，最大值用来判断语义偏移发生的极限。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/image-20200609011508175.png" alt="中文词义历时演变"></p>
+<h5 id="（3）实验"><a href="#（3）实验" class="headerlink" title="（3）实验"></a>（3）实验</h5><p>实验数据：英文历时语料，the Corpus of Historical Ameri- can English（COHA）</p>
+<p>目标单词：100个标注过语义偏移得分的单词，得分与context无关，由五个人类标注者衡量两个时段下某个单词的语义偏离程度并给出得分。（GEMS数据集）</p>
+<p>实验结论：</p>
+<ul>
+<li>为了证明K-means利用BERT产生的usage表示聚类的usage type和人类评判一致。选择了16个单词，每个单词的每个usage type标注5个usage，形成3285个usage pair，并通过众包进行相似度标注，得到了一个数据集，并且多个标注者之间的打分一致性符合要求（说明人类评判较为一致）。而最终人类在usage pair之间的相似度打分和聚类后的Usage Vector之间的相似度计算也表明，对16个单词中的10个，机器的打分和人类具有一致性。</li>
+<li>通过比较GEMS数据集上的人类打分语义偏离分数和不同metric生成的偏离分数的斯皮尔曼相关系数（0-1，越小越好），说明了上下文相关词嵌入在历时语义演变分析中很有效。</li>
+</ul>
+<p><img src="/images/image-20200609151756717.png" alt="不同metric下生成的语义偏离分数和人类打分的相关性系数"></p>
+<h5 id="（4）分析"><a href="#（4）分析" class="headerlink" title="（4）分析"></a>（4）分析</h5><p>对两个问题进行了分析：</p>
+<ul>
+<li>Usage Type捕获了哪些信息？<ul>
+<li>区分字面用法和转喻用法。比如“我挂了一个窗帘”中“窗帘”代表其字面意思“一块悬垂的布”，而“法律战争的窗帘正在被提出”中“窗帘”代表其转喻意思“阻碍信息自由交流的障碍”。</li>
+<li>用于组成短语或者命名实体的特殊用法，比如“alexander graham bell”中的“bell”。</li>
+<li>…</li>
+</ul>
+</li>
+<li>偏离得分反映了哪些语义变化？下图来自论文原文。<ul>
+<li>broaden，比如增加新的usage type，增加转喻用法等。</li>
+<li>narrow，很多usage type在消失或者使用频率减少。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/image-20200609154814456.png" alt="不同时段的Usage分布"></p>
+<h5 id="（5）-总结"><a href="#（5）-总结" class="headerlink" title="（5） 总结"></a>（5） 总结</h5><p>一个利用上下文相关词嵌入分析历时语义演变的工作，不同于基于word sense的工作，由预训练词嵌入和聚类方法自动生成不定数量的usage type，提供了更灵活的获得sense representation的方式。能相对更有效的估计语义演变的程度。作者也说其下一步的工作可能是探究如何去检测更细粒度的词汇语义变化，比如说usage-level的语义演变。</p>
+<h4 id="4-Moving-Down-the-Long-Tail-of-Word-Sense-Disambiguation-with-Gloss-Informed-Bi-encoders"><a href="#4-Moving-Down-the-Long-Tail-of-Word-Sense-Disambiguation-with-Gloss-Informed-Bi-encoders" class="headerlink" title="4. Moving Down the Long Tail of Word Sense Disambiguation with Gloss Informed Bi-encoders"></a>4. Moving Down the Long Tail of Word Sense Disambiguation with Gloss Informed Bi-encoders</h4><p><a href="https://arxiv.org/pdf/2005.02590.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/2005.02590.pdf</a> ，ACL’20，Zettlemoyer组，By 华盛顿大学&amp;FAIR。</p>
+<p>WSD（词义消歧）任务为某个上下文下的单词预测具体含义。All-word WSD为语料中每个有歧义的单词找到具体含义，被形式化为在预定义的所有义项中找到正确的类别，这是这个工作的任务。</p>
+<p>gloss：义项所对应的描述文本，来自词义体系（wordNet或其他词典）中。</p>
+<p>方法结构很简单，context encoder用来编码单词及上下文；gloss encoder对义项描述进行编码，利用交叉熵最大化正确义项类别的分类概率。两个分类器底层都使用预训练的BERT。目标是把word sense gloss和context-aware word embedding编码到同一空间，而且让一个单词和对应的词义点积距离接近。</p>
+<p><img src="/images/image-20200711172501833.png" alt="模型结构"></p>
+<p>在WSD数据集上和包括GlossBERT在内的baseline进行了对比。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>cairo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/" title="Recent Language Model Papers">http://cairohy.github.io/2020/03/04/nlp/Recent Language Models/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 自然语言处理</a>
+              <a href="/tags/Language-Model/" rel="tag"><i class="fa fa-tag"></i> Language Model</a>
+              <a href="/tags/Word-Embedding/" rel="tag"><i class="fa fa-tag"></i> Word Embedding</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/09/ml-coding-summarize/%E7%A8%80%E7%96%8F%E5%9B%BE%E8%AE%A1%E7%AE%97/" rel="prev" title="稀疏图计算">
+      <i class="fa fa-chevron-left"></i> 稀疏图计算
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/25/leetcode/%E5%9B%BE/" rel="next" title="leetcode: 图">
+      leetcode: 图 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-disqus">Load Disqus</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane disqus" id="comment-disqus">
+              
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Recent-Language-Model-Papers"><span class="nav-text">Recent Language Model Papers</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-AlBert"><span class="nav-text">1.AlBert</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-GPT-3，一个看看就好的单向语言模型"><span class="nav-text">2.GPT-3，一个看看就好的单向语言模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Analysing-Lexical-Semantic-Change-with-Contextualised-Word-Representations"><span class="nav-text">3. Analysing Lexical Semantic Change with Contextualised Word Representations</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#（0）术语翻译和理解"><span class="nav-text">（0）术语翻译和理解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（1）解决的问题"><span class="nav-text">（1）解决的问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（2）已有的方法"><span class="nav-text">（2）已有的方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（2）这篇文章提出的解决方法"><span class="nav-text">（2）这篇文章提出的解决方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（3）实验"><span class="nav-text">（3）实验</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（4）分析"><span class="nav-text">（4）分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#（5）-总结"><span class="nav-text">（5） 总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Moving-Down-the-Long-Tail-of-Word-Sense-Disambiguation-with-Gloss-Informed-Bi-encoders"><span class="nav-text">4. Moving Down the Long Tail of Word Sense Disambiguation with Gloss Informed Bi-encoders</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="cairo"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">cairo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cairoHy" title="GitHub → https://github.com/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/cairoHy" title="Zhihu → https://www.zhihu.com/people/cairoHy" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>Zhihu</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://lanzhuzhu.github.io/" title="https://lanzhuzhu.github.io/" rel="noopener" target="_blank">Lanzhuzhu's blog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://xiaofengwo.github.io/" title="https://xiaofengwo.github.io/" rel="noopener" target="_blank">蜂巢</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://randool.github.io/" title="https://randool.github.io/" rel="noopener" target="_blank">Randool</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://tobiaslee.top/" title="https://tobiaslee.top/" rel="noopener" target="_blank">TobiasLee</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-star"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cairo</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">253k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:50</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script data-pjax>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"NtbQQktKGu7UCTh5oschMKqX-gzGzoHsz","app_key":"DsSvqkvPrGML0l9xn8VU4eAI","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+  <script data-pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 5734,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://cairohy.github.io/2020/03/04/nlp/Recent%20Language%20Models/";
+    this.page.identifier = "2020/03/04/nlp/Recent Language Models/";
+    this.page.title = "Recent Language Model Papers";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://cairo-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '0ed9f3b9d2d657a14dbd',
+      clientSecret: 'db2507bf8063cb27f87702bead555fc09cedd7b3',
+      repo        : 'blog_comments',
+      owner       : 'cairoHy',
+      admin       : ['cairoHy'],
+      id          : 'bcf83c60905143b5d0124c97ca399250',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>
